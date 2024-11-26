@@ -147,6 +147,12 @@ git push -u origin fix/accordion-alwaysopen
 
 9. Fill out the Pull Request template, which will be available automatically
 
+10. At the end you need to create a new changeset, use the following command and answers the provided questions.
+
+```bash
+bunx changeset
+```
+
 #### What Happens Next?
 
 If you have followed the steps above, your Pull Request will be reviewed by a maintainer soon. If it passes review, it will be merged into the `main` branch and will be included in the next release. If not, you will receive feedback about what needs to be improved until it is ready to be merged.

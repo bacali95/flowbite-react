@@ -7,9 +7,11 @@ import type { DeepPartial } from "../../types";
 import { useTableContext } from "./TableContext";
 import type { FlowbiteTableHeadCellTheme } from "./TableHeadCell";
 import { TableHeadContext } from "./TableHeadContext";
+import { FlowbiteTableHeadRowTheme } from "./TableHeadRow";
 
 export interface FlowbiteTableHeadTheme {
   base: string;
+  row: FlowbiteTableHeadRowTheme;
   cell: FlowbiteTableHeadCellTheme;
 }
 
@@ -26,7 +28,7 @@ export const TableHead = forwardRef<HTMLTableSectionElement, TableHeadProps>(
     return (
       <TableHeadContext.Provider value={{ theme }}>
         <thead className={twMerge(theme.base, className)} ref={ref} {...props}>
-          <tr>{children}</tr>
+          {children}
         </thead>
       </TableHeadContext.Provider>
     );

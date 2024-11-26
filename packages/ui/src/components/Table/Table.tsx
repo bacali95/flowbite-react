@@ -10,6 +10,7 @@ import { TableCell } from "./TableCell";
 import { TableContext } from "./TableContext";
 import { TableHead, type FlowbiteTableHeadTheme } from "./TableHead";
 import { TableHeadCell } from "./TableHeadCell";
+import { TableHeadRow } from "./TableHeadRow";
 import { TableRow, type FlowbiteTableRowTheme } from "./TableRow";
 
 export interface FlowbiteTableTheme {
@@ -52,6 +53,7 @@ TableComponent.displayName = "Table";
 
 export const Table = Object.assign(TableComponent, {
   Head: TableHead,
+  HeadRow: TableHeadRow,
   Body: TableBody,
   Row: TableRow,
   Cell: TableCell,
