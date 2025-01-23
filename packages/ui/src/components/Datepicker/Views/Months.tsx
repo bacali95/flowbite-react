@@ -37,8 +37,10 @@ export const DatepickerViewsMonth: FC<DatepickerViewsMonthsProps> = ({ theme: cu
     <div className={theme.items.base}>
       {[...Array(12)].map((_month, index) => {
         const newDate = new Date();
-        // setting day to 1 to avoid overflow issues
-        newDate.setMonth(index, 1);
+        // Set newDate to the last day of the month based on the provided index.
+        // This is necessary for enabling the month button when minDate is set (e.g., minDate = 1/23/2025).
+        newDate.setMonth(index + 1, 1);
+        newDate.setDate(newDate.getDate() - 1);
         newDate.setFullYear(viewDate.getFullYear());
         const month = getFormattedDate(language, newDate, { month: "short" });
 
