@@ -56,7 +56,7 @@ export function DarkModeSection() {
                 {feature_list.map((f, i) => (
                   <li key={i} className="flex items-center gap-2">
                     <svg
-                      className="size-5 rounded-full bg-cyan-100 p-1 text-cyan-700 dark:bg-gray-700"
+                      className="size-5 rounded-full bg-primary-100 p-1 text-primary-700 dark:bg-gray-700"
                       width="14"
                       height="10"
                       viewBox="0 0 14 10"
@@ -75,9 +75,9 @@ export function DarkModeSection() {
               <div className="flex flex-row gap-4">
                 <Link
                   href="/docs/customize/dark-mode"
-                  className="flex items-center gap-4 font-medium text-cyan-600 hover:underline"
+                  className="flex items-center gap-4 font-medium text-primary-700 hover:underline dark:text-primary-500"
                 >
-                  Learn how to integrate dark mode in React{" "}
+                  Learn how to integrate dark mode in React
                   <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       fillRule="evenodd"

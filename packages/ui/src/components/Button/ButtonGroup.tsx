@@ -1,77 +1,42 @@
-import type { ComponentProps, FC, ReactElement, ReactNode } from "react";
-import { Children, cloneElement, isValidElement, useMemo } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import { Button, type ButtonProps } from "../Button";
+"use client";
 
-export interface FlowbiteButtonGroupTheme {
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import type { ButtonProps } from "../Button/Button";
+import { ButtonGroupContext } from "./ButtonGroupContext";
+import { buttonGroupTheme } from "./theme";
+
+export interface ButtonGroupTheme {
   base: string;
-  position: PositionInButtonGroup;
 }
 
-export interface PositionInButtonGroup {
-  none: string;
-  start: string;
-  middle: string;
-  end: string;
-}
+export interface ButtonGroupProps
+  extends ComponentProps<"div">,
+    Pick<ButtonProps, "outline" | "pill">,
+    ThemingProps<ButtonGroupTheme> {}
 
-export interface ButtonGroupProps extends ComponentProps<"div">, Pick<ButtonProps, "outline" | "pill"> {
-  theme?: DeepPartial<FlowbiteButtonGroupTheme>;
-}
+export const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [buttonGroupTheme, provider.theme?.buttonGroup, props.theme],
+    [get(provider.clearTheme, "buttonGroup"), props.clearTheme],
+    [get(provider.applyTheme, "buttonGroup"), props.applyTheme],
+  );
 
-const processChildren = (
-  children: React.ReactNode,
-  outline: boolean | undefined,
-  pill: boolean | undefined,
-): ReactNode => {
-  return Children.map(children as ReactElement<ButtonProps>[], (child, index) => {
-    if (isValidElement(child)) {
-      const positionInGroupProp =
-        child.type == Button ? { positionInGroup: determinePosition(index, Children.count(children)) } : {};
-      // Check if the child has nested children
-      if (child.props.children) {
-        // Recursively process nested children
-        return cloneElement(child, {
-          ...child.props,
-          children: processChildren(child.props.children, outline, pill),
-          ...positionInGroupProp,
-        });
-      } else {
-        return cloneElement(child, {
-          outline,
-          pill,
-          ...positionInGroupProp,
-        });
-      }
-    }
-    return child;
-  });
-};
-
-const determinePosition = (index: number, totalChildren: number): keyof PositionInButtonGroup => {
-  return index === 0 ? "start" : index === totalChildren - 1 ? "end" : "middle";
-};
-
-export const ButtonGroup: FC<ButtonGroupProps> = ({
-  children,
-  className,
-  outline,
-  pill,
-  theme: customTheme = {},
-  ...props
-}: ButtonGroupProps) => {
-  const items = useMemo(() => processChildren(children, outline, pill), [children, outline, pill]);
-
-  const theme = mergeDeep(getTheme().buttonGroup, customTheme);
+  const { children, className, outline, pill, ...restProps } = resolveProps(props, provider.props?.buttonGroup);
 
   return (
-    <div className={twMerge(theme.base, className)} role="group" {...props}>
-      {items}
-    </div>
+    <ButtonGroupContext.Provider value={{ outline, pill }}>
+      <div ref={ref} className={twMerge(theme.base, className)} role="group" {...restProps}>
+        {children}
+      </div>
+    </ButtonGroupContext.Provider>
   );
-};
+});
 
-ButtonGroup.displayName = "Button.Group";
+ButtonGroup.displayName = "ButtonGroup";

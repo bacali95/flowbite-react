@@ -1,17 +1,21 @@
-import type { ComponentProps, FC, PropsWithChildren } from "react";
-import { twMerge } from "tailwind-merge";
-import type { FlowbiteListItemTheme, FlowbiteStateColors } from "../..";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import { ListItem } from "./ListItem";
+"use client";
 
-export interface FlowbiteListTheme {
-  root: FlowbiteListRootTheme;
-  item: FlowbiteListItemTheme;
+import { forwardRef, type ComponentProps, type PropsWithChildren } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import type { ListItemTheme } from "./ListItem";
+import { listTheme } from "./theme";
+
+export interface ListTheme {
+  root: ListRootTheme;
+  item: ListItemTheme;
 }
 
-export interface FlowbiteListRootTheme {
+export interface ListRootTheme {
   base: string;
   ordered: {
     on: string;
@@ -22,50 +26,41 @@ export interface FlowbiteListRootTheme {
   nested: string;
 }
 
-export interface ListColors extends FlowbiteStateColors {
-  [key: string]: string;
-  default: string;
-}
-
-export interface ListProps extends PropsWithChildren<ComponentProps<"ul"> & ComponentProps<"ol">> {
-  theme?: DeepPartial<FlowbiteListTheme>;
+export interface ListProps
+  extends PropsWithChildren<ComponentProps<"ul"> & ComponentProps<"ol">>,
+    ThemingProps<ListRootTheme> {
+  horizontal?: boolean;
+  nested?: boolean;
   ordered?: boolean;
   unstyled?: boolean;
-  nested?: boolean;
-  horizontal?: boolean;
 }
 
-const ListComponent: FC<ListProps> = ({
-  children,
-  className,
-  unstyled,
-  nested,
-  ordered,
-  horizontal,
-  theme: customTheme = {},
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().list, customTheme);
+export const List = forwardRef<HTMLUListElement | HTMLOListElement, ListProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [listTheme.root, provider.theme?.list?.root, props.theme],
+    [get(provider.clearTheme, "list.root"), props.clearTheme],
+    [get(provider.applyTheme, "list.root"), props.applyTheme],
+  );
+
+  const { className, horizontal, nested, ordered, unstyled, ...restProps } = resolveProps(props, provider.props?.list);
+
   const Component = ordered ? "ol" : "ul";
 
   return (
     <Component
+      ref={ref as never}
       className={twMerge(
-        theme.root.base,
-        theme.root.ordered[ordered ? "on" : "off"],
-        unstyled && theme.root.unstyled,
-        nested && theme.root.nested,
-        horizontal && theme.root.horizontal,
+        theme.base,
+        theme.ordered[ordered ? "on" : "off"],
+        unstyled && theme.unstyled,
+        nested && theme.nested,
+        horizontal && theme.horizontal,
         className,
       )}
-      {...props}
-    >
-      {children}
-    </Component>
+      {...restProps}
+    />
   );
-};
+});
 
-ListComponent.displayName = "List";
-ListItem.displayName = "List.Item";
-
-export const List = Object.assign(ListComponent, { Item: ListItem });
+List.displayName = "List";

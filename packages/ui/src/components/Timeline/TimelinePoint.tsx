@@ -1,13 +1,17 @@
 "use client";
 
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import type { DeepPartial } from "../../types";
+import { forwardRef, type ComponentProps, type FC } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { timelineTheme } from "./theme";
 import { useTimelineContext } from "./TimelineContext";
 import { useTimelineItemContext } from "./TimelineItemContext";
 
-export interface FlowbiteTimelinePointTheme {
+export interface TimelinePointTheme {
   horizontal: string;
   line: string;
   marker: {
@@ -23,28 +27,45 @@ export interface FlowbiteTimelinePointTheme {
   vertical: string;
 }
 
-export interface TimelnePointProps extends ComponentProps<"div"> {
+export interface TimelinePointProps extends ComponentProps<"div">, ThemingProps<TimelinePointTheme> {
   icon?: FC<ComponentProps<"svg">>;
-  theme?: DeepPartial<FlowbiteTimelinePointTheme>;
 }
 
-export const TimelinePoint: FC<TimelnePointProps> = ({
-  children,
-  className,
-  icon: Icon,
-  theme: customTheme = {},
-  ...props
-}) => {
-  const { horizontal } = useTimelineContext();
-  const { theme: itemTheme } = useTimelineItemContext();
+export const TimelinePoint = forwardRef<HTMLDivElement, TimelinePointProps>((props, ref) => {
+  const { theme: rootTheme, clearTheme: rootClearTheme, applyTheme: rootApplyTheme, horizontal } = useTimelineContext();
+  const { theme: itemTheme, clearTheme: itemClearTheme, applyTheme: itemApplyTheme } = useTimelineItemContext();
 
-  const theme = mergeDeep(itemTheme.point, customTheme);
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [
+      timelineTheme.item.point,
+      provider.theme?.timeline?.item?.point,
+      rootTheme?.item?.point,
+      itemTheme?.point,
+      props.theme,
+    ],
+    [
+      get(provider.clearTheme, "timeline.item.point"),
+      get(rootClearTheme, "item.point"),
+      get(itemClearTheme, "point"),
+      props.clearTheme,
+    ],
+    [
+      get(provider.applyTheme, "timeline.item.point"),
+      get(rootApplyTheme, "item.point"),
+      get(itemApplyTheme, "point"),
+      props.applyTheme,
+    ],
+  );
+
+  const { children, className, icon: Icon, ...restProps } = resolveProps(props, provider.props?.timelinePoint);
 
   return (
     <div
+      ref={ref}
       data-testid="timeline-point"
       className={twMerge(horizontal && theme.horizontal, !horizontal && theme.vertical, className)}
-      {...props}
+      {...restProps}
     >
       {children}
       {Icon ? (
@@ -59,4 +80,6 @@ export const TimelinePoint: FC<TimelnePointProps> = ({
       {horizontal && <div className={twMerge(theme.line)} />}
     </div>
   );
-};
+});
+
+TimelinePoint.displayName = "TimelinePoint";

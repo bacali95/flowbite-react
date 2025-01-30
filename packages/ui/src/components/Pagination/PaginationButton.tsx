@@ -1,60 +1,71 @@
-import type { ComponentProps, FC, ReactEventHandler, ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
+"use client";
 
-export interface FlowbitePaginationButtonTheme {
+import { forwardRef, type ComponentProps, type ReactEventHandler, type ReactNode } from "react";
+import { get } from "../../helpers/get";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { paginationTheme } from "./theme";
+
+export interface PaginationButtonTheme {
   base: string;
   active: string;
   disabled: string;
 }
 
-export interface PaginationButtonProps extends ComponentProps<"button"> {
+export interface PaginationButtonProps extends ComponentProps<"button">, ThemingProps<PaginationButtonTheme> {
   active?: boolean;
   children?: ReactNode;
   className?: string;
   onClick?: ReactEventHandler<HTMLButtonElement>;
-  theme?: DeepPartial<FlowbitePaginationButtonTheme>;
 }
 
 export interface PaginationPrevButtonProps extends Omit<PaginationButtonProps, "active"> {
   disabled?: boolean;
 }
 
-export const PaginationButton: FC<PaginationButtonProps> = ({
-  active,
+export const PaginationButton = forwardRef<HTMLButtonElement, PaginationButtonProps>(
+  ({ active, children, className, onClick, theme: customTheme, clearTheme, applyTheme, ...props }, ref) => {
+    const provider = useThemeProvider();
+    const theme = useResolveTheme(
+      [paginationTheme, provider.theme?.pagination, customTheme],
+      [get(provider.clearTheme, "pagination"), clearTheme],
+      [get(provider.applyTheme, "pagination"), applyTheme],
+    );
+
+    return (
+      <button
+        ref={ref}
+        type="button"
+        className={twMerge(active && theme.pages.selector.active, className)}
+        onClick={onClick}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  },
+);
+
+PaginationButton.displayName = "PaginationButton";
+
+export function PaginationNavigation({
   children,
   className,
   onClick,
-  theme: customTheme = {},
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().pagination, customTheme);
-
-  return (
-    <button
-      type="button"
-      className={twMerge(active && theme.pages.selector.active, className)}
-      onClick={onClick}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
-
-PaginationButton.displayName = "Pagination.Button";
-
-export const PaginationNavigation: FC<PaginationPrevButtonProps> = ({
-  children,
-  className,
-  onClick,
-  theme: customTheme = {},
   disabled = false,
+  theme: customTheme,
+  clearTheme,
+  applyTheme,
   ...props
-}) => {
-  const theme = mergeDeep(getTheme().pagination, customTheme);
+}: PaginationPrevButtonProps) {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [paginationTheme, provider.theme?.pagination, customTheme],
+    [get(provider.clearTheme, "pagination"), clearTheme],
+    [get(provider.applyTheme, "pagination"), applyTheme],
+  );
 
   return (
     <button
@@ -67,6 +78,6 @@ export const PaginationNavigation: FC<PaginationPrevButtonProps> = ({
       {children}
     </button>
   );
-};
+}
 
-PaginationNavigation.displayName = "Pagination.Navigation";
+PaginationNavigation.displayName = "PaginationNavigation";

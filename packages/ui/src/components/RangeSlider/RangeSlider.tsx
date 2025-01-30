@@ -1,52 +1,61 @@
+"use client";
+
 import type { ComponentProps } from "react";
 import { forwardRef } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
-import type { FlowbiteTextInputSizes } from "../TextInput";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { DynamicStringEnumKeysOf, ThemingProps } from "../../types";
+import type { TextInputSizes } from "../TextInput";
+import { rangeSliderTheme } from "./theme";
 
-export interface FlowbiteRangeSliderTheme {
-  root: FlowbiteRangeSliderRootTheme;
-  field: FlowbiteRangeSliderFieldTheme;
+export interface RangeSliderTheme {
+  root: RangeSliderRootTheme;
+  field: RangeSliderFieldTheme;
 }
 
-export interface FlowbiteRangeSliderRootTheme {
+export interface RangeSliderRootTheme {
   base: string;
 }
 
-export interface FlowbiteRangeSliderFieldTheme {
+export interface RangeSliderFieldTheme {
   base: string;
   input: {
     base: string;
-    sizes: FlowbiteTextInputSizes;
+    sizes: TextInputSizes;
   };
 }
 
-export interface RangeSliderProps extends Omit<ComponentProps<"input">, "ref" | "type"> {
-  sizing?: DynamicStringEnumKeysOf<FlowbiteTextInputSizes>;
-  theme?: DeepPartial<FlowbiteRangeSliderTheme>;
+export interface RangeSliderProps
+  extends Omit<ComponentProps<"input">, "ref" | "type">,
+    ThemingProps<RangeSliderTheme> {
+  sizing?: DynamicStringEnumKeysOf<TextInputSizes>;
 }
 
-export const RangeSlider = forwardRef<HTMLInputElement, RangeSliderProps>(
-  ({ className, sizing = "md", theme: customTheme = {}, ...props }, ref) => {
-    const theme = mergeDeep(getTheme().rangeSlider, customTheme);
+export const RangeSlider = forwardRef<HTMLInputElement, RangeSliderProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [rangeSliderTheme, provider.theme?.rangeSlider, props.theme],
+    [get(provider.clearTheme, "rangeSlider"), props.clearTheme],
+    [get(provider.applyTheme, "rangeSlider"), props.applyTheme],
+  );
 
-    return (
-      <>
-        <div data-testid="flowbite-range-slider" className={twMerge(theme.root.base, className)}>
-          <div className={theme.field.base}>
-            <input
-              ref={ref}
-              type="range"
-              className={twMerge(theme.field.input.base, theme.field.input.sizes[sizing])}
-              {...props}
-            />
-          </div>
-        </div>
-      </>
-    );
-  },
-);
+  const { className, sizing = "md", ...restProps } = resolveProps(props, provider.props?.rangeSlider);
+
+  return (
+    <div data-testid="flowbite-range-slider" className={twMerge(theme.root.base, className)}>
+      <div className={theme.field.base}>
+        <input
+          ref={ref}
+          type="range"
+          className={twMerge(theme.field.input.base, theme.field.input.sizes[sizing])}
+          {...restProps}
+        />
+      </div>
+    </div>
+  );
+});
 
 RangeSlider.displayName = "RangeSlider";

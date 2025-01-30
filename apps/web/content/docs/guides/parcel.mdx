@@ -199,20 +199,16 @@ module.exports = {
 npm i flowbite-react
 ```
 
-2. Add the Flowbite React `content` path and `plugin` to `tailwind.config.js`:
+2. Add `flowbite-react/tailwind` plugin to `tailwind.config.js`:
 
-```js {1,7,11}
+```js {1,7}
 const flowbite = require("flowbite-react/tailwind");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    // ...
-    flowbite.content(),
-  ],
   plugins: [
     // ...
-    flowbite.plugin(),
+    flowbite,
   ],
 };
 ```

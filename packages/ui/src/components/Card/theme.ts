@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteCardTheme } from "./Card";
+import type { CardTheme } from "./Card";
 
-export const cardTheme: FlowbiteCardTheme = createTheme({
+export const cardTheme = createTheme<CardTheme>({
   root: {
     base: "flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800",
     children: "flex h-full flex-col justify-center gap-4 p-6",

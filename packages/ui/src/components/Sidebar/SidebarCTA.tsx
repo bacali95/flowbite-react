@@ -1,23 +1,25 @@
 "use client";
 
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
-import type { FlowbiteColors } from "../Flowbite";
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { DynamicStringEnumKeysOf, FlowbiteColors, ThemingProps } from "../../types";
 import { useSidebarContext } from "./SidebarContext";
+import { sidebarTheme } from "./theme";
 
-export interface FlowbiteSidebarCTATheme {
+export interface SidebarCTATheme {
   base: string;
-  color: FlowbiteSidebarCTAColors;
+  color: SidebarCTAColors;
 }
 
-export interface SidebarCTAProps extends Omit<ComponentProps<"div">, "color"> {
-  color?: DynamicStringEnumKeysOf<FlowbiteSidebarCTAColors>;
-  theme?: DeepPartial<FlowbiteSidebarCTATheme>;
+export interface SidebarCTAProps extends Omit<ComponentProps<"div">, "color">, ThemingProps<SidebarCTATheme> {
+  color?: DynamicStringEnumKeysOf<SidebarCTAColors>;
 }
 
-export interface FlowbiteSidebarCTAColors
+export interface SidebarCTAColors
   extends Pick<
     FlowbiteColors,
     "blue" | "dark" | "failure" | "gray" | "green" | "light" | "purple" | "red" | "success" | "warning" | "yellow"
@@ -25,27 +27,27 @@ export interface FlowbiteSidebarCTAColors
   [key: string]: string;
 }
 
-export const SidebarCTA: FC<SidebarCTAProps> = ({
-  children,
-  color = "info",
-  className,
-  theme: customTheme = {},
-  ...props
-}) => {
-  const { theme: rootTheme, isCollapsed } = useSidebarContext();
+export const SidebarCTA = forwardRef<HTMLDivElement, SidebarCTAProps>((props, ref) => {
+  const { theme: rootTheme, clearTheme: rootClearTheme, applyTheme: rootApplyTheme, isCollapsed } = useSidebarContext();
 
-  const theme = mergeDeep(rootTheme.cta, customTheme);
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [sidebarTheme.cta, provider.theme?.sidebar?.cta, rootTheme?.cta, props.theme],
+    [get(provider.clearTheme, "sidebar.cta"), get(rootClearTheme, "cta"), props.clearTheme],
+    [get(provider.applyTheme, "sidebar.cta"), get(rootApplyTheme, "cta"), props.applyTheme],
+  );
+
+  const { color = "info", className, ...restProps } = resolveProps(props, provider.props?.sidebarCTA);
 
   return (
     <div
+      ref={ref}
       data-testid="sidebar-cta"
       hidden={isCollapsed}
       className={twMerge(theme.base, theme.color[color], className)}
-      {...props}
-    >
-      {children}
-    </div>
+      {...restProps}
+    />
   );
-};
+});
 
-SidebarCTA.displayName = "Sidebar.CTA";
+SidebarCTA.displayName = "SidebarCTA";

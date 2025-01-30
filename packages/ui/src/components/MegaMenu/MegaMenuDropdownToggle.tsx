@@ -1,43 +1,49 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ComponentProps, type FC, type MouseEventHandler } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import { DeepPartial } from "../../types";
+import { forwardRef, useEffect, useId, useRef, useState, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { mergeRefs } from "../../helpers/merge-refs";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { megaMenuTheme } from "./theme";
 
-export interface FlowbiteMegaMenuDropdownToggleTheme {
+export interface MegaMenuDropdownToggleTheme {
   base: string;
 }
 
-export interface MegaMenuDropdownToggleProps extends ComponentProps<"button"> {
-  theme?: DeepPartial<FlowbiteMegaMenuDropdownToggleTheme>;
-}
+export interface MegaMenuDropdownToggleProps
+  extends ComponentProps<"button">,
+    ThemingProps<MegaMenuDropdownToggleTheme> {}
 
-export const MegaMenuDropdownToggle: FC<MegaMenuDropdownToggleProps> = ({
-  children,
-  className,
-  theme: customTheme = {},
-  ...props
-}) => {
+export const MegaMenuDropdownToggle = forwardRef<HTMLButtonElement, MegaMenuDropdownToggleProps>((props, ref) => {
   const id = useId();
-  const ref = useRef<HTMLButtonElement>(null);
+  const innerRef = useRef<HTMLButtonElement>(null);
   const [controls, setControls] = useState<string | undefined>(undefined);
   const [isExpanded, setExpanded] = useState<boolean | undefined>(undefined);
 
-  const theme = mergeDeep(getTheme().megaMenu.dropdownToggle, customTheme);
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [megaMenuTheme.dropdownToggle, provider.theme?.megaMenu?.dropdownToggle, props.theme],
+    [get(provider.clearTheme, "megaMenu.dropdownToggle"), props.clearTheme],
+    [get(provider.applyTheme, "megaMenu.dropdownToggle"), props.applyTheme],
+  );
 
-  const findDropdown = function () {
-    const megaMenu = ref.current?.closest("nav");
+  const { className, ...restProps } = resolveProps(props, provider.props?.megaMenuDropdownToggle);
+
+  function findDropdown() {
+    const megaMenu = innerRef.current?.closest("nav");
 
     return megaMenu?.querySelector('[role="menu"]');
-  };
+  }
 
-  const onClick: MouseEventHandler<HTMLButtonElement> = function () {
+  function onClick() {
     findDropdown()?.classList.toggle("hidden");
 
     setExpanded(!isExpanded);
-  };
+  }
 
   useEffect(() => {
     const dropdown = findDropdown();
@@ -49,18 +55,16 @@ export const MegaMenuDropdownToggle: FC<MegaMenuDropdownToggleProps> = ({
 
   return (
     <button
+      ref={mergeRefs([ref, innerRef])}
       aria-controls={controls}
       aria-expanded={isExpanded}
       aria-haspopup="menu"
       id={id}
       onClick={onClick}
-      ref={ref}
       className={twMerge(theme.base, className)}
-      {...props}
-    >
-      {children}
-    </button>
+      {...restProps}
+    />
   );
-};
+});
 
-MegaMenuDropdownToggle.displayName = "MegaMenu.DropdownToggle";
+MegaMenuDropdownToggle.displayName = "MegaMenuDropdownToggle";

@@ -1,7 +1,3 @@
 export { TextInput } from "./TextInput";
-export type {
-  FlowbiteTextInputColors,
-  FlowbiteTextInputSizes,
-  FlowbiteTextInputTheme,
-  TextInputProps,
-} from "./TextInput";
+export type { TextInputColors, TextInputProps, TextInputSizes, TextInputTheme } from "./TextInput";
+export { textInputTheme } from "./theme";

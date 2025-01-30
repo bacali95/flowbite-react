@@ -1,22 +1,34 @@
 "use client";
 
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import type { DeepPartial } from "../../types";
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
 import { useDropdownContext } from "./DropdownContext";
+import { dropdownTheme } from "./theme";
 
-export interface FlowbiteDropdownDividerTheme {
+export interface DropdownDividerTheme {
   divider: string;
 }
 
-export type DropdownDividerProps = {
-  theme?: DeepPartial<FlowbiteDropdownDividerTheme>;
-} & ComponentProps<"div">;
+export interface DropdownDividerProps extends ComponentProps<"div">, ThemingProps<DropdownDividerTheme> {}
 
-export const DropdownDivider: FC<DropdownDividerProps> = ({ className, theme: customTheme = {}, ...props }) => {
-  const { theme: rootTheme } = useDropdownContext();
+export const DropdownDivider = forwardRef<HTMLDivElement, DropdownDividerProps>((props, ref) => {
+  const { theme: rootTheme, clearTheme: rootClearTheme, applyTheme: rootApplyTheme } = useDropdownContext();
 
-  const theme = customTheme.divider ?? rootTheme.floating.divider;
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [dropdownTheme.floating, provider.theme?.dropdown?.floating, rootTheme?.floating, props.theme],
+    [get(provider.clearTheme, "dropdown.floating"), get(rootClearTheme, "floating"), props.clearTheme],
+    [get(provider.applyTheme, "dropdown.floating"), get(rootApplyTheme, "floating"), props.applyTheme],
+  );
 
-  return <div className={twMerge(theme, className)} {...props} />;
-};
+  const { className, ...restProps } = resolveProps(props, provider.props?.dropdownDivider);
+
+  return <div ref={ref} className={twMerge(theme.divider, className)} {...restProps} />;
+});
+
+DropdownDivider.displayName = "DropdownDivider";

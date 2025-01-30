@@ -3,7 +3,6 @@ export { gradientDuo } from "./button.gradientDuo";
 export { gradientMono } from "./button.gradientMono";
 export { iconOnly } from "./button.iconOnly";
 export { loading } from "./button.loading";
-export { loadingSpinner } from "./button.loadingSpinner";
 export { outline } from "./button.outline";
 export { pill } from "./button.pill";
 export { polymorph } from "./button.polymorph";

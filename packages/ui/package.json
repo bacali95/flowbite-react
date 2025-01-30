@@ -19,21 +19,108 @@
     "directory": "packages/ui"
   },
   "license": "MIT",
+  "sideEffects": false,
+  "type": "commonjs",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.cjs"
+      "import": {
+        "types": "./dist/types/index.d.mts",
+        "default": "./dist/esm/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/cjs/index.cjs"
+      }
     },
     "./components/*": {
-      "types": "./dist/types/components/*/index.d.ts",
-      "import": "./dist/esm/components/*/index.mjs",
-      "require": "./dist/cjs/components/*/index.cjs"
+      "import": {
+        "types": "./dist/types/components/*/index.d.mts",
+        "default": "./dist/esm/components/*/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types/components/*/index.d.ts",
+        "default": "./dist/cjs/components/*/index.cjs"
+      }
+    },
+    "./helpers/*": {
+      "import": {
+        "types": "./dist/types/helpers/*.d.mts",
+        "default": "./dist/esm/helpers/*.mjs"
+      },
+      "require": {
+        "types": "./dist/types/helpers/*.d.ts",
+        "default": "./dist/cjs/helpers/*.cjs"
+      }
+    },
+    "./hooks/*": {
+      "import": {
+        "types": "./dist/types/hooks/*.d.mts",
+        "default": "./dist/esm/hooks/*.mjs"
+      },
+      "require": {
+        "types": "./dist/types/hooks/*.d.ts",
+        "default": "./dist/cjs/hooks/*.cjs"
+      }
+    },
+    "./icons/*": {
+      "import": {
+        "types": "./dist/types/icons/*.d.mts",
+        "default": "./dist/esm/icons/*.mjs"
+      },
+      "require": {
+        "types": "./dist/types/icons/*.d.ts",
+        "default": "./dist/cjs/icons/*.cjs"
+      }
+    },
+    "./icons": {
+      "import": {
+        "types": "./dist/types/icons/index.d.mts",
+        "default": "./dist/esm/icons/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types/icons/index.d.ts",
+        "default": "./dist/cjs/icons/index.cjs"
+      }
+    },
+    "./tailwind/*": {
+      "import": {
+        "types": "./dist/types/tailwind/*.d.mts",
+        "default": "./dist/esm/tailwind/*.mjs"
+      },
+      "require": {
+        "types": "./dist/types/tailwind/*.d.ts",
+        "default": "./dist/cjs/tailwind/*.cjs"
+      }
     },
     "./tailwind": {
-      "types": "./dist/types/tailwind.d.ts",
-      "import": "./dist/esm/tailwind.mjs",
-      "require": "./dist/cjs/tailwind.cjs"
+      "import": {
+        "types": "./dist/types/tailwind/index.d.mts",
+        "default": "./dist/esm/tailwind/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types/tailwind/index.d.ts",
+        "default": "./dist/cjs/tailwind/index.cjs"
+      }
+    },
+    "./theme/*": {
+      "import": {
+        "types": "./dist/types/theme/*.d.mts",
+        "default": "./dist/esm/theme/*.mjs"
+      },
+      "require": {
+        "types": "./dist/types/theme/*.d.ts",
+        "default": "./dist/cjs/theme/*.cjs"
+      }
+    },
+    "./theme": {
+      "import": {
+        "types": "./dist/types/theme/index.d.mts",
+        "default": "./dist/esm/theme/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types/theme/index.d.ts",
+        "default": "./dist/cjs/theme/index.cjs"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -45,52 +132,55 @@
   ],
   "scripts": {
     "build": "bun --bun rollup -c",
-    "clean": "rimraf .turbo coverage dist node_modules tsconfig.tsbuildinfo",
+    "clean": "rimraf .turbo coverage dist node_modules src/tailwind/class-list.ts tsconfig.tsbuildinfo",
     "dev": "bun run build --watch",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
+    "generate-classlist": "bun scripts/generate-classlist.mts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepack": "clean-package",
+    "prepare": "bun run generate-classlist",
     "prepublishOnly": "bun run build",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@floating-ui/core": "1.6.6",
-    "@floating-ui/react": "0.26.21",
+    "@floating-ui/core": "1.6.9",
+    "@floating-ui/react": "0.27.3",
     "classnames": "2.5.1",
-    "debounce": "2.1.0",
-    "flowbite": "2.5.1",
-    "react-icons": "5.2.1",
-    "tailwind-merge": "2.4.0"
+    "debounce": "2.2.0",
+    "deepmerge-ts": "7.1.4",
+    "fast-deep-equal": "3.1.3",
+    "klona": "2.0.6",
+    "tailwind-merge": "2.6.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "6.4.8",
-    "@testing-library/react": "16.0.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.1.0",
     "@testing-library/user-event": "14.5.2",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
-    "@typescript-eslint/eslint-plugin": "8.0.1",
-    "@typescript-eslint/parser": "8.0.1",
-    "@vitejs/plugin-react": "4.3.1",
-    "@vitest/coverage-v8": "2.0.5",
-    "eslint-plugin-react": "7.35.0",
-    "eslint-plugin-storybook": "0.8.0",
+    "@typescript-eslint/eslint-plugin": "8.19.1",
+    "@typescript-eslint/parser": "8.19.1",
+    "@vitejs/plugin-react": "4.3.4",
+    "@vitest/coverage-v8": "2.1.8",
+    "acorn": "8.14.0",
+    "eslint-plugin-react": "7.37.3",
     "eslint-plugin-vitest": "0.5.4",
-    "fast-glob": "3.3.2",
-    "jsdom": "24.1.1",
-    "rollup": "4.20.0",
+    "estree-walker": "3.0.3",
+    "jsdom": "25.0.1",
+    "rollup": "4.30.1",
     "rollup-plugin-esbuild": "6.1.1",
     "rollup-plugin-use-client": "1.4.0",
-    "typescript": "5.5.4",
-    "vitest": "2.0.5"
+    "typescript": "5.6.3",
+    "vitest": "2.1.8"
   },
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18",
-    "tailwindcss": "^3"
+    "tailwindcss": "^3 || ^4"
   },
   "clean-package": {
     "remove": [

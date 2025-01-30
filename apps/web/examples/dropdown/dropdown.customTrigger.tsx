@@ -1,20 +1,20 @@
 "use client";
 
-import { Dropdown } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import { Dropdown, DropdownItem } from "flowbite-react";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
 "use client";
 
-import { Dropdown } from "flowbite-react";
+import { Dropdown, DropdownItem } from "flowbite-react";
 
 export function Component() {
   return (
     <Dropdown label="" dismissOnClick={false} renderTrigger={() => <span>My custom trigger</span>}>
-      <Dropdown.Item>Dashboard</Dropdown.Item>
-      <Dropdown.Item>Settings</Dropdown.Item>
-      <Dropdown.Item>Earnings</Dropdown.Item>
-      <Dropdown.Item>Sign out</Dropdown.Item>
+      <DropdownItem>Dashboard</DropdownItem>
+      <DropdownItem>Settings</DropdownItem>
+      <DropdownItem>Earnings</DropdownItem>
+      <DropdownItem>Sign out</DropdownItem>
     </Dropdown>
   );
 }
@@ -23,10 +23,10 @@ export function Component() {
 export function Component() {
   return (
     <Dropdown label="" dismissOnClick={false} renderTrigger={() => <span>My custom trigger</span>}>
-      <Dropdown.Item>Dashboard</Dropdown.Item>
-      <Dropdown.Item>Settings</Dropdown.Item>
-      <Dropdown.Item>Earnings</Dropdown.Item>
-      <Dropdown.Item>Sign out</Dropdown.Item>
+      <DropdownItem>Dashboard</DropdownItem>
+      <DropdownItem>Settings</DropdownItem>
+      <DropdownItem>Earnings</DropdownItem>
+      <DropdownItem>Sign out</DropdownItem>
     </Dropdown>
   );
 }
@@ -34,7 +34,7 @@ export function Component() {
 export const customTrigger: CodeData = {
   type: "single",
   code: {
-    fileName: "client",
+    fileName: "index",
     language: "tsx",
     code,
   },

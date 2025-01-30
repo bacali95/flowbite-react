@@ -7,17 +7,15 @@ description: Learn how to configure and build a dark mode switcher for Flowbite 
 
 ## Toggle dark mode
 
-Surround the contents of your app with the `<Flowbite>` component, and add the `<DarkThemeToggle>` component inside it. The `<DarkThemeToggle>` component will automatically detect the current theme and display the correct icon, and allow the user to switch between themes as they like.
+The `<DarkThemeToggle>` component will automatically detect the current theme and display the correct icon, and allow the user to switch between themes as they like.
 
 ```jsx
-import { DarkThemeToggle, Flowbite } from "flowbite-react";
+import { DarkThemeToggle } from "flowbite-react";
 
 export default function MyPage() {
   return (
-    <Flowbite>
-      // ...
-      <DarkThemeToggle />
-    </Flowbite>
+    // ...
+    <DarkThemeToggle />
   );
 }
 ```

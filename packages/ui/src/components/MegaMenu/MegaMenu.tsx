@@ -1,32 +1,34 @@
 "use client";
 
-import type { FC } from "react";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { FlowbiteNavbarTheme, NavbarComponentProps } from "../Navbar";
+import { forwardRef } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { useThemeProvider } from "../../theme/provider";
+import type { NavbarProps, NavbarTheme } from "../Navbar";
 import { Navbar } from "../Navbar";
-import { FlowbiteMegaMenuDropdownTheme, MegaMenuDropdown } from "./MegaMenuDropdown";
-import { FlowbiteMegaMenuDropdownToggleTheme, MegaMenuDropdownToggle } from "./MegaMenuDropdownToggle";
+import type { MegaMenuDropdownTheme } from "./MegaMenuDropdown";
+import type { MegaMenuDropdownToggleTheme } from "./MegaMenuDropdownToggle";
+import { megaMenuTheme } from "./theme";
 
-export interface FlowbiteMegaMenuTheme extends FlowbiteNavbarTheme {
-  dropdown: FlowbiteMegaMenuDropdownTheme;
-  dropdownToggle: FlowbiteMegaMenuDropdownToggleTheme;
+export interface MegaMenuTheme extends NavbarTheme {
+  dropdown: MegaMenuDropdownTheme;
+  dropdownToggle: MegaMenuDropdownToggleTheme;
 }
 
-export type MegaMenuProps = NavbarComponentProps;
+export type MegaMenuProps = NavbarProps;
 
-const MegaMenuComponent: FC<MegaMenuProps> = ({ children, theme: customTheme = {}, ...props }) => {
-  const theme = mergeDeep(getTheme().megaMenu, customTheme);
-
-  return (
-    <Navbar fluid theme={theme} {...props}>
-      {children}
-    </Navbar>
+export const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [megaMenuTheme, provider.theme?.megaMenu, props.theme],
+    [get(provider.clearTheme, "megaMenu"), props.clearTheme],
+    [get(provider.applyTheme, "megaMenu"), props.applyTheme],
   );
-};
 
-export const MegaMenu = Object.assign(MegaMenuComponent, {
-  Dropdown: MegaMenuDropdown,
-  DropdownToggle: MegaMenuDropdownToggle,
+  const mergedProps = resolveProps(props, provider.props?.megaMenu);
+
+  return <Navbar ref={ref} theme={theme} fluid {...mergedProps} />;
 });
-MegaMenuComponent.displayName = "MegaMenu";
+
+MegaMenu.displayName = "MegaMenu";

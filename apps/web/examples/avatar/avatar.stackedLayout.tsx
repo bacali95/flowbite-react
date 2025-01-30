@@ -1,35 +1,8 @@
-import { Avatar, AvatarGroup } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import { Avatar, AvatarGroup, AvatarGroupCounter } from "flowbite-react";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
-"use client";
-
-import { Avatar } from "flowbite-react";
-
-export function Component() {
-  return (
-    <div className="flex flex-wrap gap-2">
-      <Avatar.Group>
-        <Avatar img="/images/people/profile-picture-1.jpg" rounded stacked />
-        <Avatar img="/images/people/profile-picture-2.jpg" rounded stacked />
-        <Avatar img="/images/people/profile-picture-3.jpg" rounded stacked />
-        <Avatar img="/images/people/profile-picture-4.jpg" rounded stacked />
-        <Avatar img="/images/people/profile-picture-5.jpg" rounded stacked />
-      </Avatar.Group>
-      <Avatar.Group>
-        <Avatar img="/images/people/profile-picture-1.jpg" rounded stacked />
-        <Avatar img="/images/people/profile-picture-2.jpg" rounded stacked />
-        <Avatar img="/images/people/profile-picture-3.jpg" rounded stacked />
-        <Avatar img="/images/people/profile-picture-4.jpg" rounded stacked />
-        <Avatar.Counter total={99} href="#" />
-      </Avatar.Group>
-    </div>
-  );
-}
-`;
-
-const codeRSC = `
-import { Avatar, AvatarGroup } from "flowbite-react";
+import { Avatar, AvatarGroup, AvatarGroupCounter } from "flowbite-react";
 
 export function Component() {
   return (
@@ -68,7 +41,7 @@ export function Component() {
         <Avatar img="/images/people/profile-picture-2.jpg" rounded stacked />
         <Avatar img="/images/people/profile-picture-3.jpg" rounded stacked />
         <Avatar img="/images/people/profile-picture-4.jpg" rounded stacked />
-        <Avatar.Counter total={99} href="#" />
+        <AvatarGroupCounter total={99} href="#" />
       </AvatarGroup>
     </div>
   );
@@ -76,18 +49,11 @@ export function Component() {
 
 export const stackedLayout: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "avatar/avatar.stackedLayout.tsx",
   component: <Component />,
 };

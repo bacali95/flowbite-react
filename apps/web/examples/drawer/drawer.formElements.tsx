@@ -1,18 +1,38 @@
 "use client";
 
-import { Avatar, Button, Datepicker, Drawer, Label, Textarea, TextInput, theme } from "flowbite-react";
+import {
+  Avatar,
+  AvatarGroup,
+  Button,
+  Datepicker,
+  Drawer,
+  DrawerHeader,
+  DrawerItems,
+  Label,
+  Textarea,
+  TextInput,
+} from "flowbite-react";
 import { useState } from "react";
 import { HiCalendar, HiUserAdd } from "react-icons/hi";
-import { twMerge } from "tailwind-merge";
 import type { CodeData } from "~/components/code-demo";
 
 const code = `
 "use client";
 
-import { Avatar, Button, Datepicker, Drawer, Label, Textarea, TextInput, theme } from "flowbite-react";
+import {
+  Avatar,
+  AvatarGroup,
+  Button,
+  Datepicker,
+  Drawer,
+  DrawerHeader,
+  DrawerItems,
+  Label,
+  Textarea,
+  TextInput,
+} from "flowbite-react";
 import { useState } from "react";
 import { HiCalendar, HiUserAdd } from "react-icons/hi";
-import { twMerge } from "tailwind-merge";
 
 export function Component() {
   const [isOpen, setIsOpen] = useState(true);
@@ -25,8 +45,8 @@ export function Component() {
         <Button onClick={() => setIsOpen(true)}>Show drawer</Button>
       </div>
       <Drawer open={isOpen} onClose={handleClose}>
-        <Drawer.Header title="NEW EVENT" titleIcon={HiCalendar} />
-        <Drawer.Items>
+        <DrawerHeader title="NEW EVENT" titleIcon={HiCalendar} />
+        <DrawerItems>
           <form action="#">
             <div className="mb-6 mt-3">
               <Label htmlFor="title" className="mb-2 block">
@@ -75,7 +95,7 @@ export function Component() {
               Create event
             </Button>
           </form>
-        </Drawer.Items>
+        </DrawerItems>
       </Drawer>
     </>
   );
@@ -93,8 +113,8 @@ export function Component() {
         <Button onClick={() => setIsOpen(true)}>Show drawer</Button>
       </div>
       <Drawer open={isOpen} onClose={handleClose}>
-        <Drawer.Header title="NEW EVENT" titleIcon={HiCalendar} />
-        <Drawer.Items>
+        <DrawerHeader title="NEW EVENT" titleIcon={HiCalendar} />
+        <DrawerItems>
           <form action="#">
             <div className="mb-6 mt-3">
               <Label htmlFor="title" className="mb-2 block">
@@ -126,24 +146,24 @@ export function Component() {
                 theme={{
                   field: {
                     rightIcon: {
-                      base: twMerge(theme.textInput.field.rightIcon.base, "pointer-events-auto"),
+                      base: "pointer-events-auto",
                     },
                   },
                 }}
               />
             </div>
-            <Avatar.Group className="mb-6">
+            <AvatarGroup className="mb-6">
               <Avatar alt="" img="/images/people/profile-picture-5.jpg" rounded size="sm" stacked />
               <Avatar alt="" img="/images/people/profile-picture-2.jpg" rounded size="sm" stacked />
               <Avatar alt="" img="/images/people/profile-picture-3.jpg" rounded size="sm" stacked />
               <Avatar alt="" img="/images/people/profile-picture-4.jpg" rounded size="sm" stacked />
-            </Avatar.Group>
+            </AvatarGroup>
             <Button className="w-full">
               <HiCalendar className="mr-2" />
               Create event
             </Button>
           </form>
-        </Drawer.Items>
+        </DrawerItems>
       </Drawer>
     </>
   );
@@ -151,13 +171,11 @@ export function Component() {
 
 export const formElements: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "drawer/drawer.formElements.tsx",
   component: <Component />,
   iframe: 600,

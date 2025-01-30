@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Checkbox, Label, Popover, TextInput } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
 "use client";
@@ -13,13 +13,13 @@ export function Component() {
     <form className="flex max-w-md flex-col gap-4">
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="email1" value="Your email" />
+          <Label htmlFor="email1">Your email</Label>
         </div>
         <TextInput id="email1" type="email" placeholder="name@flowbite.com" required />
       </div>
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="password1" value="Your password" />
+          <Label htmlFor="password1">Your password</Label>
         </div>
         <Popover
           trigger="hover"
@@ -110,13 +110,13 @@ export function Component() {
     <form className="flex max-w-md flex-col gap-4">
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="email1" value="Your email" />
+          <Label htmlFor="email1">Your email</Label>
         </div>
         <TextInput id="email1" type="email" placeholder="name@flowbite.com" required />
       </div>
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="password1" value="Your password" />
+          <Label htmlFor="password1">Your password</Label>
         </div>
         <Popover
           trigger="hover"
@@ -203,13 +203,11 @@ export function Component() {
 
 export const password: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "popover/popover.password.tsx",
   component: <Component />,
 };

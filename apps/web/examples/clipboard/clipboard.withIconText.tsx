@@ -1,12 +1,8 @@
-"use client";
-
-import { Clipboard } from "flowbite-react";
+import { ClipboardWithIconText } from "flowbite-react";
 import type { CodeData } from "~/components/code-demo";
 
 const code = `
-"use client";
-
-import { Clipboard } from "flowbite-react"
+import { ClipboardWithIconText } from "flowbite-react"
 
 export function Component() {
   return (
@@ -23,10 +19,10 @@ export function Component() {
           disabled
           readOnly
         />
-        <Clipboard.WithIconText valueToCopy="npm install flowbite-react" />
+        <ClipboardWithIconText valueToCopy="npm install flowbite-react" />
       </div>
     </div>
-  )
+  );
 }
 `;
 
@@ -45,7 +41,7 @@ export function Component() {
           disabled
           readOnly
         />
-        <Clipboard.WithIconText valueToCopy="npm install flowbite-react" />
+        <ClipboardWithIconText valueToCopy="npm install flowbite-react" />
       </div>
     </div>
   );
@@ -53,13 +49,11 @@ export function Component() {
 
 export const withIconText: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "clipboard/clipboard.withIconText.tsx",
   component: <Component />,
 };

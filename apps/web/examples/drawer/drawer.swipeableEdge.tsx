@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Drawer } from "flowbite-react";
+import { Button, Drawer, DrawerHeader, DrawerItems } from "flowbite-react";
 import { useState } from "react";
 import { HiBars2, HiSquaresPlus } from "react-icons/hi2";
 import type { CodeData } from "~/components/code-demo";
@@ -8,7 +8,7 @@ import type { CodeData } from "~/components/code-demo";
 const code = `
 "use client";
 
-import { Button, Drawer } from "flowbite-react";
+import { Button, Drawer, DrawerHeader, DrawerItems } from "flowbite-react";
 import { useState } from "react";
 import { HiBars2, HiSquaresPlus } from "react-icons/hi2";
 
@@ -23,14 +23,14 @@ export function Component() {
         <Button onClick={() => setIsOpen(true)}>Show swipeable drawer</Button>
       </div>
       <Drawer edge open={isOpen} onClose={handleClose} position="bottom" className="p-0">
-        <Drawer.Header
+        <DrawerHeader
           closeIcon={HiBars2}
           title="Add widget"
           titleIcon={HiSquaresPlus}
           onClick={() => setIsOpen(!isOpen)}
           className="cursor-pointer px-4 pt-4 hover:bg-gray-50 dark:hover:bg-gray-700"
         />
-        <Drawer.Items className="p-4">
+        <DrawerItems className="p-4">
           <div className="grid grid-cols-3 gap-4 p-4 lg:grid-cols-4">
             <div className="cursor-pointer rounded-lg bg-gray-50 p-4 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
               <div className="mx-auto mb-2 flex h-[48px] max-h-[48px] w-[48px] max-w-[48px] items-center justify-center rounded-full bg-gray-200 p-2 dark:bg-gray-600">
@@ -158,7 +158,7 @@ export function Component() {
               <div className="text-center font-medium text-gray-500 dark:text-gray-400">Custom</div>
             </div>
           </div>
-        </Drawer.Items>
+        </DrawerItems>
       </Drawer>
     </>
   );
@@ -176,14 +176,14 @@ export function Component() {
         <Button onClick={() => setIsOpen(true)}>Show swipeable drawer</Button>
       </div>
       <Drawer edge open={isOpen} onClose={handleClose} position="bottom" className="p-0">
-        <Drawer.Header
+        <DrawerHeader
           closeIcon={HiBars2}
           title="Add widget"
           titleIcon={HiSquaresPlus}
           onClick={() => setIsOpen(!isOpen)}
           className="cursor-pointer px-4 pt-4 hover:bg-gray-50 dark:hover:bg-gray-700"
         />
-        <Drawer.Items className="p-4">
+        <DrawerItems className="p-4">
           <div className="grid grid-cols-3 gap-4 p-4 lg:grid-cols-4">
             <div className="cursor-pointer rounded-lg bg-gray-50 p-4 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
               <div className="mx-auto mb-2 flex h-[48px] max-h-[48px] w-[48px] max-w-[48px] items-center justify-center rounded-full bg-gray-200 p-2 dark:bg-gray-600">
@@ -311,7 +311,7 @@ export function Component() {
               <div className="text-center font-medium text-gray-500 dark:text-gray-400">Custom</div>
             </div>
           </div>
-        </Drawer.Items>
+        </DrawerItems>
       </Drawer>
     </>
   );
@@ -319,13 +319,11 @@ export function Component() {
 
 export const swipeableEdge: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "drawer/drawer.swipeableEdge.tsx",
   component: <Component />,
   iframe: 600,

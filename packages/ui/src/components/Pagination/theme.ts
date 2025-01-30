@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbitePaginationTheme } from "./Pagination";
+import type { PaginationTheme } from "./Pagination";
 
-export const paginationTheme: FlowbitePaginationTheme = createTheme({
+export const paginationTheme = createTheme<PaginationTheme>({
   base: "",
   layout: {
     table: {

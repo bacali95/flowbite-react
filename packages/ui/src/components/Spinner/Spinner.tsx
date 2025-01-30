@@ -1,11 +1,15 @@
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
-import type { FlowbiteColors, FlowbiteSizes } from "../Flowbite";
+"use client";
 
-export interface FlowbiteSpinnerTheme {
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { DynamicStringEnumKeysOf, FlowbiteColors, FlowbiteSizes, ThemingProps } from "../../types";
+import { spinnerTheme } from "./theme";
+
+export interface SpinnerTheme {
   base: string;
   color: SpinnerColors;
   light: {
@@ -24,31 +28,37 @@ export interface FlowbiteSpinnerTheme {
 export interface SpinnerColors
   extends Pick<FlowbiteColors, "failure" | "gray" | "info" | "pink" | "purple" | "success" | "warning"> {
   [key: string]: string;
+  default: string;
 }
 
 export interface SpinnerSizes extends Pick<FlowbiteSizes, "xs" | "sm" | "md" | "lg" | "xl"> {
   [key: string]: string;
 }
 
-export interface SpinnerProps extends Omit<ComponentProps<"span">, "color"> {
+export interface SpinnerProps extends Omit<ComponentProps<"span">, "color">, ThemingProps<SpinnerTheme> {
   color?: DynamicStringEnumKeysOf<SpinnerColors>;
   light?: boolean;
   size?: DynamicStringEnumKeysOf<SpinnerSizes>;
-  theme?: DeepPartial<FlowbiteSpinnerTheme>;
 }
 
-export const Spinner: FC<SpinnerProps> = ({
-  className,
-  color = "info",
-  light,
-  size = "md",
-  theme: customTheme = {},
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().spinner, customTheme);
+export const Spinner = forwardRef<HTMLSpanElement, SpinnerProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [spinnerTheme, provider.theme?.spinner, props.theme],
+    [get(provider.clearTheme, "spinner"), props.clearTheme],
+    [get(provider.applyTheme, "spinner"), props.applyTheme],
+  );
+
+  const {
+    className,
+    color = "default",
+    light,
+    size = "lg",
+    ...restProps
+  } = resolveProps(props, provider.props?.spinner);
 
   return (
-    <span role="status" {...props}>
+    <span ref={ref} role="status" {...restProps}>
       <svg
         fill="none"
         viewBox="0 0 100 101"
@@ -72,6 +82,6 @@ export const Spinner: FC<SpinnerProps> = ({
       </svg>
     </span>
   );
-};
+});
 
 Spinner.displayName = "Spinner";

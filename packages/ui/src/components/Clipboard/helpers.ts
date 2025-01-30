@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 
-export const copyToClipboard = (valueToCopy: string, setIsJustCopied: Dispatch<SetStateAction<boolean>>) => {
+export function copyToClipboard(valueToCopy: string, setIsJustCopied: Dispatch<SetStateAction<boolean>>) {
   setIsJustCopied(true);
   navigator?.clipboard
     ?.writeText(valueToCopy)
@@ -12,4 +12,4 @@ export const copyToClipboard = (valueToCopy: string, setIsJustCopied: Dispatch<S
       setIsJustCopied(false);
     });
   setTimeout(() => setIsJustCopied(false), 4000);
-};
+}
