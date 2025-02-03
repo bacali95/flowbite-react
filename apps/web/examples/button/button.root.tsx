@@ -1,42 +1,19 @@
 import { Button } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
-"use client";
-
 import { Button } from "flowbite-react";
 
 export function Component() {
   return (
     <div className="flex flex-wrap gap-2">
       <Button>Default</Button>
-      <Button color="blue">Blue</Button>
-      <Button color="gray">Gray</Button>
+      <Button color="alternative">Alternative</Button>
       <Button color="dark">Dark</Button>
       <Button color="light">Light</Button>
-      <Button color="success">Success</Button>
-      <Button color="failure">Failure</Button>
-      <Button color="warning">Warning</Button>
-      <Button color="purple">Purple</Button>
-    </div>
-  );
-}
-`;
-
-const codeRSC = `
-import { Button } from "flowbite-react";
-
-export function Component() {
-  return (
-    <div className="flex flex-wrap gap-2">
-      <Button>Default</Button>
-      <Button color="blue">Blue</Button>
-      <Button color="gray">Gray</Button>
-      <Button color="dark">Dark</Button>
-      <Button color="light">Light</Button>
-      <Button color="success">Success</Button>
-      <Button color="failure">Failure</Button>
-      <Button color="warning">Warning</Button>
+      <Button color="green">Green</Button>
+      <Button color="red">Red</Button>
+      <Button color="yellow">Yellow</Button>
       <Button color="purple">Purple</Button>
     </div>
   );
@@ -47,13 +24,12 @@ export function Component() {
   return (
     <div className="flex flex-wrap gap-2">
       <Button>Default</Button>
-      <Button color="blue">Blue</Button>
-      <Button color="gray">Gray</Button>
+      <Button color="alternative">Alternative</Button>
       <Button color="dark">Dark</Button>
       <Button color="light">Light</Button>
-      <Button color="success">Success</Button>
-      <Button color="failure">Failure</Button>
-      <Button color="warning">Warning</Button>
+      <Button color="green">Green</Button>
+      <Button color="red">Red</Button>
+      <Button color="yellow">Yellow</Button>
       <Button color="purple">Purple</Button>
     </div>
   );
@@ -61,18 +37,11 @@ export function Component() {
 
 export const root: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "button/button.root.tsx",
   component: <Component />,
 };

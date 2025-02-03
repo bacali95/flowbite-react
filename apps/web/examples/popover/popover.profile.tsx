@@ -1,5 +1,5 @@
 import { Button, Popover } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
 import { Button, Popover } from "flowbite-react";
@@ -36,7 +36,7 @@ export function Component() {
             </a>
           </p>
           <p className="mb-4 text-sm">
-            Open-source contributor. Building{' '}
+            Open-source contributor. Building{" "}
             <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">
               flowbite.com
             </a>
@@ -127,13 +127,11 @@ export function Component() {
 
 export const profile: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "popover/popover.profile.tsx",
   component: <Component />,
 };

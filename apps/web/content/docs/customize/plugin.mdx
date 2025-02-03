@@ -1,0 +1,129 @@
+---
+title: Tailwind CSS Plugin - Flowbite
+description: Learn how to configure the Flowbite React Tailwind CSS plugin
+---
+
+The Flowbite React Tailwind CSS plugin handles the class list injection, prefix and separator for the Flowbite React components, also extends the `theme.colors` object with the Flowbite React colors.
+
+## Usage
+
+```js {1,7}
+import flowbite from "flowbite-react/tailwind";
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  plugins: [
+    // ...
+    flowbite,
+  ],
+};
+```
+
+## Colors
+
+The Flowbite React Tailwind CSS plugin extends the `theme.colors` object with the Flowbite React colors:
+
+```json
+{
+  "primary": {
+    "50": "#EBF5FF",
+    "100": "#E1EFFE",
+    "200": "#C3DDFD",
+    "300": "#A4CAFE",
+    "400": "#76A9FA",
+    "500": "#3F83F8",
+    "600": "#1C64F2",
+    "700": "#1A56DB",
+    "800": "#1E429F",
+    "900": "#233876"
+  }
+}
+```
+
+The `primary` color is used by default in the components.
+
+### Override colors
+
+You can override the colors by changing the `theme.extend.colors` object.
+
+```js {8-19}
+import flowbite from "flowbite-react/tailwind";
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: "#F0F5FF",
+          100: "#D6E4FF",
+          200: "#A3BFFA",
+          300: "#6796E6",
+          400: "#3182CE",
+          500: "#2B6CB0",
+          600: "#2C5282",
+          700: "#2A4365",
+          800: "#1A365D",
+          900: "#153E75",
+        },
+      },
+    },
+  },
+  plugins: [
+    // ...
+    flowbite,
+  ],
+};
+```
+
+## Options
+
+Using the Flowbite React Tailwind CSS plugin you can customize the following options:
+
+```js {8-10}
+import flowbite from "flowbite-react/tailwind";
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  plugins: [
+    // ...
+    flowbite({
+      prefix: "",
+      components: [],
+    }),
+  ],
+};
+```
+
+### Prefix
+
+The `prefix` option allows you to apply a prefix to the base class list.
+
+### Components
+
+The `components` option allows you to compile the class list for the specified components.
+
+If empty, all components will be compiled.
+
+## Typesafe
+
+The Flowbite React Tailwind CSS plugin is typesafe and provides autocompletion for the options.
+
+## API
+
+```ts
+export type PluginOptions = Partial<{
+  /**
+   * Prefix to apply to base class list
+   *
+   * @default ""
+   */
+  prefix: string;
+  /**
+   * Components to compile class list
+   *
+   * @default []
+   */
+  components: ComponentName[]; // ["Button", "Alert"]
+}>;
+```

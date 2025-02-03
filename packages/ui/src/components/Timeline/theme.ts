@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteTimelineTheme } from "./Timeline";
+import type { TimelineTheme } from "./Timeline";
 
-export const timelineTheme: FlowbiteTimelineTheme = createTheme({
+export const timelineTheme = createTheme<TimelineTheme>({
   root: {
     direction: {
       horizontal: "sm:flex",
@@ -31,7 +31,7 @@ export const timelineTheme: FlowbiteTimelineTheme = createTheme({
     },
     point: {
       horizontal: "flex items-center",
-      line: "hidden h-0.5 w-full bg-gray-200 dark:bg-gray-700 sm:flex",
+      line: "hidden h-0.5 w-full bg-gray-200 sm:flex dark:bg-gray-700",
       marker: {
         base: {
           horizontal:
@@ -40,9 +40,9 @@ export const timelineTheme: FlowbiteTimelineTheme = createTheme({
             "absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700",
         },
         icon: {
-          base: "h-3 w-3 text-cyan-600 dark:text-cyan-300",
+          base: "h-3 w-3 text-primary-600 dark:text-primary-300",
           wrapper:
-            "absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-cyan-200 ring-8 ring-white dark:bg-cyan-900 dark:ring-gray-900",
+            "absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary-200 ring-8 ring-white dark:bg-primary-900 dark:ring-gray-900",
         },
       },
       vertical: "",

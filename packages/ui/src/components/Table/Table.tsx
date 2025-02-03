@@ -1,59 +1,56 @@
 "use client";
 
 import { forwardRef, type ComponentPropsWithRef } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import { TableBody, type FlowbiteTableBodyTheme } from "./TableBody";
-import { TableCell } from "./TableCell";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import type { TableBodyTheme } from "./TableBody";
 import { TableContext } from "./TableContext";
-import { TableHead, type FlowbiteTableHeadTheme } from "./TableHead";
-import { TableHeadCell } from "./TableHeadCell";
-import { TableRow, type FlowbiteTableRowTheme } from "./TableRow";
+import type { TableHeadTheme } from "./TableHead";
+import type { TableRowTheme } from "./TableRow";
+import { tableTheme } from "./theme";
 
-export interface FlowbiteTableTheme {
-  root: FlowbiteTableRootTheme;
-  head: FlowbiteTableHeadTheme;
-  row: FlowbiteTableRowTheme;
-  body: FlowbiteTableBodyTheme;
+export interface TableTheme {
+  root: TableRootTheme;
+  head: TableHeadTheme;
+  row: TableRowTheme;
+  body: TableBodyTheme;
 }
 
-export interface FlowbiteTableRootTheme {
+export interface TableRootTheme {
   base: string;
   shadow: string;
   wrapper: string;
 }
 
-export interface TableProps extends ComponentPropsWithRef<"table"> {
+export interface TableProps extends ComponentPropsWithRef<"table">, ThemingProps<TableTheme> {
   striped?: boolean;
   hoverable?: boolean;
-  theme?: DeepPartial<FlowbiteTableTheme>;
 }
 
-const TableComponent = forwardRef<HTMLTableElement, TableProps>(
-  ({ children, className, striped, hoverable, theme: customTheme = {}, ...props }, ref) => {
-    const theme = mergeDeep(getTheme().table, customTheme);
+export const Table = forwardRef<HTMLTableElement, TableProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [tableTheme, provider.theme?.table, props.theme],
+    [get(provider.clearTheme, "table"), props.clearTheme],
+    [get(provider.applyTheme, "table"), props.applyTheme],
+  );
 
-    return (
-      <div data-testid="table-element" className={twMerge(theme.root.wrapper)}>
-        <TableContext.Provider value={{ theme, striped, hoverable }}>
-          <div className={twMerge(theme.root.shadow, className)}></div>
-          <table className={twMerge(theme.root.base, className)} {...props} ref={ref}>
-            {children}
-          </table>
-        </TableContext.Provider>
-      </div>
-    );
-  },
-);
+  const { className, striped, hoverable, ...restProps } = resolveProps(props, provider.props?.table);
 
-TableComponent.displayName = "Table";
-
-export const Table = Object.assign(TableComponent, {
-  Head: TableHead,
-  Body: TableBody,
-  Row: TableRow,
-  Cell: TableCell,
-  HeadCell: TableHeadCell,
+  return (
+    <div data-testid="table-element" className={twMerge(theme.root.wrapper)}>
+      <TableContext.Provider
+        value={{ theme: props.theme, clearTheme: props.clearTheme, applyTheme: props.applyTheme, striped, hoverable }}
+      >
+        <div className={twMerge(theme.root.shadow, className)}></div>
+        <table ref={ref} className={twMerge(theme.root.base, className)} {...restProps} />
+      </TableContext.Provider>
+    </div>
+  );
 });
+
+Table.displayName = "Table";

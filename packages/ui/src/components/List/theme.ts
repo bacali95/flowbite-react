@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteListTheme } from "./List";
+import type { ListTheme } from "./List";
 
-export const listTheme: FlowbiteListTheme = createTheme({
+export const listTheme = createTheme<ListTheme>({
   root: {
     base: "list-inside space-y-1 text-gray-500 dark:text-gray-400",
     ordered: {
@@ -17,6 +17,6 @@ export const listTheme: FlowbiteListTheme = createTheme({
       off: "",
       on: "flex items-center",
     },
-    icon: "me-2 h-3.5 w-3.5 flex-shrink-0",
+    icon: "me-2 h-3.5 w-3.5 shrink-0",
   },
 });

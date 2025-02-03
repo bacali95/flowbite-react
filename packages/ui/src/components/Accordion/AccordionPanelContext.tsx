@@ -3,11 +3,11 @@
 import { createContext, useContext } from "react";
 import type { AccordionPanelProps } from "./AccordionPanel";
 
-type AccordionPanelContext = Omit<AccordionPanelProps, "children">;
+export type AccordionPanelContextValue = Omit<AccordionPanelProps, "children">;
 
-export const AccordionPanelContext = createContext<AccordionPanelContext | undefined>(undefined);
+export const AccordionPanelContext = createContext<AccordionPanelContextValue | undefined>(undefined);
 
-export function useAccordionContext(): AccordionPanelContext {
+export function useAccordionContext(): AccordionPanelContextValue {
   const context = useContext(AccordionPanelContext);
 
   if (!context) {

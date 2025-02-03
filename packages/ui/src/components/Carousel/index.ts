@@ -1,11 +1,12 @@
 export { Carousel } from "./Carousel";
 export type {
+  CarouselControlTheme,
+  CarouselIndicatorsTheme,
+  CarouselItemTheme,
   CarouselProps,
+  CarouselRootTheme,
+  CarouselScrollContainer,
+  CarouselTheme,
   DefaultLeftRightControlProps,
-  FlowbiteCarouselControlTheme,
-  FlowbiteCarouselIndicatorsTheme,
-  FlowbiteCarouselItemTheme,
-  FlowbiteCarouselRootTheme,
-  FlowbiteCarouselScrollContainer,
-  FlowbiteCarouselTheme,
 } from "./Carousel";
+export { carouselTheme } from "./theme";

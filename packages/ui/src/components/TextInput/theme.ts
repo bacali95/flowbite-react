@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteTextInputTheme } from "./TextInput";
+import type { TextInputTheme } from "./TextInput";
 
-export const textInputTheme: FlowbiteTextInputTheme = createTheme({
+export const textInputTheme = createTheme<TextInputTheme>({
   base: "flex",
   addon:
     "inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-400",
@@ -16,14 +16,14 @@ export const textInputTheme: FlowbiteTextInputTheme = createTheme({
       svg: "h-5 w-5 text-gray-500 dark:text-gray-400",
     },
     input: {
-      base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50",
+      base: "block w-full border focus:outline-none focus:ring-1 disabled:cursor-not-allowed disabled:opacity-50",
       sizes: {
         sm: "p-2 sm:text-xs",
         md: "p-2.5 text-sm",
         lg: "p-4 sm:text-base",
       },
       colors: {
-        gray: "border-gray-300 bg-gray-50 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+        gray: "border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500",
         info: "border-cyan-500 bg-cyan-50 text-cyan-900 placeholder-cyan-700 focus:border-cyan-500 focus:ring-cyan-500 dark:border-cyan-400 dark:bg-cyan-100 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
         failure:
           "border-red-500 bg-red-50 text-red-900 placeholder-red-700 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:bg-red-100 dark:focus:border-red-500 dark:focus:ring-red-500",

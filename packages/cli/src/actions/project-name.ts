@@ -1,5 +1,5 @@
 import * as p from "@clack/prompts";
-import { Context } from "../context.js";
+import type { Context } from "../context.js";
 import { DEFAULT_PROJECT_NAME } from "../data.js";
 import { validateProjectName } from "../utils/validators.js";
 

@@ -1,10 +1,10 @@
-import type { FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../../helpers/merge-deep";
+"use client";
+
+import { twMerge } from "../../../helpers/tailwind-merge";
 import { useDatePickerContext } from "../DatepickerContext";
 import { addYears, isDateInDecade, isDateInRange, startOfYearPeriod, Views } from "../helpers";
 
-export interface FlowbiteDatepickerViewsDecadesTheme {
+export interface DatepickerViewsDecadesTheme {
   items: {
     base: string;
     item: {
@@ -15,15 +15,12 @@ export interface FlowbiteDatepickerViewsDecadesTheme {
   };
 }
 
-export interface DatepickerViewsDecadesProps {
-  theme?: FlowbiteDatepickerViewsDecadesTheme;
-}
-
-export const DatepickerViewsDecades: FC<DatepickerViewsDecadesProps> = ({ theme: customTheme = {} }) => {
+export function DatepickerViewsDecades() {
   const { theme: rootTheme, viewDate, selectedDate, minDate, maxDate, setViewDate, setView } = useDatePickerContext();
 
-  const theme = mergeDeep(rootTheme.views.decades, customTheme);
+  const theme = rootTheme.views.decades;
   const first = startOfYearPeriod(viewDate, 100);
+
   return (
     <div className={theme.items.base}>
       {[...Array(12)].map((_year, index) => {
@@ -59,4 +56,6 @@ export const DatepickerViewsDecades: FC<DatepickerViewsDecadesProps> = ({ theme:
       })}
     </div>
   );
-};
+}
+
+DatepickerViewsDecades.displayName = "DatepickerViewsDecades";

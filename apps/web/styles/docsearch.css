@@ -40,11 +40,11 @@
 }
 
 .DocSearch .DocSearch-Hits mark {
-  @apply text-cyan-600 decoration-cyan-600 decoration-2 underline-offset-2;
+  @apply text-primary-600 decoration-primary-600 decoration-2 underline-offset-2;
 }
 
 .DocSearch .DocSearch-Hit[aria-selected="true"] a {
-  @apply bg-cyan-700;
+  @apply bg-primary-700;
 }
 
 .DocSearch .DocSearch-Hit-source {
@@ -52,7 +52,7 @@
 }
 
 .DocSearch .DocSearch-Container {
-  @apply bg-gray-900 bg-opacity-50;
+  @apply bg-gray-900/50;
 }
 
 .DocSearch .DocSearch-Modal {
@@ -155,7 +155,7 @@
   }
 
   .DocSearch .DocSearch-Hit[aria-selected="true"] a {
-    @apply bg-cyan-600;
+    @apply bg-primary-600;
   }
 
   .DocSearch .DocSearch-Hit-source {
@@ -163,7 +163,7 @@
   }
 
   .DocSearch .DocSearch-Container {
-    @apply bg-opacity-80;
+    @apply bg-gray-900/80;
   }
 
   .DocSearch .DocSearch-Modal {
@@ -191,7 +191,7 @@
   }
 
   .DocSearch .DocSearch-Hit a {
-    @apply bg-gray-600 hover:bg-cyan-600;
+    @apply bg-gray-600 hover:bg-primary-600;
   }
 
   .DocSearch .DocSearch-Title {

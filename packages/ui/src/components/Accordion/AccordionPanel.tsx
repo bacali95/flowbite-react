@@ -1,6 +1,5 @@
 "use client";
 
-import type { FC } from "react";
 import { useState } from "react";
 import type { AccordionProps } from "./Accordion";
 import { AccordionPanelContext } from "./AccordionPanelContext";
@@ -10,7 +9,7 @@ export interface AccordionPanelProps extends AccordionProps {
   setOpen?: () => void;
 }
 
-export const AccordionPanel: FC<AccordionPanelProps> = ({ children, ...props }) => {
+export function AccordionPanel({ children, ...props }: AccordionPanelProps) {
   const { alwaysOpen } = props;
   const [isOpen, setOpen] = useState(props.isOpen);
 
@@ -23,4 +22,6 @@ export const AccordionPanel: FC<AccordionPanelProps> = ({ children, ...props }) 
     : props;
 
   return <AccordionPanelContext.Provider value={provider}>{children}</AccordionPanelContext.Provider>;
-};
+}
+
+AccordionPanel.displayName = "AccordionPanel";

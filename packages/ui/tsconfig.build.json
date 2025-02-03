@@ -5,5 +5,5 @@
     "emitDeclarationOnly": true
   },
   "include": ["src"],
-  "exclude": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.stories.tsx"]
+  "exclude": ["**/*.test.ts", "**/*.test.tsx"]
 }

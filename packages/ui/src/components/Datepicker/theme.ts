@@ -1,7 +1,7 @@
-import type { FlowbiteDatepickerTheme } from ".";
 import { createTheme } from "../../helpers/create-theme";
+import type { DatepickerTheme } from "./Datepicker";
 
-export const datePickerTheme: FlowbiteDatepickerTheme = createTheme({
+export const datePickerTheme = createTheme<DatepickerTheme>({
   root: {
     base: "relative",
   },

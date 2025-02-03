@@ -1,66 +1,27 @@
 import { Button } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
-"use client";
-
 import { Button } from "flowbite-react";
 
 export function Component() {
   return (
     <div className="flex flex-wrap gap-2">
-      <Button outline gradientDuoTone="purpleToBlue">
-        Purple to Blue
+      <Button outline>Default</Button>
+      <Button color="dark" outline>
+        Dark
       </Button>
-      <Button outline gradientDuoTone="cyanToBlue">
-        Cyan to Blue
+      <Button color="green" outline>
+        Green
       </Button>
-      <Button outline gradientDuoTone="greenToBlue">
-        Green to Blue
+      <Button color="red" outline>
+        Red
       </Button>
-      <Button outline gradientDuoTone="purpleToPink">
-        Purple to Pink
+      <Button color="yellow" outline>
+        Yellow
       </Button>
-      <Button outline gradientDuoTone="pinkToOrange">
-        Pink to Orange
-      </Button>
-      <Button outline gradientDuoTone="tealToLime">
-        Teal to Lime
-      </Button>
-      <Button outline gradientDuoTone="redToYellow">
-        Red to Yellow
-      </Button>
-    </div>
-  );
-}
-`;
-
-const codeRSC = `
-import { Button } from "flowbite-react";
-
-export function Component() {
-  return (
-    <div className="flex flex-wrap gap-2">
-      <Button outline gradientDuoTone="purpleToBlue">
-        Purple to Blue
-      </Button>
-      <Button outline gradientDuoTone="cyanToBlue">
-        Cyan to Blue
-      </Button>
-      <Button outline gradientDuoTone="greenToBlue">
-        Green to Blue
-      </Button>
-      <Button outline gradientDuoTone="purpleToPink">
-        Purple to Pink
-      </Button>
-      <Button outline gradientDuoTone="pinkToOrange">
-        Pink to Orange
-      </Button>
-      <Button outline gradientDuoTone="tealToLime">
-        Teal to Lime
-      </Button>
-      <Button outline gradientDuoTone="redToYellow">
-        Red to Yellow
+      <Button color="purple" outline>
+        Purple
       </Button>
     </div>
   );
@@ -70,26 +31,21 @@ export function Component() {
 export function Component() {
   return (
     <div className="flex flex-wrap gap-2">
-      <Button outline gradientDuoTone="purpleToBlue">
-        Purple to Blue
+      <Button outline>Default</Button>
+      <Button color="dark" outline>
+        Dark
       </Button>
-      <Button outline gradientDuoTone="cyanToBlue">
-        Cyan to Blue
+      <Button color="green" outline>
+        Green
       </Button>
-      <Button outline gradientDuoTone="greenToBlue">
-        Green to Blue
+      <Button color="red" outline>
+        Red
       </Button>
-      <Button outline gradientDuoTone="purpleToPink">
-        Purple to Pink
+      <Button color="yellow" outline>
+        Yellow
       </Button>
-      <Button outline gradientDuoTone="pinkToOrange">
-        Pink to Orange
-      </Button>
-      <Button outline gradientDuoTone="tealToLime">
-        Teal to Lime
-      </Button>
-      <Button outline gradientDuoTone="redToYellow">
-        Red to Yellow
+      <Button color="purple" outline>
+        Purple
       </Button>
     </div>
   );
@@ -97,18 +53,11 @@ export function Component() {
 
 export const outline: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "button/button.outline.tsx",
   component: <Component />,
 };

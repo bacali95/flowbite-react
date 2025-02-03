@@ -2,14 +2,14 @@
 
 import type { Placement } from "@floating-ui/core";
 import { autoUpdate, useFocus } from "@floating-ui/react";
-import type { ComponentProps, FC, ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
-import { twMerge } from "tailwind-merge";
+import { twMerge } from "../../helpers/tailwind-merge";
 import { useBaseFLoating, useFloatingInteractions } from "../../hooks/use-floating";
 import { getArrowPlacement } from "./helpers";
 
-export interface FlowbiteFloatingTheme {
-  arrow: FlowbiteFloatingArrowTheme;
+export interface FloatingTheme {
+  arrow: FloatingArrowTheme;
   animation: string;
   base: string;
   content: string;
@@ -22,7 +22,7 @@ export interface FlowbiteFloatingTheme {
   target: string;
 }
 
-export interface FlowbiteFloatingArrowTheme {
+export interface FloatingArrowTheme {
   base: string;
   placement: string;
   style: {
@@ -40,7 +40,7 @@ export interface FloatingProps extends Omit<ComponentProps<"div">, "content" | "
   content: ReactNode;
   placement?: "auto" | Placement;
   style?: FloatingStyle;
-  theme: FlowbiteFloatingTheme;
+  theme: FloatingTheme;
   trigger?: "hover" | "click";
   minWidth?: number;
 }
@@ -48,7 +48,7 @@ export interface FloatingProps extends Omit<ComponentProps<"div">, "content" | "
 /**
  * @see https://floating-ui.com/docs/react-dom-interactions
  */
-export const Floating: FC<FloatingProps> = ({
+export function Floating({
   animation = "duration-300",
   arrow = true,
   children,
@@ -60,7 +60,7 @@ export const Floating: FC<FloatingProps> = ({
   trigger = "hover",
   minWidth,
   ...props
-}) => {
+}: FloatingProps) {
   const arrowRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
 
@@ -150,4 +150,6 @@ export const Floating: FC<FloatingProps> = ({
       </div>
     </>
   );
-};
+}
+
+Floating.displayName = "Floating";

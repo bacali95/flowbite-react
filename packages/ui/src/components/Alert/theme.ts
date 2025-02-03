@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteAlertTheme } from "./Alert";
+import type { AlertTheme } from "./Alert";
 
-export const alertTheme: FlowbiteAlertTheme = createTheme({
+export const alertTheme = createTheme<AlertTheme>({
   base: "flex flex-col gap-2 p-4 text-sm",
   borderAccent: "border-t-4",
   closeButton: {
@@ -54,7 +54,7 @@ export const alertTheme: FlowbiteAlertTheme = createTheme({
     teal: "border-teal-500 bg-teal-100 text-teal-700 dark:bg-teal-200 dark:text-teal-800",
     light: "border-gray-400 bg-gray-50 text-gray-600 dark:bg-gray-500 dark:text-gray-200",
   },
-  icon: "mr-3 inline h-5 w-5 flex-shrink-0",
+  icon: "mr-3 inline h-5 w-5 shrink-0",
   rounded: "rounded-lg",
   wrapper: "flex items-center",
 });

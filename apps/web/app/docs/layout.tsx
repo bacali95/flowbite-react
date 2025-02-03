@@ -46,7 +46,6 @@ export default function DocsLayout({ children }: PropsWithChildren) {
 function DocsNavbar({ isCollapsed, setCollapsed }: DocsLayoutState) {
   return (
     <Navbar
-      fluid
       theme={{
         root: {
           base: "sticky top-0 z-[60] mx-auto flex w-full items-center justify-between border-b border-gray-200 bg-white text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400",
@@ -55,6 +54,8 @@ function DocsNavbar({ isCollapsed, setCollapsed }: DocsLayoutState) {
           },
         },
       }}
+      applyTheme="replace"
+      fluid
     >
       <div className="flex items-center">
         {isCollapsed ? (
@@ -145,23 +146,19 @@ function SidebarSection({ title, children }: PropsWithChildren<{ title: string }
   );
 }
 
-function SidebarItem({ title, href, isNew, isExternal, onClick }: DocsSidebarItem & { onClick(): void }) {
+function SidebarItem({ title, href, tag, onClick }: DocsSidebarItem & { onClick(): void }) {
   return (
     <li>
-      <SidebarLink href={href} isExternal={isExternal} onClick={onClick}>
-        {isNew ? <NewBadge>{title}</NewBadge> : title}
+      <SidebarLink href={href} onClick={onClick}>
+        {tag ? <Tag tag={tag}>{title}</Tag> : title}
       </SidebarLink>
     </li>
   );
 }
 
-function SidebarLink({
-  children,
-  href,
-  isExternal,
-  onClick,
-}: PropsWithChildren<{ href: string; isExternal?: boolean; onClick(): void }>) {
+function SidebarLink({ children, href, onClick }: PropsWithChildren<{ href: string; onClick(): void }>) {
   const pathname = usePathname();
+  const isExternal = !href.startsWith("/");
 
   return (
     <Link
@@ -180,12 +177,12 @@ function SidebarLink({
   );
 }
 
-function NewBadge({ children }: PropsWithChildren) {
+function Tag({ children, tag }: PropsWithChildren<{ tag: DocsSidebarItem["tag"] }>) {
   return (
     <span className="flex items-center gap-2">
       {children}
-      <span className="ml-2 inline-flex h-[1.1rem] items-center rounded border border-cyan-100 bg-cyan-100 px-1.5 text-[10px] font-semibold uppercase text-cyan-800 dark:border-cyan-400 dark:bg-gray-700 dark:text-cyan-400">
-        new
+      <span className="ml-2 inline-flex h-[1.1rem] items-center rounded border border-primary-100 bg-primary-100 px-1.5 text-[10px] font-semibold uppercase text-primary-800 dark:border-primary-400 dark:bg-gray-700 dark:text-primary-400">
+        {tag}
       </span>
     </span>
   );

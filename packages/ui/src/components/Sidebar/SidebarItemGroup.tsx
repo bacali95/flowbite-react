@@ -1,35 +1,44 @@
 "use client";
 
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import type { DeepPartial } from "../../types";
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
 import { useSidebarContext } from "./SidebarContext";
 import { SidebarItemContext } from "./SidebarItemContext";
+import { sidebarTheme } from "./theme";
 
-export interface FlowbiteSidebarItemGroupTheme {
+export interface SidebarItemGroupTheme {
   base: string;
 }
 
-export interface SidebarItemGroupProps extends ComponentProps<"ul"> {
-  theme?: DeepPartial<FlowbiteSidebarItemGroupTheme>;
-}
+export interface SidebarItemGroupProps extends ComponentProps<"ul">, ThemingProps<SidebarItemGroupTheme> {}
 
-export const SidebarItemGroup: FC<SidebarItemGroupProps> = ({
-  children,
-  className,
-  theme: customTheme = {},
-  ...props
-}) => {
-  const { theme: rootTheme } = useSidebarContext();
+export const SidebarItemGroup = forwardRef<HTMLUListElement, SidebarItemGroupProps>((props, ref) => {
+  const { theme: rootTheme, clearTheme: rootClearTheme, applyTheme: rootApplyTheme } = useSidebarContext();
 
-  const theme = mergeDeep(rootTheme.itemGroup, customTheme);
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [sidebarTheme.itemGroup, provider.theme?.sidebar?.itemGroup, rootTheme?.itemGroup, props.theme],
+    [get(provider.clearTheme, "sidebar.itemGroup"), get(rootClearTheme, "itemGroup"), props.clearTheme],
+    [get(provider.applyTheme, "sidebar.itemGroup"), get(rootApplyTheme, "itemGroup"), props.applyTheme],
+  );
+
+  const { className, ...restProps } = resolveProps(props, provider.props?.sidebarItemGroup);
 
   return (
-    <ul data-testid="flowbite-sidebar-item-group" className={twMerge(theme.base, className)} {...props}>
-      <SidebarItemContext.Provider value={{ isInsideCollapse: false }}>{children}</SidebarItemContext.Provider>
-    </ul>
+    <SidebarItemContext.Provider value={{ isInsideCollapse: false }}>
+      <ul
+        ref={ref}
+        data-testid="flowbite-sidebar-item-group"
+        className={twMerge(theme.base, className)}
+        {...restProps}
+      />
+    </SidebarItemContext.Provider>
   );
-};
+});
 
-SidebarItemGroup.displayName = "Sidebar.ItemGroup";
+SidebarItemGroup.displayName = "SidebarItemGroup";

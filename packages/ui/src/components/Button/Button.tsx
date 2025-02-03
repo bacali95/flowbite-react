@@ -1,65 +1,43 @@
+"use client";
+
 import type { ElementType } from "react";
-import { forwardRef, type ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
+import { forwardRef } from "react";
 import type { PolymorphicComponentPropWithRef, PolymorphicRef } from "../../helpers/generic-as-prop";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
 import type {
-  FlowbiteBoolean,
+  DynamicStringEnumKeysOf,
   FlowbiteColors,
-  FlowbiteGradientColors,
-  FlowbiteGradientDuoToneColors,
   FlowbiteSizes,
-} from "../Flowbite";
-import { Spinner } from "../Spinner";
-import { ButtonBase, type ButtonBaseProps } from "./ButtonBase";
-import type { PositionInButtonGroup } from "./ButtonGroup";
-import { ButtonGroup } from "./ButtonGroup";
+  FlowbiteStateColors,
+  ThemingProps,
+} from "../../types";
+import { ButtonBase } from "./ButtonBase";
+import { useButtonGroupContext } from "./ButtonGroupContext";
+import { buttonTheme } from "./theme";
 
-export interface FlowbiteButtonTheme {
+export interface ButtonTheme {
   base: string;
-  fullSized: string;
-  color: FlowbiteColors;
   disabled: string;
-  isProcessing: string;
-  spinnerSlot: string;
-  spinnerLeftPosition: ButtonSizes;
-  gradient: ButtonGradientColors;
-  gradientDuoTone: ButtonGradientDuoToneColors;
-  inner: FlowbiteButtonInnerTheme;
-  label: string;
-  outline: FlowbiteButtonOutlineTheme;
-  pill: FlowbiteBoolean;
+  fullSized: string;
+  grouped: string;
+  pill: string;
   size: ButtonSizes;
+  // colors
+  color: ButtonColors;
+  outlineColor: ButtonOutlineColors;
 }
 
-export interface FlowbiteButtonInnerTheme {
-  base: string;
-  position: PositionInButtonGroup;
-  outline: string;
-  isProcessingPadding: ButtonSizes;
-}
-
-export interface FlowbiteButtonOutlineTheme extends FlowbiteBoolean {
-  color: ButtonOutlineColors;
-  pill: FlowbiteBoolean;
-}
-
-export interface ButtonColors
-  extends Pick<FlowbiteColors, "dark" | "failure" | "gray" | "info" | "light" | "purple" | "success" | "warning"> {
+export interface ButtonColors extends Omit<FlowbiteColors, keyof FlowbiteStateColors> {
   [key: string]: string;
+  default: string;
+  alternative: string;
 }
 
-export interface ButtonGradientColors extends FlowbiteGradientColors {
-  [key: string]: string;
-}
-
-export interface ButtonGradientDuoToneColors extends FlowbiteGradientDuoToneColors {
-  [key: string]: string;
-}
-
-export interface ButtonOutlineColors extends Pick<FlowbiteColors, "gray"> {
+export interface ButtonOutlineColors extends Omit<ButtonColors, "alternative" | "light"> {
   [key: string]: string;
 }
 
@@ -71,107 +49,63 @@ export type ButtonProps<T extends ElementType = "button"> = PolymorphicComponent
   T,
   {
     href?: string;
-    color?: DynamicStringEnumKeysOf<FlowbiteColors>;
+    color?: DynamicStringEnumKeysOf<ButtonColors>;
     fullSized?: boolean;
-    gradientDuoTone?: DynamicStringEnumKeysOf<ButtonGradientDuoToneColors>;
-    gradientMonochrome?: DynamicStringEnumKeysOf<ButtonGradientColors>;
-    target?: string;
-    isProcessing?: boolean;
-    processingLabel?: string;
-    processingSpinner?: ReactNode;
-    label?: ReactNode;
     outline?: boolean;
     pill?: boolean;
-    positionInGroup?: keyof PositionInButtonGroup;
     size?: DynamicStringEnumKeysOf<ButtonSizes>;
-    theme?: DeepPartial<FlowbiteButtonTheme>;
   }
->;
+> &
+  ThemingProps<ButtonTheme>;
 
 type ButtonComponentType = (<C extends ElementType = "button">(props: ButtonProps<C>) => JSX.Element) & {
   displayName?: string;
 };
 
-const ButtonComponent = forwardRef(
-  <T extends ElementType = "button">(
-    {
-      children,
-      className,
-      color = "info",
-      disabled,
-      fullSized,
-      isProcessing = false,
-      processingLabel = "Loading...",
-      processingSpinner,
-      gradientDuoTone,
-      gradientMonochrome,
-      label,
-      outline = false,
-      pill = false,
-      positionInGroup = "none",
-      size = "md",
-      theme: customTheme = {},
-      ...props
-    }: ButtonProps<T>,
-    ref: PolymorphicRef<T>,
-  ) => {
-    const { buttonGroup: groupTheme, button: buttonTheme } = getTheme();
-    const theme = mergeDeep(buttonTheme, customTheme);
+export const Button = forwardRef(<T extends ElementType = "button">(props: ButtonProps<T>, ref: PolymorphicRef<T>) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [buttonTheme, provider.theme?.button, props.theme],
+    [get(provider.clearTheme, "button"), props.clearTheme],
+    [get(provider.applyTheme, "button"), props.applyTheme],
+  );
 
-    const theirProps = props as ButtonBaseProps<T>;
+  const {
+    children,
+    className,
+    color = "default",
+    disabled,
+    fullSized,
+    outline: _outline,
+    pill: _pill,
+    size = "md",
+    ...restProps
+  } = resolveProps(props, provider.props?.button);
 
-    return (
-      <ButtonBase
-        ref={ref}
-        disabled={disabled}
-        className={twMerge(
-          theme.base,
-          disabled && theme.disabled,
-          !gradientDuoTone && !gradientMonochrome && theme.color[color],
-          gradientDuoTone && !gradientMonochrome && theme.gradientDuoTone[gradientDuoTone],
-          !gradientDuoTone && gradientMonochrome && theme.gradient[gradientMonochrome],
-          outline && (theme.outline.color[color] ?? theme.outline.color.default),
-          theme.pill[pill ? "on" : "off"],
-          fullSized && theme.fullSized,
-          groupTheme.position[positionInGroup],
-          className,
-        )}
-        {...theirProps}
-      >
-        <span
-          className={twMerge(
-            theme.inner.base,
-            theme.outline[outline ? "on" : "off"],
-            theme.outline.pill[outline && pill ? "on" : "off"],
-            theme.size[size],
-            outline && !theme.outline.color[color] && theme.inner.outline,
-            isProcessing && theme.isProcessing,
-            isProcessing && theme.inner.isProcessingPadding[size],
-            theme.inner.position[positionInGroup],
-          )}
-        >
-          <>
-            {isProcessing && (
-              <span className={twMerge(theme.spinnerSlot, theme.spinnerLeftPosition[size])}>
-                {processingSpinner || <Spinner size={size} />}
-              </span>
-            )}
-            {typeof children !== "undefined" ? (
-              children
-            ) : (
-              <span data-testid="flowbite-button-label" className={twMerge(theme.label)}>
-                {isProcessing ? processingLabel : label}
-              </span>
-            )}
-          </>
-        </span>
-      </ButtonBase>
-    );
-  },
-) as ButtonComponentType;
+  const buttonGroup = useButtonGroupContext();
 
-ButtonComponent.displayName = "Button";
+  const outline = buttonGroup?.outline ?? _outline;
+  const pill = buttonGroup?.pill ?? _pill;
 
-export const Button = Object.assign(ButtonComponent, {
-  Group: ButtonGroup,
-});
+  return (
+    <ButtonBase
+      ref={ref}
+      disabled={disabled}
+      className={twMerge(
+        theme.base,
+        theme.size[size],
+        pill && theme.pill,
+        disabled && theme.disabled,
+        fullSized && theme.fullSized,
+        outline ? theme.outlineColor[color] : theme.color[color],
+        buttonGroup && theme.grouped,
+        className,
+      )}
+      {...restProps}
+    >
+      {children}
+    </ButtonBase>
+  );
+}) as ButtonComponentType;
+
+Button.displayName = "Button";

@@ -1,18 +1,18 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { FlowbiteDrawerTheme } from "./Drawer";
+import type { ThemingProps } from "../../types";
+import type { DrawerTheme } from "./Drawer";
 
-interface DrawerContext {
+export interface DrawerContextValue extends ThemingProps<DrawerTheme> {
   id?: string;
   isOpen?: boolean;
   onClose?: () => void;
-  theme: FlowbiteDrawerTheme;
 }
 
-export const DrawerContext = createContext<DrawerContext | undefined>(undefined);
+export const DrawerContext = createContext<DrawerContextValue | undefined>(undefined);
 
-export function useDrawerContext(): DrawerContext {
+export function useDrawerContext(): DrawerContextValue {
   const context = useContext(DrawerContext);
 
   if (!context) {

@@ -1,72 +1,73 @@
 "use client";
 
-import type { ComponentProps, ElementType, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import type { FlowbiteBoolean } from "../Flowbite";
-import { SidebarCollapse, type FlowbiteSidebarCollapseTheme } from "./SidebarCollapse";
+import { forwardRef, type ComponentProps, type ElementType } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { FlowbiteBoolean, ThemingProps } from "../../types";
+import type { SidebarCollapseTheme } from "./SidebarCollapse";
 import { SidebarContext } from "./SidebarContext";
-import { SidebarCTA, type FlowbiteSidebarCTATheme } from "./SidebarCTA";
-import { SidebarItem, type FlowbiteSidebarItemTheme } from "./SidebarItem";
-import { SidebarItemGroup, type FlowbiteSidebarItemGroupTheme } from "./SidebarItemGroup";
-import { SidebarItems, type FlowbiteSidebarItemsTheme } from "./SidebarItems";
-import { SidebarLogo, type FlowbiteSidebarLogoTheme } from "./SidebarLogo";
+import type { SidebarCTATheme } from "./SidebarCTA";
+import type { SidebarItemTheme } from "./SidebarItem";
+import type { SidebarItemGroupTheme } from "./SidebarItemGroup";
+import type { SidebarItemsTheme } from "./SidebarItems";
+import type { SidebarLogoTheme } from "./SidebarLogo";
+import { sidebarTheme } from "./theme";
 
-export interface FlowbiteSidebarTheme {
+export interface SidebarTheme {
   root: {
     base: string;
     collapsed: FlowbiteBoolean;
     inner: string;
   };
-  collapse: FlowbiteSidebarCollapseTheme;
-  cta: FlowbiteSidebarCTATheme;
-  item: FlowbiteSidebarItemTheme;
-  items: FlowbiteSidebarItemsTheme;
-  itemGroup: FlowbiteSidebarItemGroupTheme;
-  logo: FlowbiteSidebarLogoTheme;
+  collapse: SidebarCollapseTheme;
+  cta: SidebarCTATheme;
+  item: SidebarItemTheme;
+  items: SidebarItemsTheme;
+  itemGroup: SidebarItemGroupTheme;
+  logo: SidebarLogoTheme;
 }
 
-export interface SidebarProps extends ComponentProps<"div"> {
+export interface SidebarProps extends ComponentProps<"div">, ThemingProps<SidebarTheme> {
   as?: ElementType;
   collapseBehavior?: "collapse" | "hide";
   collapsed?: boolean;
-  theme?: DeepPartial<FlowbiteSidebarTheme>;
 }
 
-const SidebarComponent: FC<SidebarProps> = ({
-  children,
-  as: Component = "nav",
-  collapseBehavior = "collapse",
-  collapsed: isCollapsed = false,
-  theme: customTheme = {},
-  className,
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().sidebar, customTheme);
+export const Sidebar = forwardRef<HTMLElement, SidebarProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [sidebarTheme, provider.theme?.sidebar, props.theme],
+    [get(provider.clearTheme, "sidebar"), props.clearTheme],
+    [get(provider.applyTheme, "sidebar"), props.applyTheme],
+  );
+
+  const {
+    as: Component = "nav",
+    children,
+    className,
+    collapseBehavior = "collapse",
+    collapsed: isCollapsed = false,
+    ...restProps
+  } = resolveProps(props, provider.props?.sidebar);
 
   return (
-    <SidebarContext.Provider value={{ theme, isCollapsed }}>
+    <SidebarContext.Provider
+      value={{ theme: props.theme, clearTheme: props.clearTheme, applyTheme: props.applyTheme, isCollapsed }}
+    >
       <Component
+        ref={ref}
         aria-label="Sidebar"
         hidden={isCollapsed && collapseBehavior === "hide"}
         className={twMerge(theme.root.base, theme.root.collapsed[isCollapsed ? "on" : "off"], className)}
-        {...props}
+        {...restProps}
       >
         <div className={theme.root.inner}>{children}</div>
       </Component>
     </SidebarContext.Provider>
   );
-};
-
-SidebarComponent.displayName = "Sidebar";
-
-export const Sidebar = Object.assign(SidebarComponent, {
-  Collapse: SidebarCollapse,
-  CTA: SidebarCTA,
-  Item: SidebarItem,
-  Items: SidebarItems,
-  ItemGroup: SidebarItemGroup,
-  Logo: SidebarLogo,
 });
+
+Sidebar.displayName = "Sidebar";

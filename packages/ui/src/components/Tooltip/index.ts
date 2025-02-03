@@ -1,2 +1,3 @@
 export { Tooltip } from "./Tooltip";
-export type { FlowbiteTooltipTheme, TooltipProps } from "./Tooltip";
+export type { TooltipProps, TooltipTheme } from "./Tooltip";
+export { tooltipTheme } from "./theme";

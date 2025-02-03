@@ -1,4 +1,4 @@
-import { Footer } from "flowbite-react";
+import { Footer, FooterCopyright, FooterDivider, FooterLink, FooterLinkGroup, FooterTitle } from "flowbite-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -22,7 +22,7 @@ export function MainFooter() {
                 href="https://github.com/themesberg/flowbite-react/blob/main/LICENSE"
                 rel="nofollow noopener noreferrer"
                 target="_blank"
-                className="text-cyan-600 hover:underline"
+                className="text-primary-700 hover:underline dark:text-primary-500"
               >
                 MIT
               </a>
@@ -31,7 +31,7 @@ export function MainFooter() {
                 href="https://creativecommons.org/licenses/by/3.0/"
                 rel="nofollow noopener noreferrer"
                 target="_blank"
-                className="text-cyan-600 hover:underline"
+                className="text-primary-700 hover:underline dark:text-primary-500"
               >
                 CC BY 3.0
               </a>
@@ -39,78 +39,78 @@ export function MainFooter() {
           </div>
           <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">
             <div>
-              <Footer.Title
+              <FooterTitle
                 title="Resources"
                 className="mb-6 text-sm font-semibold uppercase text-gray-900 dark:text-white"
               />
-              <Footer.LinkGroup col className="text-gray-600 dark:text-gray-400">
-                <Footer.Link
+              <FooterLinkGroup col className="text-gray-600 dark:text-gray-400">
+                <FooterLink
                   href="https://github.com/themesberg/flowbite-react"
                   rel="noopener"
                   target="_blank"
                   className="text-base"
                 >
                   GitHub
-                </Footer.Link>
-                <Footer.Link href="https://flowbite.com/" rel="noopener" target="_blank" className="text-base">
+                </FooterLink>
+                <FooterLink href="https://flowbite.com/" rel="noopener" target="_blank" className="text-base">
                   Flowbite
-                </Footer.Link>
-                <Footer.Link
+                </FooterLink>
+                <FooterLink
                   href="https://tailwindcss.com/"
                   rel="nofollow noopener noreferrer"
                   target="_blank"
                   className="text-base"
                 >
                   Tailwind CSS
-                </Footer.Link>
-                <Footer.Link href="https://flowbite.com/figma/" rel="noopener" target="_blank" className="text-base">
+                </FooterLink>
+                <FooterLink href="https://flowbite.com/figma/" rel="noopener" target="_blank" className="text-base">
                   Figma
-                </Footer.Link>
-              </Footer.LinkGroup>
+                </FooterLink>
+              </FooterLinkGroup>
             </div>
             <div>
-              <Footer.Title
+              <FooterTitle
                 title="Help & Support"
                 className="mb-6 text-sm font-semibold uppercase text-gray-900 dark:text-white"
               />
-              <Footer.LinkGroup col className="text-gray-600 dark:text-gray-400">
-                <Footer.Link
+              <FooterLinkGroup col className="text-gray-600 dark:text-gray-400">
+                <FooterLink
                   href="https://discord.gg/4eeurUVvTy"
                   rel="nofollow noopener noreferrer"
                   target="_blank"
                   className="text-base"
                 >
                   Discord
-                </Footer.Link>
-                <Footer.Link
+                </FooterLink>
+                <FooterLink
                   href="https://github.com/themesberg/flowbite-react/discussions"
                   rel="noopener"
                   target="_blank"
                   className="text-base"
                 >
                   Github Discussions
-                </Footer.Link>
-              </Footer.LinkGroup>
+                </FooterLink>
+              </FooterLinkGroup>
             </div>
             <div>
-              <Footer.Title
+              <FooterTitle
                 title="Legal"
                 className="mb-6 text-sm font-semibold uppercase text-gray-900 dark:text-white"
               />
-              <Footer.LinkGroup col className="text-gray-600 dark:text-gray-400">
-                <Footer.Link href="https://flowbite.com/license/" rel="noopener" target="_blank" className="text-base">
+              <FooterLinkGroup col className="text-gray-600 dark:text-gray-400">
+                <FooterLink href="https://flowbite.com/license/" rel="noopener" target="_blank" className="text-base">
                   License
-                </Footer.Link>
-                <Footer.Link href="https://flowbite.com/brand/" rel="noopener" target="_blank" className="text-base">
+                </FooterLink>
+                <FooterLink href="https://flowbite.com/brand/" rel="noopener" target="_blank" className="text-base">
                   Brand guideline
-                </Footer.Link>
-              </Footer.LinkGroup>
+                </FooterLink>
+              </FooterLinkGroup>
             </div>
           </div>
         </div>
-        <Footer.Divider />
+        <FooterDivider />
         <div className="w-full text-center sm:flex sm:items-center sm:justify-center">
-          <Footer.Copyright
+          <FooterCopyright
             by="All Rights Reserved. Flowbite™ is a registered trademark."
             href="/"
             year={new Date().getFullYear()}

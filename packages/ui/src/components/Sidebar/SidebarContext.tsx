@@ -1,16 +1,16 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { FlowbiteSidebarTheme } from "./Sidebar";
+import type { ThemingProps } from "../../types";
+import type { SidebarTheme } from "./Sidebar";
 
-export type SidebarContext = {
-  theme: FlowbiteSidebarTheme;
+export interface SidebarContextValue extends ThemingProps<SidebarTheme> {
   isCollapsed: boolean;
-};
+}
 
-export const SidebarContext = createContext<SidebarContext | undefined>(undefined);
+export const SidebarContext = createContext<SidebarContextValue | undefined>(undefined);
 
-export function useSidebarContext(): SidebarContext {
+export function useSidebarContext(): SidebarContextValue {
   const context = useContext(SidebarContext);
 
   if (!context) {

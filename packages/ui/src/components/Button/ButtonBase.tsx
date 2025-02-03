@@ -1,3 +1,5 @@
+"use client";
+
 import type { ComponentPropsWithoutRef, ElementType, ForwardedRef } from "react";
 import { createElement, forwardRef } from "react";
 
@@ -17,4 +19,4 @@ export const ButtonBase = forwardRef(
   },
 );
 
-ButtonBase.displayName = "ButtonBaseComponent";
+ButtonBase.displayName = "ButtonBase";
