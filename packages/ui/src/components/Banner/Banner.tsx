@@ -1,18 +1,16 @@
-import type { ComponentProps, FC } from "react";
-import { BannerCollapseButton } from "./BannerCollapseButton";
+"use client";
 
-export type BannerComponentProps = ComponentProps<"div">;
+import { forwardRef, type ComponentProps } from "react";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useThemeProvider } from "../../theme/provider";
 
-const BannerComponent: FC<BannerComponentProps> = ({ children, ...props }) => {
-  return (
-    <div data-testid="flowbite-banner" role="banner" tabIndex={-1} {...props}>
-      {children}
-    </div>
-  );
-};
+export type BannerProps = ComponentProps<"div">;
 
-BannerComponent.displayName = "Banner";
+export const Banner = forwardRef<HTMLDivElement, BannerProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const mergedProps = resolveProps(props, provider.props?.banner);
 
-export const Banner = Object.assign(BannerComponent, {
-  CollapseButton: BannerCollapseButton,
+  return <div ref={ref} data-testid="flowbite-banner" role="banner" tabIndex={-1} {...mergedProps} />;
 });
+
+Banner.displayName = "Banner";

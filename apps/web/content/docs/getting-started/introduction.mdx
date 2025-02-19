@@ -23,20 +23,16 @@ Install Tailwind CSS by following the [official installation guide](https://tail
 npm i flowbite-react
 ```
 
-2. Add the Flowbite React `content` path and `plugin` to `tailwind.config.js`:
+2. Add `flowbite-react/tailwind` plugin to `tailwind.config.js`:
 
-```js {1,7,11}
+```js {1,7}
 const flowbite = require("flowbite-react/tailwind");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    // ...
-    flowbite.content(),
-  ],
   plugins: [
     // ...
-    flowbite.plugin(),
+    flowbite,
   ],
 };
 ```
@@ -45,15 +41,11 @@ module.exports = {
 
 How you use Flowbite React depends on your project setup. In general, you can just import the components you want to use from `flowbite-react` and use them in a React `.jsx` or `.tsx` file:
 
-```jsx
+```tsx
 import { Button } from "flowbite-react";
 
 export default function MyPage() {
-  return (
-    <div>
-      <Button>Click me</Button>
-    </div>
-  );
+  return <Button>Click me</Button>;
 }
 ```
 

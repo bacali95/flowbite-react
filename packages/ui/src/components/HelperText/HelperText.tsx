@@ -1,15 +1,19 @@
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
-import type { FlowbiteColors } from "../Flowbite";
+"use client";
 
-export interface FlowbiteHelperTextTheme {
-  root: FlowbiteHelperTextRootTheme;
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { DynamicStringEnumKeysOf, FlowbiteColors, ThemingProps } from "../../types";
+import { helperTextTheme } from "./theme";
+
+export interface HelperTextTheme {
+  root: HelperTextRootTheme;
 }
 
-export interface FlowbiteHelperTextRootTheme {
+export interface HelperTextRootTheme {
   base: string;
   colors: HelperColors;
 }
@@ -18,27 +22,21 @@ export interface HelperColors extends Pick<FlowbiteColors, "gray" | "info" | "fa
   [key: string]: string;
 }
 
-export interface HelperTextProps extends Omit<ComponentProps<"p">, "color"> {
+export interface HelperTextProps extends Omit<ComponentProps<"p">, "color">, ThemingProps<HelperTextTheme> {
   color?: DynamicStringEnumKeysOf<HelperColors>;
-  theme?: DeepPartial<FlowbiteHelperTextTheme>;
-  value?: string;
 }
 
-export const HelperText: FC<HelperTextProps> = ({
-  children,
-  className,
-  color = "default",
-  theme: customTheme = {},
-  value,
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().helperText, customTheme);
-
-  return (
-    <p className={twMerge(theme.root.base, theme.root.colors[color], className)} {...props}>
-      {value ?? children ?? ""}
-    </p>
+export const HelperText = forwardRef<HTMLParagraphElement, HelperTextProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [helperTextTheme, provider.theme?.helperText, props.theme],
+    [get(provider.clearTheme, "helperText"), props.clearTheme],
+    [get(provider.applyTheme, "helperText"), props.applyTheme],
   );
-};
+
+  const { className, color = "gray", ...restProps } = resolveProps(props, provider.props?.helperText);
+
+  return <p ref={ref} className={twMerge(theme.root.base, theme.root.colors[color], className)} {...restProps} />;
+});
 
 HelperText.displayName = "HelperText";

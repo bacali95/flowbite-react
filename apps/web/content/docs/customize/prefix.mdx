@@ -1,0 +1,42 @@
+---
+title: React Theme Prefix - Flowbite
+description: Learn how you can change the Tailwind CSS classes prefix used by the components in Flowbite React
+---
+
+By following these steps, you can easily customize the Tailwind CSS prefix in your Flowbite React project, ensuring better compatibility with other CSS frameworks and avoiding class name conflicts.
+
+## Update Tailwind CSS
+
+Provide the `prefix` property and the `flowbite-react/tailwind` plugin with a prefix value in the `tailwind.config.js` file:
+
+```js {5,8}
+import flowbite from "flowbite-react/tailwind";
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  prefix: "tw-",
+  plugins: [
+    // ...
+    flowbite({ prefix: "tw-" }),
+  ],
+};
+```
+
+## Update Your React Application
+
+Next, render the `ThemeConfig` component at the **root of your app** with the `prefix` property:
+
+```tsx {1,6}
+import { ThemeConfig } from "flowbite-react";
+
+export default function App() {
+  return (
+    <>
+      <ThemeConfig prefix="tw-" />
+      {/* ... */}
+    </>
+  );
+}
+```
+
+This ensures that all Flowbite React components use the specified prefix.

@@ -1,58 +1,56 @@
 "use client";
 
 import { forwardRef, useState, type ComponentProps, type ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import { Tooltip } from "../Tooltip";
-import { ClipboardWithIcon } from "./ClipboardWithIcon";
-import type { FlowbiteClipboardWithIconTheme } from "./ClipboardWithIcon";
-import { ClipboardWithIconText } from "./ClipboardWithIconText";
-import type { FlowbiteClipboardWithIconTextTheme } from "./ClipboardWithIconText";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { Tooltip } from "../Tooltip/Tooltip";
+import type { ClipboardWithIconTheme } from "./ClipboardWithIcon";
+import type { ClipboardWithIconTextTheme } from "./ClipboardWithIconText";
 import { copyToClipboard } from "./helpers";
+import { clipboardTheme } from "./theme";
 
-export interface FlowbiteClipboardTheme {
+export interface ClipboardTheme {
   button: {
     base: string;
     label: string;
   };
-  withIcon: FlowbiteClipboardWithIconTheme;
-  withIconText: FlowbiteClipboardWithIconTextTheme;
+  withIcon: ClipboardWithIconTheme;
+  withIconText: ClipboardWithIconTextTheme;
 }
 
-export interface ClipboardProps extends ComponentProps<"button"> {
+export interface ClipboardProps extends ComponentProps<"button">, ThemingProps<ClipboardTheme["button"]> {
   valueToCopy: string;
   label?: ReactNode;
-  theme?: DeepPartial<FlowbiteClipboardTheme>;
 }
 
-const ClipboardComponent = forwardRef<HTMLButtonElement, ClipboardProps>(
-  ({ className, valueToCopy, label, theme: customTheme = {}, ...rest }, ref) => {
-    const [isJustCopied, setIsJustCopied] = useState(false);
+export const Clipboard = forwardRef<HTMLButtonElement, ClipboardProps>((props, ref) => {
+  const [isJustCopied, setIsJustCopied] = useState(false);
 
-    const theme = mergeDeep(getTheme().clipboard.button, customTheme);
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [clipboardTheme.button, provider.theme?.clipboard?.button, props.theme],
+    [get(provider.clearTheme, "clipboard.button"), props.clearTheme],
+    [get(provider.applyTheme, "clipboard.button"), props.applyTheme],
+  );
 
-    return (
-      <Tooltip content={isJustCopied ? "Copied" : "Copy to clipboard"} className="[&_*]:cursor-pointer">
-        <button
-          className={twMerge(theme.base, className)}
-          onClick={() => copyToClipboard(valueToCopy, setIsJustCopied)}
-          {...rest}
-          ref={ref}
-        >
-          <span className={theme.label}>{label}</span>
-        </button>
-      </Tooltip>
-    );
-  },
-);
+  const { className, valueToCopy, label, ...restProps } = resolveProps(props, provider.props?.clipboard);
 
-ClipboardComponent.displayName = "Clipboard";
-ClipboardWithIcon.displayName = "Clipboard.WithIcon";
-ClipboardWithIconText.displayName = "Clipboard.WithIconText";
-
-export const Clipboard = Object.assign(ClipboardComponent, {
-  WithIcon: ClipboardWithIcon,
-  WithIconText: ClipboardWithIconText,
+  return (
+    <Tooltip content={isJustCopied ? "Copied" : "Copy to clipboard"} className="[&_*]:cursor-pointer">
+      <button
+        className={twMerge(theme.base, className)}
+        onClick={() => copyToClipboard(valueToCopy, setIsJustCopied)}
+        {...restProps}
+        ref={ref}
+      >
+        <span className={theme.label}>{label}</span>
+      </button>
+    </Tooltip>
+  );
 });
+
+Clipboard.displayName = "Clipboard";

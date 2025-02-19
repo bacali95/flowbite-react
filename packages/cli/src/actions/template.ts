@@ -1,5 +1,5 @@
 import * as p from "@clack/prompts";
-import { Context } from "../context.js";
+import type { Context } from "../context.js";
 import { REPOS } from "../data.js";
 
 export async function getTemplate(context: Context) {

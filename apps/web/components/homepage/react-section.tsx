@@ -61,7 +61,7 @@ export function ReactSection() {
                 {feature_list.map((f, i) => (
                   <li key={i} className="flex items-center gap-2">
                     <svg
-                      className="size-5 rounded-full bg-cyan-100 p-1 text-cyan-700 dark:bg-gray-700"
+                      className="size-5 rounded-full bg-primary-100 p-1 text-primary-700 dark:bg-gray-700"
                       width="14"
                       height="10"
                       viewBox="0 0 14 10"
@@ -83,7 +83,7 @@ export function ReactSection() {
                 </Button>
                 <Button
                   as={Link}
-                  color="gray"
+                  color="alternative"
                   href="https://github.com/themesberg/flowbite-react"
                   rel="noopener"
                   target="_blank"

@@ -1,6 +1,16 @@
 "use client";
 
-import { Button, Drawer, Sidebar, TextInput } from "flowbite-react";
+import {
+  Button,
+  Drawer,
+  DrawerHeader,
+  DrawerItems,
+  Sidebar,
+  SidebarItem,
+  SidebarItemGroup,
+  SidebarItems,
+  TextInput,
+} from "flowbite-react";
 import { useState } from "react";
 import {
   HiChartPie,
@@ -18,7 +28,17 @@ import type { CodeData } from "~/components/code-demo";
 const code = `
 "use client";
 
-import { Button, Drawer, Sidebar, TextInput } from "flowbite-react";
+import {
+  Button,
+  Drawer,
+  DrawerHeader,
+  DrawerItems,
+  Sidebar,
+  SidebarItem,
+  SidebarItemGroup,
+  SidebarItems,
+  TextInput,
+} from "flowbite-react";
 import { useState } from "react";
 import {
   HiChartPie,
@@ -43,8 +63,8 @@ export function Component() {
         <Button onClick={() => setIsOpen(true)}>Show navigation</Button>
       </div>
       <Drawer open={isOpen} onClose={handleClose}>
-        <Drawer.Header title="MENU" titleIcon={() => <></>} />
-        <Drawer.Items>
+        <DrawerHeader title="MENU" titleIcon={() => <></>} />
+        <DrawerItems>
           <Sidebar
             aria-label="Sidebar with multi-level dropdown example"
             className="[&>div]:bg-transparent [&>div]:p-0"
@@ -54,40 +74,40 @@ export function Component() {
                 <form className="pb-3 md:hidden">
                   <TextInput icon={HiSearch} type="search" placeholder="Search" required size={32} />
                 </form>
-                <Sidebar.Items>
-                  <Sidebar.ItemGroup>
-                    <Sidebar.Item href="/" icon={HiChartPie}>
+                <SidebarItems>
+                  <SidebarItemGroup>
+                    <SidebarItem href="/" icon={HiChartPie}>
                       Dashboard
-                    </Sidebar.Item>
-                    <Sidebar.Item href="/e-commerce/products" icon={HiShoppingBag}>
+                    </SidebarItem>
+                    <SidebarItem href="/e-commerce/products" icon={HiShoppingBag}>
                       Products
-                    </Sidebar.Item>
-                    <Sidebar.Item href="/users/list" icon={HiUsers}>
+                    </SidebarItem>
+                    <SidebarItem href="/users/list" icon={HiUsers}>
                       Users list
-                    </Sidebar.Item>
-                    <Sidebar.Item href="/authentication/sign-in" icon={HiLogin}>
+                    </SidebarItem>
+                    <SidebarItem href="/authentication/sign-in" icon={HiLogin}>
                       Sign in
-                    </Sidebar.Item>
-                    <Sidebar.Item href="/authentication/sign-up" icon={HiPencil}>
+                    </SidebarItem>
+                    <SidebarItem href="/authentication/sign-up" icon={HiPencil}>
                       Sign up
-                    </Sidebar.Item>
-                  </Sidebar.ItemGroup>
-                  <Sidebar.ItemGroup>
-                    <Sidebar.Item href="https://github.com/themesberg/flowbite-react/" icon={HiClipboard}>
+                    </SidebarItem>
+                  </SidebarItemGroup>
+                  <SidebarItemGroup>
+                    <SidebarItem href="https://github.com/themesberg/flowbite-react/" icon={HiClipboard}>
                       Docs
-                    </Sidebar.Item>
-                    <Sidebar.Item href="https://flowbite-react.com/" icon={HiCollection}>
+                    </SidebarItem>
+                    <SidebarItem href="https://flowbite-react.com/" icon={HiCollection}>
                       Components
-                    </Sidebar.Item>
-                    <Sidebar.Item href="https://github.com/themesberg/flowbite-react/issues" icon={HiInformationCircle}>
+                    </SidebarItem>
+                    <SidebarItem href="https://github.com/themesberg/flowbite-react/issues" icon={HiInformationCircle}>
                       Help
-                    </Sidebar.Item>
-                  </Sidebar.ItemGroup>
-                </Sidebar.Items>
+                    </SidebarItem>
+                  </SidebarItemGroup>
+                </SidebarItems>
               </div>
             </div>
           </Sidebar>
-        </Drawer.Items>
+        </DrawerItems>
       </Drawer>
     </>
   );
@@ -105,8 +125,8 @@ export function Component() {
         <Button onClick={() => setIsOpen(true)}>Show navigation</Button>
       </div>
       <Drawer open={isOpen} onClose={handleClose}>
-        <Drawer.Header title="MENU" titleIcon={() => <></>} />
-        <Drawer.Items>
+        <DrawerHeader title="MENU" titleIcon={() => <></>} />
+        <DrawerItems>
           <Sidebar
             aria-label="Sidebar with multi-level dropdown example"
             className="[&>div]:bg-transparent [&>div]:p-0"
@@ -116,40 +136,40 @@ export function Component() {
                 <form className="pb-3 md:hidden">
                   <TextInput icon={HiSearch} type="search" placeholder="Search" required size={32} />
                 </form>
-                <Sidebar.Items>
-                  <Sidebar.ItemGroup>
-                    <Sidebar.Item href="/" icon={HiChartPie}>
+                <SidebarItems>
+                  <SidebarItemGroup>
+                    <SidebarItem href="/" icon={HiChartPie}>
                       Dashboard
-                    </Sidebar.Item>
-                    <Sidebar.Item href="/e-commerce/products" icon={HiShoppingBag}>
+                    </SidebarItem>
+                    <SidebarItem href="/e-commerce/products" icon={HiShoppingBag}>
                       Products
-                    </Sidebar.Item>
-                    <Sidebar.Item href="/users/list" icon={HiUsers}>
+                    </SidebarItem>
+                    <SidebarItem href="/users/list" icon={HiUsers}>
                       Users list
-                    </Sidebar.Item>
-                    <Sidebar.Item href="/authentication/sign-in" icon={HiLogin}>
+                    </SidebarItem>
+                    <SidebarItem href="/authentication/sign-in" icon={HiLogin}>
                       Sign in
-                    </Sidebar.Item>
-                    <Sidebar.Item href="/authentication/sign-up" icon={HiPencil}>
+                    </SidebarItem>
+                    <SidebarItem href="/authentication/sign-up" icon={HiPencil}>
                       Sign up
-                    </Sidebar.Item>
-                  </Sidebar.ItemGroup>
-                  <Sidebar.ItemGroup>
-                    <Sidebar.Item href="https://github.com/themesberg/flowbite-react/" icon={HiClipboard}>
+                    </SidebarItem>
+                  </SidebarItemGroup>
+                  <SidebarItemGroup>
+                    <SidebarItem href="https://github.com/themesberg/flowbite-react/" icon={HiClipboard}>
                       Docs
-                    </Sidebar.Item>
-                    <Sidebar.Item href="https://flowbite-react.com/" icon={HiCollection}>
+                    </SidebarItem>
+                    <SidebarItem href="https://flowbite-react.com/" icon={HiCollection}>
                       Components
-                    </Sidebar.Item>
-                    <Sidebar.Item href="https://github.com/themesberg/flowbite-react/issues" icon={HiInformationCircle}>
+                    </SidebarItem>
+                    <SidebarItem href="https://github.com/themesberg/flowbite-react/issues" icon={HiInformationCircle}>
                       Help
-                    </Sidebar.Item>
-                  </Sidebar.ItemGroup>
-                </Sidebar.Items>
+                    </SidebarItem>
+                  </SidebarItemGroup>
+                </SidebarItems>
               </div>
             </div>
           </Sidebar>
-        </Drawer.Items>
+        </DrawerItems>
       </Drawer>
     </>
   );
@@ -157,13 +177,11 @@ export function Component() {
 
 export const navigation: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "drawer/drawer.navigation.tsx",
   component: <Component />,
   iframe: 600,

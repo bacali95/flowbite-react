@@ -1,53 +1,63 @@
-import type { ComponentProps, FC, ReactNode } from "react";
-import { HiX } from "react-icons/hi";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
-import type { FlowbiteColors } from "../Flowbite";
+"use client";
 
-export interface FlowbiteAlertTheme {
+import { forwardRef, type ComponentProps, type FC, type ReactNode } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { XIcon } from "../../icons/x-icon";
+import { useThemeProvider } from "../../theme/provider";
+import type { DynamicStringEnumKeysOf, FlowbiteColors, ThemingProps } from "../../types";
+import { alertTheme } from "./theme";
+
+export interface AlertTheme {
   base: string;
   borderAccent: string;
-  closeButton: FlowbiteAlertCloseButtonTheme;
+  closeButton: AlertCloseButtonTheme;
   color: FlowbiteColors;
   icon: string;
   rounded: string;
   wrapper: string;
 }
 
-export interface FlowbiteAlertCloseButtonTheme {
+export interface AlertCloseButtonTheme {
   base: string;
   color: FlowbiteColors;
   icon: string;
 }
 
-export interface AlertProps extends Omit<ComponentProps<"div">, "color"> {
+export interface AlertProps extends Omit<ComponentProps<"div">, "color">, ThemingProps<AlertTheme> {
   additionalContent?: ReactNode;
   color?: DynamicStringEnumKeysOf<FlowbiteColors>;
   icon?: FC<ComponentProps<"svg">>;
   onDismiss?: boolean | (() => void);
   rounded?: boolean;
-  theme?: DeepPartial<FlowbiteAlertTheme>;
   withBorderAccent?: boolean;
 }
 
-export const Alert: FC<AlertProps> = ({
-  additionalContent,
-  children,
-  className,
-  color = "info",
-  icon: Icon,
-  onDismiss,
-  rounded = true,
-  theme: customTheme = {},
-  withBorderAccent,
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().alert, customTheme);
+export const Alert = forwardRef<HTMLDivElement, AlertProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [alertTheme, provider.theme?.alert, props.theme],
+    [get(provider.clearTheme, "alert"), props.clearTheme],
+    [get(provider.applyTheme, "alert"), props.applyTheme],
+  );
+
+  const {
+    additionalContent,
+    children,
+    className,
+    color = "info",
+    icon: Icon,
+    onDismiss,
+    rounded = true,
+    withBorderAccent,
+    ...restProps
+  } = resolveProps(props, provider.props?.alert);
 
   return (
     <div
+      ref={ref}
       className={twMerge(
         theme.base,
         theme.color[color],
@@ -56,7 +66,7 @@ export const Alert: FC<AlertProps> = ({
         className,
       )}
       role="alert"
-      {...props}
+      {...restProps}
     >
       <div className={theme.wrapper} data-testid="flowbite-alert-wrapper">
         {Icon && <Icon className={theme.icon} data-testid="flowbite-alert-icon" />}
@@ -68,13 +78,13 @@ export const Alert: FC<AlertProps> = ({
             onClick={onDismiss}
             type="button"
           >
-            <HiX aria-hidden className={theme.closeButton.icon} />
+            <XIcon aria-hidden className={theme.closeButton.icon} />
           </button>
         )}
       </div>
       {additionalContent && <div>{additionalContent}</div>}
     </div>
   );
-};
+});
 
 Alert.displayName = "Alert";

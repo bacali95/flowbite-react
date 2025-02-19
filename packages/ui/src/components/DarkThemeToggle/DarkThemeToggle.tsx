@@ -1,63 +1,66 @@
 "use client";
 
-import type { ComponentProps, FC } from "react";
-import type { IconBaseProps } from "react-icons";
-import { HiMoon, HiSun } from "react-icons/hi";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { useIsMounted } from "../../hooks/use-is-mounted";
+import { forwardRef, type ComponentProps, type FC } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
 import { useThemeMode } from "../../hooks/use-theme-mode";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
+import { MoonIcon } from "../../icons/moon-icon";
+import { SunIcon } from "../../icons/sun-icon";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { darkThemeToggleTheme } from "./theme";
 
-export interface FlowbiteDarkThemeToggleTheme {
-  root: FlowbiteDarkThemeToggleRootTheme;
+export interface DarkThemeToggleTheme {
+  root: DarkThemeToggleRootTheme;
 }
 
-export interface FlowbiteDarkThemeToggleRootTheme {
+export interface DarkThemeToggleRootTheme {
   base: string;
-  icon: string;
+  icon: {
+    base: string;
+    light: string;
+    dark: string;
+  };
 }
 
-export interface DarkThemeToggleProps extends ComponentProps<"button"> {
-  iconDark?: FC<IconBaseProps>;
-  iconLight?: FC<IconBaseProps>;
-  theme?: DeepPartial<FlowbiteDarkThemeToggleTheme>;
+export interface DarkThemeToggleProps extends ComponentProps<"button">, ThemingProps<DarkThemeToggleTheme> {
+  iconDark?: FC<ComponentProps<"svg">>;
+  iconLight?: FC<ComponentProps<"svg">>;
 }
 
-export const DarkThemeToggle: FC<DarkThemeToggleProps> = ({
-  className,
-  theme: customTheme = {},
-  iconDark: IconDark = HiSun,
-  iconLight: IconLight = HiMoon,
-  ...props
-}) => {
-  const isMounted = useIsMounted();
-  const { computedMode, toggleMode } = useThemeMode();
+export const DarkThemeToggle = forwardRef<HTMLButtonElement, DarkThemeToggleProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [darkThemeToggleTheme, provider.theme?.darkThemeToggle, props.theme],
+    [get(provider.clearTheme, "darkThemeToggle"), props.clearTheme],
+    [get(provider.applyTheme, "darkThemeToggle"), props.applyTheme],
+  );
 
-  const theme = mergeDeep(getTheme().darkThemeToggle, customTheme);
+  const {
+    className,
+    iconDark: IconDark = SunIcon,
+    iconLight: IconLight = MoonIcon,
+    ...restProps
+  } = resolveProps(props, provider.props?.darkThemeToggle);
+
+  const { toggleMode } = useThemeMode();
 
   return (
     <button
+      ref={ref}
       type="button"
       aria-label="Toggle dark mode"
       data-testid="dark-theme-toggle"
       className={twMerge(theme.root.base, className)}
       onClick={toggleMode}
-      {...props}
+      {...restProps}
     >
-      <IconDark
-        aria-label="Currently dark mode"
-        data-active={isMounted && computedMode === "dark"}
-        className={twMerge(theme.root.icon, "hidden dark:block")}
-      />
-      <IconLight
-        aria-label="Currently light mode"
-        data-active={isMounted && computedMode === "light"}
-        className={twMerge(theme.root.icon, "dark:hidden")}
-      />
+      <IconDark aria-label="Currently dark mode" className={twMerge(theme.root.icon.base, theme.root.icon.dark)} />
+      <IconLight aria-label="Currently light mode" className={twMerge(theme.root.icon.base, theme.root.icon.light)} />
     </button>
   );
-};
+});
 
 DarkThemeToggle.displayName = "DarkThemeToggle";

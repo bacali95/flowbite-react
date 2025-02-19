@@ -27,11 +27,11 @@ The downside of this approach is that you have to change the `className` prop in
 
 ## Option 2: Create a custom theme
 
-You can create a custom theme and pass it to the `<Flowbite>` component. The custom theme will be merged with the default theme, and the resulting theme will be used by the components.
+You can create a custom theme and pass it to the `<ThemeProvider>` component. The custom theme will be merged with the default theme, and the resulting theme will be used by the components.
 
 ```tsx
 import type { CustomFlowbiteTheme } from "flowbite-react";
-import { Flowbite } from "flowbite-react";
+import { ThemeProvider } from "flowbite-react";
 
 const customTheme: CustomFlowbiteTheme = {
   button: {
@@ -43,9 +43,9 @@ const customTheme: CustomFlowbiteTheme = {
 
 export default function MyPage() {
   return (
-    <Flowbite theme={{ theme: customTheme }}>
+    <ThemeProvider theme={customTheme}>
       <Button color="primary">Click me</Button>
-    </Flowbite>
+    </ThemeProvider>
   );
 }
 ```

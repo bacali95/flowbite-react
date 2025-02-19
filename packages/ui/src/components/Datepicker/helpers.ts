@@ -15,7 +15,7 @@ export enum WeekStart {
   Saturday = 6,
 }
 
-export const isDateInRange = (date: Date, minDate?: Date, maxDate?: Date): boolean => {
+export function isDateInRange(date: Date, minDate?: Date, maxDate?: Date): boolean {
   const dateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
 
   if (minDate && maxDate) {
@@ -35,20 +35,20 @@ export const isDateInRange = (date: Date, minDate?: Date, maxDate?: Date): boole
   }
 
   return true;
-};
+}
 
-export const isDateEqual = (date: Date, selectedDate: Date): boolean => {
+export function isDateEqual(date: Date, selectedDate: Date): boolean {
   date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
   selectedDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
 
   return date.getTime() === selectedDate.getTime();
-};
+}
 
-export const isMonthEqual = (date: Date, selectedDate: Date): boolean => {
+export function isMonthEqual(date: Date, selectedDate: Date): boolean {
   return date.getMonth() === selectedDate.getMonth();
-};
+}
 
-export const getFirstDateInRange = (date: Date, minDate?: Date, maxDate?: Date): Date => {
+export function getFirstDateInRange(date: Date, minDate?: Date, maxDate?: Date): Date {
   if (!isDateInRange(date, minDate, maxDate)) {
     if (minDate && date < minDate) {
       date = minDate;
@@ -57,9 +57,9 @@ export const getFirstDateInRange = (date: Date, minDate?: Date, maxDate?: Date):
     }
   }
   return date;
-};
+}
 
-export const getFirstDayOfTheMonth = (date: Date, weekStart: WeekStart): Date => {
+export function getFirstDayOfTheMonth(date: Date, weekStart: WeekStart): Date {
   const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
   const dayOfWeek = firstDayOfMonth.getDay();
 
@@ -69,9 +69,9 @@ export const getFirstDayOfTheMonth = (date: Date, weekStart: WeekStart): Date =>
   }
 
   return addDays(firstDayOfMonth, -diff);
-};
+}
 
-export const getWeekDays = (lang: string, weekStart: WeekStart): string[] => {
+export function getWeekDays(lang: string, weekStart: WeekStart): string[] {
   const weekdays: string[] = [];
   const date = new Date(0);
   date.setDate(date.getDate() - date.getDay() + weekStart);
@@ -83,27 +83,27 @@ export const getWeekDays = (lang: string, weekStart: WeekStart): string[] => {
   }
 
   return weekdays;
-};
+}
 
-export const addDays = (date: Date, amount: number): Date => {
+export function addDays(date: Date, amount: number): Date {
   const newDate = new Date(date);
   newDate.setDate(newDate.getDate() + amount);
   return newDate;
-};
+}
 
-export const addMonths = (date: Date, amount: number): Date => {
+export function addMonths(date: Date, amount: number): Date {
   const newDate = new Date(date);
   newDate.setMonth(newDate.getMonth() + amount);
   return newDate;
-};
+}
 
-export const addYears = (date: Date, amount: number): Date => {
+export function addYears(date: Date, amount: number): Date {
   const newDate = new Date(date);
   newDate.setFullYear(newDate.getFullYear() + amount);
   return newDate;
-};
+}
 
-export const getFormattedDate = (language: string, date: Date, options?: Intl.DateTimeFormatOptions): string => {
+export function getFormattedDate(language: string, date: Date, options?: Intl.DateTimeFormatOptions): string {
   let defaultOptions: Intl.DateTimeFormatOptions = {
     day: "numeric",
     month: "long",
@@ -115,25 +115,20 @@ export const getFormattedDate = (language: string, date: Date, options?: Intl.Da
   }
 
   return new Intl.DateTimeFormat(language, defaultOptions).format(date);
-};
+}
 
-export const startOfYearPeriod = (date: Date, years: number): number => {
+export function startOfYearPeriod(date: Date, years: number): number {
   const year = date.getFullYear();
   return Math.floor(year / years) * years;
-};
+}
 
-export const isDateInDecade = (date: Date, startYear: number): boolean => {
+export function isDateInDecade(date: Date, startYear: number): boolean {
   const year = date.getFullYear();
   const endYear = startYear + 9;
   return year >= startYear && year <= endYear;
-};
+}
 
-export const isDateRangeInDecade = (
-  startDate: Date,
-  endDate: Date,
-  decadeStart: number,
-  decadeEnd: number,
-): boolean => {
+export function isDateRangeInDecade(startDate: Date, endDate: Date, decadeStart: number, decadeEnd: number): boolean {
   const startYear = startDate.getFullYear();
   const endYear = endDate.getFullYear();
 
@@ -155,4 +150,4 @@ export const isDateRangeInDecade = (
 
   // If decadeStart or decadeEnd is not provided, treat it as an open-ended range
   return true;
-};
+}

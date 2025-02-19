@@ -2,49 +2,55 @@
 
 import type { ComponentProps, FC, ReactElement } from "react";
 import { Children, cloneElement, useMemo, useState } from "react";
-import { HiChevronDown } from "react-icons/hi";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import type { FlowbiteBoolean } from "../Flowbite";
-import type { FlowbiteAccordionComponentTheme } from "./AccordionContent";
-import { AccordionContent } from "./AccordionContent";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { ChevronDownIcon } from "../../icons/chevron-down-icon";
+import { useThemeProvider } from "../../theme/provider";
+import type { FlowbiteBoolean, ThemingProps } from "../../types";
+import type { AccordionContentTheme } from "./AccordionContent";
 import type { AccordionPanelProps } from "./AccordionPanel";
-import { AccordionPanel } from "./AccordionPanel";
-import type { FlowbiteAccordionTitleTheme } from "./AccordionTitle";
-import { AccordionTitle } from "./AccordionTitle";
+import type { AccordionTitleTheme } from "./AccordionTitle";
+import { accordionTheme } from "./theme";
 
-export interface FlowbiteAccordionTheme {
-  root: FlowbiteAccordionRootTheme;
-  content: FlowbiteAccordionComponentTheme;
-  title: FlowbiteAccordionTitleTheme;
+export interface AccordionTheme {
+  root: AccordionRootTheme;
+  content: AccordionContentTheme;
+  title: AccordionTitleTheme;
 }
 
-export interface FlowbiteAccordionRootTheme {
+export interface AccordionRootTheme {
   base: string;
   flush: FlowbiteBoolean;
 }
 
-export interface AccordionProps extends ComponentProps<"div"> {
+export interface AccordionProps extends ComponentProps<"div">, ThemingProps<AccordionRootTheme> {
   alwaysOpen?: boolean;
   arrowIcon?: FC<ComponentProps<"svg">>;
   children: ReactElement<AccordionPanelProps> | ReactElement<AccordionPanelProps>[];
   flush?: boolean;
   collapseAll?: boolean;
-  theme?: DeepPartial<FlowbiteAccordionTheme>;
 }
 
-const AccordionComponent: FC<AccordionProps> = ({
-  alwaysOpen = false,
-  arrowIcon = HiChevronDown,
-  children,
-  flush = false,
-  collapseAll = false,
-  className,
-  theme: customTheme = {},
-  ...props
-}) => {
+export function Accordion(props: AccordionProps) {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [accordionTheme.root, provider.theme?.accordion?.root, props.theme],
+    [get(provider.clearTheme, "accordion.root"), props.clearTheme],
+    [get(provider.applyTheme, "accordion.root"), props.applyTheme],
+  );
+
+  const {
+    alwaysOpen = false,
+    arrowIcon = ChevronDownIcon,
+    children,
+    flush = false,
+    collapseAll = false,
+    className,
+    ...restProps
+  } = resolveProps(props, provider.props?.accordion);
+
   const [isOpen, setOpen] = useState(collapseAll ? -1 : 0);
 
   const panels = useMemo(
@@ -61,26 +67,15 @@ const AccordionComponent: FC<AccordionProps> = ({
     [alwaysOpen, arrowIcon, children, flush, isOpen],
   );
 
-  const theme = mergeDeep(getTheme().accordion.root, customTheme);
-
   return (
     <div
       className={twMerge(theme.base, theme.flush[flush ? "on" : "off"], className)}
       data-testid="flowbite-accordion"
-      {...props}
+      {...restProps}
     >
       {panels}
     </div>
   );
-};
+}
 
-AccordionComponent.displayName = "Accordion";
-AccordionPanel.displayName = "Accordion.Panel";
-AccordionTitle.displayName = "Accordion.Title";
-AccordionContent.displayName = "Accordion.Content";
-
-export const Accordion = Object.assign(AccordionComponent, {
-  Panel: AccordionPanel,
-  Title: AccordionTitle,
-  Content: AccordionContent,
-});
+Accordion.displayName = "Accordion";

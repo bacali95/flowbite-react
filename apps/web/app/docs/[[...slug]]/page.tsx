@@ -53,7 +53,7 @@ export default function DocPage({ params }: Props) {
 
   return (
     <div className="flex">
-      <div className="flex min-w-0 flex-col px-4 pb-12 pt-6 lg:px-8 lg:pb-16 lg:pt-8 xl:pb-24">
+      <div className="flex min-w-0 flex-1 flex-col px-4 pb-12 pt-6 lg:px-8 lg:pb-16 lg:pt-8 xl:pb-24">
         <main>
           <ContentLayout title={doc.title} description={doc.description}>
             <Mdx code={doc.body.code} />
@@ -149,7 +149,7 @@ function DocsPager({ doc }: { doc: Doc }) {
 
 function ToC({ doc }: { doc: Doc }) {
   return (
-    <div className="hidden w-64 flex-none px-8 xl:block xl:text-sm">
+    <div className="hidden w-64 flex-none xl:block xl:text-sm">
       <div className="sticky top-20 flex h-[calc(100vh-5rem)] flex-col justify-between overflow-y-auto pb-6">
         <div className="mb-8">
           <h4 className="mb-4 mt-5 pl-2.5 text-sm font-semibold uppercase tracking-wide text-gray-900 lg:text-xs dark:text-white">

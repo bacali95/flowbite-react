@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteAccordionTheme } from "./Accordion";
+import type { AccordionTheme } from "./Accordion";
 
-export const accordionTheme: FlowbiteAccordionTheme = createTheme({
+export const accordionTheme = createTheme<AccordionTheme>({
   root: {
     base: "divide-y divide-gray-200 border-gray-200 dark:divide-gray-700 dark:border-gray-700",
     flush: {

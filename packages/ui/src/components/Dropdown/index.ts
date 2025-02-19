@@ -1,8 +1,11 @@
 export { Dropdown } from "./Dropdown";
-export type { DropdownProps, FlowbiteDropdownFloatingTheme, FlowbiteDropdownTheme, TriggerProps } from "./Dropdown";
+export type { DropdownFloatingTheme, DropdownProps, DropdownTheme, TriggerProps } from "./Dropdown";
+export { DropdownContext, useDropdownContext } from "./DropdownContext";
+export type { DropdownContextValue } from "./DropdownContext";
 export { DropdownDivider } from "./DropdownDivider";
-export type { DropdownDividerProps, FlowbiteDropdownDividerTheme } from "./DropdownDivider";
+export type { DropdownDividerProps, DropdownDividerTheme } from "./DropdownDivider";
 export { DropdownHeader } from "./DropdownHeader";
-export type { DropdownHeaderProps, FlowbiteDropdownHeaderTheme } from "./DropdownHeader";
+export type { DropdownHeaderProps, DropdownHeaderTheme } from "./DropdownHeader";
 export { DropdownItem } from "./DropdownItem";
-export type { DropdownItemProps, FlowbiteDropdownItemTheme } from "./DropdownItem";
+export type { DropdownItemProps, DropdownItemTheme } from "./DropdownItem";
+export { dropdownTheme } from "./theme";

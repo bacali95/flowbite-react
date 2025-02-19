@@ -1,23 +1,32 @@
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
-import type { FlowbiteBoolean, FlowbiteColors, FlowbiteSizes } from "../Flowbite";
+"use client";
 
-export interface FlowbiteBadgeTheme {
-  root: FlowbiteBadgeRootTheme;
-  icon: FlowbiteBadgeIconTheme;
+import { forwardRef, type ComponentProps, type FC } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type {
+  DynamicStringEnumKeysOf,
+  FlowbiteBoolean,
+  FlowbiteColors,
+  FlowbiteSizes,
+  ThemingProps,
+} from "../../types";
+import { badgeTheme } from "./theme";
+
+export interface BadgeTheme {
+  root: BadgeRootTheme;
+  icon: BadgeIconTheme;
 }
 
-export interface FlowbiteBadgeRootTheme {
+export interface BadgeRootTheme {
   base: string;
   color: FlowbiteColors;
-  href: string;
   size: BadgeSizes;
 }
 
-export interface FlowbiteBadgeIconTheme extends FlowbiteBoolean {
+export interface BadgeIconTheme extends FlowbiteBoolean {
   size: BadgeSizes;
 }
 
@@ -25,28 +34,32 @@ export interface BadgeSizes extends Pick<FlowbiteSizes, "xs" | "sm"> {
   [key: string]: string;
 }
 
-export interface BadgeProps extends Omit<ComponentProps<"span">, "color"> {
+export interface BadgeProps extends Omit<ComponentProps<"span">, "color">, ThemingProps<BadgeTheme> {
   color?: DynamicStringEnumKeysOf<FlowbiteColors>;
-  href?: string;
   icon?: FC<ComponentProps<"svg">>;
   size?: DynamicStringEnumKeysOf<BadgeSizes>;
-  theme?: DeepPartial<FlowbiteBadgeTheme>;
 }
 
-export const Badge: FC<BadgeProps> = ({
-  children,
-  color = "info",
-  href,
-  icon: Icon,
-  size = "xs",
-  className,
-  theme: customTheme = {},
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().badge, customTheme);
+export const Badge = forwardRef<HTMLSpanElement, BadgeProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [badgeTheme, provider.theme?.badge, props.theme],
+    [get(provider.clearTheme, "badge"), props.clearTheme],
+    [get(provider.applyTheme, "badge"), props.applyTheme],
+  );
 
-  const Content: FC = () => (
+  const {
+    children,
+    color = "info",
+    icon: Icon,
+    size = "xs",
+    className,
+    ...restProps
+  } = resolveProps(props, provider.props?.badge);
+
+  return (
     <span
+      ref={ref}
       className={twMerge(
         theme.root.base,
         theme.root.color[color],
@@ -55,20 +68,12 @@ export const Badge: FC<BadgeProps> = ({
         className,
       )}
       data-testid="flowbite-badge"
-      {...props}
+      {...restProps}
     >
       {Icon && <Icon aria-hidden className={theme.icon.size[size]} data-testid="flowbite-badge-icon" />}
       {children && <span>{children}</span>}
     </span>
   );
-
-  return href ? (
-    <a className={theme.root.href} href={href}>
-      <Content />
-    </a>
-  ) : (
-    <Content />
-  );
-};
+});
 
 Badge.displayName = "Badge";

@@ -2,15 +2,16 @@ export { Avatar } from "./Avatar";
 export type {
   AvatarColors,
   AvatarImageProps,
+  AvatarImageTheme,
+  AvatarInitialsTheme,
   AvatarProps,
+  AvatarRootTheme,
   AvatarSizes,
-  FlowbiteAvatarImageTheme,
-  FlowbiteAvatarInitialsTheme,
-  FlowbiteAvatarRootTheme,
-  FlowbiteAvatarStatusTheme,
-  FlowbiteAvatarTheme,
+  AvatarStatusTheme,
+  AvatarTheme,
 } from "./Avatar";
 export { AvatarGroup } from "./AvatarGroup";
-export type { AvatarGroupProps, FlowbiteAvatarGroupTheme } from "./AvatarGroup";
+export type { AvatarGroupProps, AvatarGroupTheme } from "./AvatarGroup";
 export { AvatarGroupCounter } from "./AvatarGroupCounter";
-export type { AvatarGroupCounterProps, FlowbiteAvatarGroupCounterTheme } from "./AvatarGroupCounter";
+export type { AvatarGroupCounterProps, AvatarGroupCounterTheme } from "./AvatarGroupCounter";
+export { avatarTheme } from "./theme";

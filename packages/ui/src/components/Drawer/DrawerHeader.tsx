@@ -1,14 +1,18 @@
 "use client";
 
 import type { ComponentProps, FC } from "react";
-import { useId } from "react";
-import { MdClose, MdHome } from "react-icons/md";
-import { mergeDeep } from "../../helpers/merge-deep";
-import type { DeepPartial } from "../../types";
-import type { FlowbiteBoolean } from "../Flowbite";
+import { forwardRef, useId } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { CloseIcon as DefaultCloseIcon } from "../../icons/close-icon";
+import { HomeIcon } from "../../icons/home-icon";
+import { useThemeProvider } from "../../theme/provider";
+import type { FlowbiteBoolean, ThemingProps } from "../../types";
 import { useDrawerContext } from "./DrawerContext";
+import { drawerTheme } from "./theme";
 
-export interface FlowbiteDrawerHeaderTheme {
+export interface DrawerHeaderTheme {
   inner: {
     titleIcon: string;
     titleText: string;
@@ -18,30 +22,42 @@ export interface FlowbiteDrawerHeaderTheme {
   collapsed: FlowbiteBoolean;
 }
 
-export interface DrawerHeaderProps extends ComponentProps<"div">, Record<string, unknown> {
+export interface DrawerHeaderProps extends ComponentProps<"div">, ThemingProps<DrawerHeaderTheme> {
   closeIcon?: FC<ComponentProps<"svg">>;
-  theme?: DeepPartial<FlowbiteDrawerHeaderTheme>;
   title?: string;
   titleIcon?: FC<ComponentProps<"svg">>;
 }
 
-export const DrawerHeader: FC<DrawerHeaderProps> = ({
-  children,
-  className,
-  closeIcon: CloseIcon = MdClose,
-  theme: customTheme = {},
-  title,
-  titleIcon: TitleIcon = MdHome,
-  ...props
-}) => {
+export const DrawerHeader = forwardRef<HTMLDivElement, DrawerHeaderProps>((props, ref) => {
   const id = useId();
 
-  const { id: mainDivId, isOpen, onClose, theme: rootTheme } = useDrawerContext();
+  const {
+    id: mainDivId,
+    isOpen,
+    onClose,
+    theme: rootTheme,
+    clearTheme: rootClearTheme,
+    applyTheme: rootApplyTheme,
+  } = useDrawerContext();
 
-  const theme = mergeDeep(rootTheme.header, customTheme);
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [drawerTheme.header, provider.theme?.drawer?.header, rootTheme?.header, props.theme],
+    [get(provider.clearTheme, "drawer.header"), get(rootClearTheme, "header"), props.clearTheme],
+    [get(provider.applyTheme, "drawer.header"), get(rootApplyTheme, "header"), props.applyTheme],
+  );
+
+  const {
+    children,
+    className,
+    closeIcon: CloseIcon = DefaultCloseIcon,
+    title,
+    titleIcon: TitleIcon = HomeIcon,
+    ...restProps
+  } = resolveProps(props, provider.props?.drawerHeader);
 
   return (
-    <div className={className} {...props}>
+    <div ref={ref} className={className} {...restProps}>
       <h5 className={theme.inner.titleText} id={mainDivId}>
         <TitleIcon aria-hidden className={theme.inner.titleIcon} />
         {title}
@@ -55,6 +71,6 @@ export const DrawerHeader: FC<DrawerHeaderProps> = ({
       </span>
     </div>
   );
-};
+});
 
-DrawerHeader.displayName = "Drawer.Header";
+DrawerHeader.displayName = "DrawerHeader";

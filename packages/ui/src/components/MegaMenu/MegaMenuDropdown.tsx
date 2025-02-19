@@ -1,31 +1,35 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ComponentProps, type FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import { Dropdown, FlowbiteDropdownTheme } from "../Dropdown";
+import { useEffect, useId, useRef, useState, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { Dropdown, type DropdownTheme } from "../Dropdown";
+import { megaMenuTheme } from "./theme";
 
-export interface FlowbiteMegaMenuDropdownTheme {
+export interface MegaMenuDropdownTheme {
   base: string;
-  toggle: FlowbiteDropdownTheme;
+  toggle: DropdownTheme;
 }
 
-export interface MegaMenuDropdownProps extends ComponentProps<"div"> {
-  theme?: FlowbiteMegaMenuDropdownTheme;
+export interface MegaMenuDropdownProps extends ComponentProps<"div">, ThemingProps<MegaMenuDropdownTheme> {
   toggle?: JSX.Element;
 }
 
-export const MegaMenuDropdown: FC<MegaMenuDropdownProps> = ({
-  children,
-  className,
-  theme: customTheme = {},
-  toggle,
-  ...props
-}) => {
+export function MegaMenuDropdown(props: MegaMenuDropdownProps) {
   const [labelledBy, setLabelledBy] = useState<string | undefined>(undefined);
 
-  const theme = mergeDeep(getTheme().megaMenu.dropdown, customTheme);
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [megaMenuTheme.dropdown, provider.theme?.megaMenu?.dropdown, props.theme],
+    [get(provider.clearTheme, "megaMenu.dropdown"), props.clearTheme],
+    [get(provider.applyTheme, "megaMenu.dropdown"), props.applyTheme],
+  );
+
+  const { children, className, toggle, ...restProps } = resolveProps(props, provider.props?.megaMenuDropdown);
 
   if (toggle) {
     return (
@@ -45,13 +49,8 @@ export const MegaMenuDropdown: FC<MegaMenuDropdownProps> = ({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const findToggle = function () {
-      const megaMenu = ref.current?.closest("nav");
-
-      return megaMenu?.querySelector('[aria-haspopup="menu"]');
-    };
-
-    setLabelledBy(findToggle()?.id);
+    const toggle = ref.current?.closest("nav")?.querySelector('[aria-haspopup="menu"]');
+    setLabelledBy(toggle?.id);
   }, []);
 
   return (
@@ -61,11 +60,11 @@ export const MegaMenuDropdown: FC<MegaMenuDropdownProps> = ({
       ref={ref}
       role="menu"
       className={twMerge(theme.base, className)}
-      {...props}
+      {...restProps}
     >
       {children}
     </div>
   );
-};
+}
 
-MegaMenuDropdown.displayName = "MegaMenu.Dropdown";
+MegaMenuDropdown.displayName = "MegaMenuDropdown";

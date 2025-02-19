@@ -1,44 +1,44 @@
 "use client";
 
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
-import { RatingAdvanced } from "./RatingAdvanced";
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { DynamicStringEnumKeysOf, ThemingProps } from "../../types";
 import { RatingContext } from "./RatingContext";
-import type { FlowbiteRatingStarTheme, FlowbiteStarSizes } from "./RatingStar";
-import { RatingStar } from "./RatingStar";
+import type { RatingStarSizes, RatingStarTheme } from "./RatingStar";
+import { ratingTheme } from "./theme";
 
-export interface FlowbiteRatingTheme {
+export interface RatingTheme {
   root: {
     base: string;
   };
-  star: FlowbiteRatingStarTheme;
+  star: RatingStarTheme;
 }
 
-export interface RatingProps extends ComponentProps<"div"> {
-  size?: DynamicStringEnumKeysOf<FlowbiteStarSizes>;
-  theme?: DeepPartial<FlowbiteRatingTheme>;
+export interface RatingProps extends ComponentProps<"div">, ThemingProps<RatingTheme> {
+  size?: DynamicStringEnumKeysOf<RatingStarSizes>;
 }
 
-const RatingComponent: FC<RatingProps> = ({ children, className, size = "sm", theme: customTheme = {}, ...props }) => {
-  const theme = mergeDeep(getTheme().rating, customTheme);
+export const Rating = forwardRef<HTMLDivElement, RatingProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [ratingTheme, provider.theme?.rating, props.theme],
+    [get(provider.clearTheme, "rating"), props.clearTheme],
+    [get(provider.applyTheme, "rating"), props.applyTheme],
+  );
+
+  const { className, size = "sm", ...restProps } = resolveProps(props, provider.props?.rating);
 
   return (
-    <RatingContext.Provider value={{ theme, size }}>
-      <div className={twMerge(theme.root.base, className)} {...props}>
-        {children}
-      </div>
+    <RatingContext.Provider
+      value={{ theme: props.theme, clearTheme: props.clearTheme, applyTheme: props.applyTheme, size }}
+    >
+      <div ref={ref} className={twMerge(theme.root.base, className)} {...restProps} />
     </RatingContext.Provider>
   );
-};
-
-RatingComponent.displayName = "Rating";
-RatingStar.displayName = "Rating.Star";
-RatingAdvanced.displayName = "Rating.Advanced";
-
-export const Rating = Object.assign(RatingComponent, {
-  Star: RatingStar,
-  Advanced: RatingAdvanced,
 });
+
+Rating.displayName = "Rating";

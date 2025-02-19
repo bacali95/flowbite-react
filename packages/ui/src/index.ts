@@ -17,7 +17,6 @@ export * from "./components/Drawer";
 export * from "./components/Dropdown";
 export * from "./components/FileInput";
 export * from "./components/FloatingLabel";
-export * from "./components/Flowbite";
 export * from "./components/Footer";
 export * from "./components/HelperText";
 export * from "./components/HR";
@@ -39,22 +38,21 @@ export * from "./components/Sidebar";
 export * from "./components/Spinner";
 export * from "./components/Table";
 export * from "./components/Tabs";
-export * from "./components/TextInput";
 export * from "./components/Textarea";
-export * from "./components/ThemeModeScript";
+export * from "./components/TextInput";
 export * from "./components/Timeline";
 export * from "./components/Toast";
 export * from "./components/ToggleSwitch";
 export * from "./components/Tooltip";
 
-// hooks
-export * from "./hooks/use-theme-mode";
-
-// theme
-export * from "./theme";
-
 // helpers
 export { createTheme } from "./helpers/create-theme";
 
-// theme store
-export { getTheme, getThemeMode } from "./theme-store";
+// hooks
+export * from "./hooks/use-theme-mode";
+
+// icons
+export * from "./icons";
+
+// theme
+export * from "./theme";
