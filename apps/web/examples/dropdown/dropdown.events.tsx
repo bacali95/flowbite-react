@@ -1,20 +1,20 @@
 "use client";
 
-import { Dropdown } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import { Dropdown, DropdownItem } from "flowbite-react";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
 "use client";
 
-import { Dropdown } from "flowbite-react";
+import { Dropdown, DropdownItem } from "flowbite-react";
 
 export function Component() {
   return (
     <Dropdown label="Dropdown">
-      <Dropdown.Item onClick={() => alert('Dashboard!')}>Dashboard</Dropdown.Item>
-      <Dropdown.Item onClick={() => alert('Settings!')}>Settings</Dropdown.Item>
-      <Dropdown.Item onClick={() => alert('Earnings!')}>Earnings</Dropdown.Item>
-      <Dropdown.Item onClick={() => alert('Sign out!')}>Sign out</Dropdown.Item>
+      <DropdownItem onClick={() => alert("Dashboard!")}>Dashboard</DropdownItem>
+      <DropdownItem onClick={() => alert("Settings!")}>Settings</DropdownItem>
+      <DropdownItem onClick={() => alert("Earnings!")}>Earnings</DropdownItem>
+      <DropdownItem onClick={() => alert("Sign out!")}>Sign out</DropdownItem>
     </Dropdown>
   );
 }
@@ -23,10 +23,10 @@ export function Component() {
 export function Component() {
   return (
     <Dropdown label="Dropdown">
-      <Dropdown.Item onClick={() => alert("Dashboard!")}>Dashboard</Dropdown.Item>
-      <Dropdown.Item onClick={() => alert("Settings!")}>Settings</Dropdown.Item>
-      <Dropdown.Item onClick={() => alert("Earnings!")}>Earnings</Dropdown.Item>
-      <Dropdown.Item onClick={() => alert("Sign out!")}>Sign out</Dropdown.Item>
+      <DropdownItem onClick={() => alert("Dashboard!")}>Dashboard</DropdownItem>
+      <DropdownItem onClick={() => alert("Settings!")}>Settings</DropdownItem>
+      <DropdownItem onClick={() => alert("Earnings!")}>Earnings</DropdownItem>
+      <DropdownItem onClick={() => alert("Sign out!")}>Sign out</DropdownItem>
     </Dropdown>
   );
 }
@@ -34,7 +34,7 @@ export function Component() {
 export const events: CodeData = {
   type: "single",
   code: {
-    fileName: "client",
+    fileName: "index",
     language: "tsx",
     code,
   },

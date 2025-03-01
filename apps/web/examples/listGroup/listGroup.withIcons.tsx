@@ -1,30 +1,12 @@
+"use client";
+
 import { ListGroup, ListGroupItem } from "flowbite-react";
 import { HiCloudDownload, HiInbox, HiOutlineAdjustments, HiUserCircle } from "react-icons/hi";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
 "use client";
 
-import { ListGroup } from "flowbite-react";
-import { HiCloudDownload, HiInbox, HiOutlineAdjustments, HiUserCircle } from "react-icons/hi";
-
-export function Component() {
-  return (
-    <div className="flex justify-center">
-      <ListGroup className="w-48">
-        <ListGroup.Item icon={HiUserCircle} active>
-          Profile
-        </ListGroup.Item>
-        <ListGroup.Item icon={HiOutlineAdjustments}>Settings</ListGroup.Item>
-        <ListGroup.Item icon={HiInbox}>Messages</ListGroup.Item>
-        <ListGroup.Item icon={HiCloudDownload}>Download</ListGroup.Item>
-      </ListGroup>
-    </div>
-  );
-}
-`;
-
-const codeRSC = `
 import { ListGroup, ListGroupItem } from "flowbite-react";
 import { HiCloudDownload, HiInbox, HiOutlineAdjustments, HiUserCircle } from "react-icons/hi";
 
@@ -61,18 +43,11 @@ export function Component() {
 
 export const withIcons: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "listGroup/listGroup.withIcons.tsx",
   component: <Component />,
 };

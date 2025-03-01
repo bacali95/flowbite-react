@@ -1,2 +1,3 @@
 export { Progress } from "./Progress";
-export type { FlowbiteProgressTheme, ProgressColor, ProgressProps, ProgressSizes } from "./Progress";
+export type { ProgressColor, ProgressProps, ProgressSizes, ProgressTheme } from "./Progress";
+export { progressTheme } from "./theme";

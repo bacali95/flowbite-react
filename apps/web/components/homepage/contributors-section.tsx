@@ -75,9 +75,9 @@ export async function ContributorsSection() {
                 rel="noopener"
                 target="_blank"
                 href="https://github.com/themesberg/flowbite-react"
-                className="flex items-center gap-2 whitespace-nowrap text-base font-medium text-cyan-700 hover:underline"
+                className="flex items-center gap-2 whitespace-nowrap text-base font-medium text-primary-700 hover:underline dark:text-primary-500"
               >
-                See our repository{" "}
+                See our repository
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"

@@ -1,72 +1,56 @@
 "use client";
 
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import { TimelineBody } from "./TimelineBody";
-import { TimelineContent } from "./TimelineContent";
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { timelineTheme } from "./theme";
 import { TimelineContext } from "./TimelineContext";
-import { TimelineItem, type FlowbiteTimelineItemTheme } from "./TimelineItem";
-import { TimelinePoint } from "./TimelinePoint";
-import { TimelineTime } from "./TimelineTime";
-import { TimelineTitle } from "./TimelineTitle";
+import type { TimelineItemTheme } from "./TimelineItem";
 
-export interface FlowbiteTimelineTheme {
+export interface TimelineTheme {
   root: {
     direction: {
       horizontal: string;
       vertical: string;
     };
   };
-  item: FlowbiteTimelineItemTheme;
+  item: TimelineItemTheme;
 }
 
-export interface TimelineProps extends ComponentProps<"ol"> {
+export interface TimelineProps extends ComponentProps<"ol">, ThemingProps<TimelineTheme> {
   horizontal?: boolean;
-  theme?: DeepPartial<FlowbiteTimelineTheme>;
 }
 
-const TimelineComponent: FC<TimelineProps> = ({
-  children,
-  className,
-  horizontal,
-  theme: customTheme = {},
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().timeline, customTheme);
+export const Timeline = forwardRef<HTMLOListElement, TimelineProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [timelineTheme, provider.theme?.timeline, props.theme],
+    [get(provider.clearTheme, "timeline"), props.clearTheme],
+    [get(provider.applyTheme, "timeline"), props.applyTheme],
+  );
+
+  const { className, horizontal, ...restProps } = resolveProps(props, provider.props?.timeline);
 
   return (
-    <TimelineContext.Provider value={{ theme, horizontal }}>
+    <TimelineContext.Provider
+      value={{ theme: props.theme, clearTheme: props.clearTheme, applyTheme: props.applyTheme, horizontal }}
+    >
       <ol
+        ref={ref}
         data-testid="timeline-component"
         className={twMerge(
           horizontal && theme.root.direction.horizontal,
           !horizontal && theme.root.direction.vertical,
           className,
         )}
-        {...props}
-      >
-        {children}
-      </ol>
+        {...restProps}
+      />
     </TimelineContext.Provider>
   );
-};
-
-TimelineComponent.displayName = "Timeline";
-TimelineItem.displayName = "Timeline.Item";
-TimelinePoint.displayName = "Timeline.Point";
-TimelineContent.displayName = "Timeline.Content";
-TimelineTime.displayName = "Timeline.Time";
-TimelineTitle.displayName = "Timeline.Title";
-TimelineBody.displayName = "Timeline.Body";
-
-export const Timeline = Object.assign(TimelineComponent, {
-  Item: TimelineItem,
-  Point: TimelinePoint,
-  Content: TimelineContent,
-  Time: TimelineTime,
-  Title: TimelineTitle,
-  Body: TimelineBody,
 });
+
+Timeline.displayName = "Timeline";

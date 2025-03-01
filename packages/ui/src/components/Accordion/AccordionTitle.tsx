@@ -1,14 +1,16 @@
 "use client";
 
 import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import type { FlowbiteBoolean, FlowbiteHeadingLevel } from "../Flowbite";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { FlowbiteBoolean, FlowbiteHeadingLevel, ThemingProps } from "../../types";
 import { useAccordionContext } from "./AccordionPanelContext";
+import { accordionTheme } from "./theme";
 
-export interface FlowbiteAccordionTitleTheme {
+export interface AccordionTitleTheme {
   arrow: {
     base: string;
     open: FlowbiteBoolean;
@@ -19,30 +21,30 @@ export interface FlowbiteAccordionTitleTheme {
   open: FlowbiteBoolean;
 }
 
-export interface AccordionTitleProps extends ComponentProps<"button"> {
+export interface AccordionTitleProps extends ComponentProps<"button">, ThemingProps<AccordionTitleTheme> {
   arrowIcon?: FC<ComponentProps<"svg">>;
   as?: FlowbiteHeadingLevel;
-  theme?: DeepPartial<FlowbiteAccordionTitleTheme>;
 }
 
-export const AccordionTitle: FC<AccordionTitleProps> = ({
-  as: Heading = "h2",
-  children,
-  className,
-  theme: customTheme = {},
-  ...props
-}) => {
+export function AccordionTitle(props: AccordionTitleProps) {
   const { arrowIcon: ArrowIcon, flush, isOpen, setOpen } = useAccordionContext();
   const onClick = () => typeof setOpen !== "undefined" && setOpen();
 
-  const theme = mergeDeep(getTheme().accordion.title, customTheme);
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [accordionTheme.title, provider.theme?.accordion?.title, props.theme],
+    [get(provider.clearTheme, "accordion.title"), props.clearTheme],
+    [get(provider.applyTheme, "accordion.title"), props.applyTheme],
+  );
+
+  const { as: Heading = "h2", children, className, ...restProps } = resolveProps(props, provider.props?.accordionTitle);
 
   return (
     <button
       className={twMerge(theme.base, theme.flush[flush ? "on" : "off"], theme.open[isOpen ? "on" : "off"], className)}
       onClick={onClick}
       type="button"
-      {...props}
+      {...restProps}
     >
       <Heading className={theme.heading} data-testid="flowbite-accordion-heading">
         {children}
@@ -56,4 +58,6 @@ export const AccordionTitle: FC<AccordionTitleProps> = ({
       )}
     </button>
   );
-};
+}
+
+AccordionTitle.displayName = "AccordionTitle";

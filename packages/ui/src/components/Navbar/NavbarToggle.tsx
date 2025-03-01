@@ -1,45 +1,59 @@
 "use client";
 
-import type { ComponentProps, FC } from "react";
-import { FaBars } from "react-icons/fa";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import type { DeepPartial } from "../../types";
+import { forwardRef, type ComponentProps, type FC } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { BarsIcon } from "../../icons/bars-icon";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
 import { useNavbarContext } from "./NavbarContext";
+import { navbarTheme } from "./theme";
 
-export interface FlowbiteNavbarToggleTheme {
+export interface NavbarToggleThem {
   base: string;
   icon: string;
 }
 
-export interface NavbarToggleProps extends ComponentProps<"button"> {
+export interface NavbarToggleProps extends ComponentProps<"button">, ThemingProps<NavbarToggleThem> {
   barIcon?: FC<ComponentProps<"svg">>;
-  theme?: DeepPartial<FlowbiteNavbarToggleTheme>;
 }
 
-export const NavbarToggle: FC<NavbarToggleProps> = ({
-  barIcon: BarIcon = FaBars,
-  className,
-  theme: customTheme = {},
-  ...props
-}) => {
-  const { theme: rootTheme, isOpen, setIsOpen } = useNavbarContext();
+export const NavbarToggle = forwardRef<HTMLButtonElement, NavbarToggleProps>((props, ref) => {
+  const {
+    theme: rootTheme,
+    clearTheme: rootClearTheme,
+    applyTheme: rootApplyTheme,
+    isOpen,
+    setIsOpen,
+  } = useNavbarContext();
 
-  const theme = mergeDeep(rootTheme.toggle, customTheme);
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [navbarTheme.toggle, provider.theme?.navbar?.toggle, rootTheme?.toggle, props.theme],
+    [get(provider.clearTheme, "navbar.toggle"), get(rootClearTheme, "toggle"), props.clearTheme],
+    [get(provider.applyTheme, "navbar.toggle"), get(rootApplyTheme, "toggle"), props.applyTheme],
+  );
 
-  const handleClick = () => {
+  const { barIcon: BarIcon = BarsIcon, className, ...restProps } = resolveProps(props, provider.props?.navbarToggle);
+
+  function handleClick() {
     setIsOpen(!isOpen);
-  };
+  }
 
   return (
     <button
+      ref={ref}
       data-testid="flowbite-navbar-toggle"
       onClick={handleClick}
       className={twMerge(theme.base, className)}
-      {...props}
+      {...restProps}
     >
       <span className="sr-only">Open main menu</span>
       <BarIcon aria-hidden className={theme.icon} />
     </button>
   );
-};
+});
+
+NavbarToggle.displayName = "NavbarToggle";

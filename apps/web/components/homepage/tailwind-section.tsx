@@ -64,9 +64,9 @@ export function TailwindSection() {
               <div className="flex flex-row gap-4">
                 <Link
                   href="/docs/customize/theme"
-                  className="flex items-center gap-4 font-medium text-cyan-600 hover:underline"
+                  className="flex items-center gap-4 font-medium text-primary-700 hover:underline dark:text-primary-500"
                 >
-                  Learn more about the theming system{" "}
+                  Learn more about the theming system
                   <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       fillRule="evenodd"

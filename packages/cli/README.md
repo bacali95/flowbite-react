@@ -71,14 +71,13 @@ Check out the full list of [official `flowbite-react` template examples](https:/
 
 ## Templates
 
-| \<name>     | Full name        | URL                                                             |
-| ----------- | ---------------- | --------------------------------------------------------------- |
-| `nextjs`    | Next.js          | https://github.com/themesberg/flowbite-react-template-nextjs    |
-| `remix`     | Remix            | https://github.com/themesberg/flowbite-react-template-remix     |
-| `astro`     | Astro            | https://github.com/themesberg/flowbite-react-template-astro     |
-| `gatsby`    | Gatsby           | https://github.com/themesberg/flowbite-react-template-gatsby    |
-| `redwoodjs` | RedwoodJS        | https://github.com/themesberg/flowbite-react-template-redwoodjs |
-| `laravel`   | Laravel          | https://github.com/themesberg/flowbite-react-template-laravel   |
-| `vite`      | Vite             | https://github.com/themesberg/flowbite-react-template-vite      |
-| `parcel`    | Parcel           | https://github.com/themesberg/flowbite-react-template-parcel    |
-| `cra`       | Create React App | https://github.com/themesberg/flowbite-react-template-cra       |
+| \<name>     | Full name | URL                                                             |
+| ----------- | --------- | --------------------------------------------------------------- |
+| `nextjs`    | Next.js   | https://github.com/themesberg/flowbite-react-template-nextjs    |
+| `remix`     | Remix     | https://github.com/themesberg/flowbite-react-template-remix     |
+| `astro`     | Astro     | https://github.com/themesberg/flowbite-react-template-astro     |
+| `gatsby`    | Gatsby    | https://github.com/themesberg/flowbite-react-template-gatsby    |
+| `redwoodjs` | RedwoodJS | https://github.com/themesberg/flowbite-react-template-redwoodjs |
+| `laravel`   | Laravel   | https://github.com/themesberg/flowbite-react-template-laravel   |
+| `vite`      | Vite      | https://github.com/themesberg/flowbite-react-template-vite      |
+| `parcel`    | Parcel    | https://github.com/themesberg/flowbite-react-template-parcel    |

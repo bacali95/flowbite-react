@@ -2,11 +2,13 @@
 
 import { Alert } from "flowbite-react";
 import { HiEye, HiInformationCircle } from "react-icons/hi";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
-import { HiEye, HiInformationCircle } from "react-icons/hi";
+"use client";
+
 import { Alert } from "flowbite-react";
+import { HiEye, HiInformationCircle } from "react-icons/hi";
 
 export function Component() {
   return (
@@ -66,7 +68,7 @@ function ExampleAdditionalContent() {
 export const allOptions: CodeData = {
   type: "single",
   code: {
-    fileName: "client",
+    fileName: "index",
     language: "tsx",
     code,
   },

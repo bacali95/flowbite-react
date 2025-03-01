@@ -1,16 +1,16 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { FlowbiteTimelineTheme } from "./Timeline";
+import type { ThemingProps } from "../../types";
+import type { TimelineTheme } from "./Timeline";
 
-export type TimelineContext = {
-  theme: FlowbiteTimelineTheme;
+export interface TimelineContextValue extends ThemingProps<TimelineTheme> {
   horizontal?: boolean;
-};
+}
 
-export const TimelineContext = createContext<TimelineContext | undefined>(undefined);
+export const TimelineContext = createContext<TimelineContextValue | undefined>(undefined);
 
-export function useTimelineContext(): TimelineContext {
+export function useTimelineContext(): TimelineContextValue {
   const context = useContext(TimelineContext);
 
   if (!context) {

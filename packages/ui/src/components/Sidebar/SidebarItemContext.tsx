@@ -2,13 +2,13 @@
 
 import { createContext, useContext } from "react";
 
-export type SidebarItemContext = {
+export interface SidebarItemContextValue {
   isInsideCollapse: boolean;
-};
+}
 
-export const SidebarItemContext = createContext<SidebarItemContext | undefined>(undefined);
+export const SidebarItemContext = createContext<SidebarItemContextValue | undefined>(undefined);
 
-export function useSidebarItemContext(): SidebarItemContext {
+export function useSidebarItemContext(): SidebarItemContextValue {
   const context = useContext(SidebarItemContext);
 
   if (!context) {

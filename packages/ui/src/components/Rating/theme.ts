@@ -1,8 +1,8 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteRatingTheme } from "./Rating";
-import type { FlowbiteRatingAdvancedTheme } from "./RatingAdvanced";
+import type { RatingTheme } from "./Rating";
+import type { RatingAdvancedTheme } from "./RatingAdvanced";
 
-export const ratingTheme: FlowbiteRatingTheme = createTheme({
+export const ratingTheme = createTheme<RatingTheme>({
   root: {
     base: "flex items-center",
   },
@@ -17,7 +17,7 @@ export const ratingTheme: FlowbiteRatingTheme = createTheme({
   },
 });
 
-export const ratingAdvancedTheme: FlowbiteRatingAdvancedTheme = createTheme({
+export const ratingAdvancedTheme = createTheme<RatingAdvancedTheme>({
   base: "flex items-center",
   label: "text-sm font-medium text-cyan-600 dark:text-cyan-500",
   progress: {

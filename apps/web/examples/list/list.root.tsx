@@ -1,23 +1,7 @@
 import { List, ListItem } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
-"use client";
-
-import { List } from "flowbite-react";
-
-export function Component() {
-  return (
-    <List>
-      <List.Item>At least 10 characters (and up to 100 characters)</List.Item>
-      <List.Item>At least one lowercase character</List.Item>
-      <List.Item>Inclusion of at least one special character, e.g., ! @ # ?</List.Item>
-    </List>
-  );
-}
-`;
-
-const codeRSC = `
 import { List, ListItem } from "flowbite-react";
 
 export function Component() {
@@ -43,18 +27,11 @@ export function Component() {
 
 export const root: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "list/list.root.tsx",
   component: <Component />,
 };

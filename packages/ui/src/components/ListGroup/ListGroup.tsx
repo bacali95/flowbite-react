@@ -1,37 +1,37 @@
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import type { FlowbiteListGroupItemTheme } from "./ListGroupItem";
-import { ListGroupItem } from "./ListGroupItem";
+"use client";
 
-export interface FlowbiteListGroupTheme {
-  root: FlowbiteListGroupRootTheme;
-  item: FlowbiteListGroupItemTheme;
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import type { ListGroupItemTheme } from "./ListGroupItem";
+import { listGroupTheme } from "./theme";
+
+export interface ListGroupTheme {
+  root: ListGroupRootTheme;
+  item: ListGroupItemTheme;
 }
 
-export interface FlowbiteListGroupRootTheme {
+export interface ListGroupRootTheme {
   base: string;
 }
 
-export interface ListGroupProps extends ComponentProps<"ul"> {
-  theme?: DeepPartial<FlowbiteListGroupTheme>;
-}
+export interface ListGroupProps extends ComponentProps<"ul">, ThemingProps<ListGroupRootTheme> {}
 
-const ListGroupComponent: FC<ListGroupProps> = ({ children, className, theme: customTheme = {}, ...props }) => {
-  const theme = mergeDeep(getTheme().listGroup, customTheme);
-
-  return (
-    <ul className={twMerge(theme.root.base, className)} {...props}>
-      {children}
-    </ul>
+export const ListGroup = forwardRef<HTMLUListElement, ListGroupProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [listGroupTheme.root, provider.theme?.listGroup?.root, props.theme],
+    [get(provider.clearTheme, "listGroup.root"), props.clearTheme],
+    [get(provider.applyTheme, "listGroup.root"), props.applyTheme],
   );
-};
 
-ListGroupComponent.displayName = "ListGroup";
-ListGroupItem.displayName = "ListGroup.Item";
+  const { className, ...restProps } = resolveProps(props, provider.props?.listGroup);
 
-export const ListGroup = Object.assign(ListGroupComponent, {
-  Item: ListGroupItem,
+  return <ul ref={ref} className={twMerge(theme.base, className)} {...restProps} />;
 });
+
+ListGroup.displayName = "ListGroup";

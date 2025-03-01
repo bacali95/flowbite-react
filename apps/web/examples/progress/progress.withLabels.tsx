@@ -1,17 +1,7 @@
 import { Progress } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
-"use client";
-
-import { Progress } from "flowbite-react";
-
-export function Component() {
-  return <Progress progress={50} textLabel="Flowbite" size="lg" labelProgress labelText />;
-}
-`;
-
-const codeRSC = `
 import { Progress } from "flowbite-react";
 
 export function Component() {
@@ -25,18 +15,11 @@ export function Component() {
 
 export const withLabels: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "progress/progress.withLabels.tsx",
   component: <Component />,
 };

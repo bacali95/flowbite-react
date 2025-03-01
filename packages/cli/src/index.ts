@@ -12,8 +12,13 @@ import { getContext } from "./context.js";
 async function main(argv: string[]) {
   const context = getContext(argv);
 
-  if (context.help) return help();
-  if (context.version) return version();
+  if (context.help) {
+    return help();
+  }
+
+  if (context.version) {
+    return version();
+  }
 
   intro();
 
@@ -22,7 +27,11 @@ async function main(argv: string[]) {
   const git = await getGit(context);
 
   await createProject({ projectName, template });
-  if (git) await initGit({ projectName });
+
+  if (git) {
+    await initGit({ projectName });
+  }
+
   nextSteps({ projectName });
 }
 

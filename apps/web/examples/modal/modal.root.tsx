@@ -1,13 +1,13 @@
 "use client";
 
-import { Button, Modal } from "flowbite-react";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "flowbite-react";
 import { useState } from "react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
 "use client";
 
-import { Button, Modal } from "flowbite-react";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "flowbite-react";
 import { useState } from "react";
 
 export function Component() {
@@ -17,8 +17,8 @@ export function Component() {
     <>
       <Button onClick={() => setOpenModal(true)}>Toggle modal</Button>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Terms of Service</Modal.Header>
-        <Modal.Body>
+        <ModalHeader>Terms of Service</ModalHeader>
+        <ModalBody>
           <div className="space-y-6">
             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
               With less than a month to go before the European Union enacts new consumer privacy laws for its citizens,
@@ -30,13 +30,13 @@ export function Component() {
               soon as possible of high-risk data breaches that could personally affect them.
             </p>
           </div>
-        </Modal.Body>
-        <Modal.Footer>
+        </ModalBody>
+        <ModalFooter>
           <Button onClick={() => setOpenModal(false)}>I accept</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
             Decline
           </Button>
-        </Modal.Footer>
+        </ModalFooter>
       </Modal>
     </>
   );
@@ -50,8 +50,8 @@ export function Component() {
     <>
       <Button onClick={() => setOpenModal(true)}>Toggle modal</Button>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Terms of Service</Modal.Header>
-        <Modal.Body>
+        <ModalHeader>Terms of Service</ModalHeader>
+        <ModalBody>
           <div className="space-y-6">
             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
               With less than a month to go before the European Union enacts new consumer privacy laws for its citizens,
@@ -63,13 +63,13 @@ export function Component() {
               soon as possible of high-risk data breaches that could personally affect them.
             </p>
           </div>
-        </Modal.Body>
-        <Modal.Footer>
+        </ModalBody>
+        <ModalFooter>
           <Button onClick={() => setOpenModal(false)}>I accept</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
             Decline
           </Button>
-        </Modal.Footer>
+        </ModalFooter>
       </Modal>
     </>
   );
@@ -78,7 +78,7 @@ export function Component() {
 export const root: CodeData = {
   type: "single",
   code: {
-    fileName: "client",
+    fileName: "index",
     language: "tsx",
     code,
   },

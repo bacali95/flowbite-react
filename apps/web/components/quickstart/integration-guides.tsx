@@ -21,7 +21,6 @@ const GUIDES: Guide[] = [
   { name: "Laravel", slug: "/docs/guides/laravel", logo: "laravel.svg" },
   { name: "Vite", slug: "/docs/guides/vite", logo: "vite.svg" },
   { name: "Parcel", slug: "/docs/guides/parcel", logo: "parcel.svg" },
-  { name: "Create React App", slug: "/docs/guides/create-react-app", logo: "create-react-app.svg" },
 ];
 
 export function IntegrationGuides() {

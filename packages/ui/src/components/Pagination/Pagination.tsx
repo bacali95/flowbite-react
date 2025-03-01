@@ -1,44 +1,50 @@
-import type { ComponentProps, FC, ReactNode } from "react";
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
+"use client";
+
+import { forwardRef, type ComponentProps, type ReactNode } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { ChevronLeftIcon } from "../../icons/chevron-left-icon";
+import { ChevronRightIcon } from "../../icons/chevron-right-icon";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
 import { range } from "./helpers";
-import type { FlowbitePaginationButtonTheme, PaginationButtonProps } from "./PaginationButton";
+import type { PaginationButtonProps, PaginationButtonTheme } from "./PaginationButton";
 import { PaginationButton, PaginationNavigation } from "./PaginationButton";
+import { paginationTheme } from "./theme";
 
-export interface FlowbitePaginationTheme {
+export interface PaginationTheme {
   base: string;
-  layout: FlowbitePaginationLayoutTheme;
-  pages: FlowbitePaginationPagesTheme;
+  layout: PaginationLayoutTheme;
+  pages: PaginationPagesTheme;
 }
 
-export interface FlowbitePaginationRootTheme {
+export interface PaginationRootTheme {
   base: string;
 }
 
-export interface FlowbitePaginationLayoutTheme {
+export interface PaginationLayoutTheme {
   table: {
     base: string;
     span: string;
   };
 }
 
-export interface FlowbitePaginationPagesTheme {
+export interface PaginationPagesTheme {
   base: string;
   showIcon: string;
-  previous: FlowbitePaginationNavigationTheme;
-  next: FlowbitePaginationNavigationTheme;
-  selector: FlowbitePaginationButtonTheme;
+  previous: PaginationNavigationTheme;
+  next: PaginationNavigationTheme;
+  selector: PaginationButtonTheme;
 }
 
-export interface FlowbitePaginationNavigationTheme {
+export interface PaginationNavigationTheme {
   base: string;
   icon: string;
 }
 
-export interface PaginationProps extends ComponentProps<"nav"> {
+export interface PaginationProps extends ComponentProps<"nav">, ThemingProps<PaginationTheme> {
   currentPage: number;
   layout?: "navigation" | "pagination" | "table";
   nextLabel?: string;
@@ -46,38 +52,43 @@ export interface PaginationProps extends ComponentProps<"nav"> {
   previousLabel?: string;
   renderPaginationButton?: (props: PaginationButtonProps) => ReactNode;
   showIcons?: boolean;
-  theme?: DeepPartial<FlowbitePaginationTheme>;
   totalPages: number;
 }
 
-const PaginationComponent: FC<PaginationProps> = ({
-  className,
-  currentPage,
-  layout = "pagination",
-  nextLabel = "Next",
-  onPageChange,
-  previousLabel = "Previous",
-  renderPaginationButton = (props) => <PaginationButton {...props} />,
-  showIcons: showIcon = false,
-  theme: customTheme = {},
-  totalPages,
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().pagination, customTheme);
+export const Pagination = forwardRef<HTMLElement, PaginationProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [paginationTheme, provider.theme?.pagination, props.theme],
+    [get(provider.clearTheme, "pagination"), props.clearTheme],
+    [get(provider.applyTheme, "pagination"), props.applyTheme],
+  );
+
+  const {
+    className,
+    currentPage,
+    layout = "pagination",
+    nextLabel = "Next",
+    onPageChange,
+    previousLabel = "Previous",
+    renderPaginationButton = (props: PaginationButtonProps) => <PaginationButton {...props} />,
+    showIcons: showIcon = false,
+    totalPages,
+    ...restProps
+  } = resolveProps(props, provider.props?.pagination);
 
   const lastPage = Math.min(Math.max(layout === "pagination" ? currentPage + 2 : currentPage + 4, 5), totalPages);
   const firstPage = Math.max(1, lastPage - 4);
 
-  const goToNextPage = (): void => {
+  function goToNextPage() {
     onPageChange(Math.min(currentPage + 1, totalPages));
-  };
+  }
 
-  const goToPreviousPage = (): void => {
+  function goToPreviousPage() {
     onPageChange(Math.max(currentPage - 1, 1));
-  };
+  }
 
   return (
-    <nav className={twMerge(theme.base, className)} {...props}>
+    <nav ref={ref} className={twMerge(theme.base, className)} {...restProps}>
       {layout === "table" && (
         <div className={theme.layout.table.base}>
           Showing <span className={theme.layout.table.span}>{firstPage}</span> to&nbsp;
@@ -92,7 +103,7 @@ const PaginationComponent: FC<PaginationProps> = ({
             onClick={goToPreviousPage}
             disabled={currentPage === 1}
           >
-            {showIcon && <HiChevronLeft aria-hidden className={theme.pages.previous.icon} />}
+            {showIcon && <ChevronLeftIcon aria-hidden className={theme.pages.previous.icon} />}
             {previousLabel}
           </PaginationNavigation>
         </li>
@@ -114,16 +125,12 @@ const PaginationComponent: FC<PaginationProps> = ({
             disabled={currentPage === totalPages}
           >
             {nextLabel}
-            {showIcon && <HiChevronRight aria-hidden className={theme.pages.next.icon} />}
+            {showIcon && <ChevronRightIcon aria-hidden className={theme.pages.next.icon} />}
           </PaginationNavigation>
         </li>
       </ul>
     </nav>
   );
-};
-
-PaginationComponent.displayName = "Pagination";
-
-export const Pagination = Object.assign(PaginationComponent, {
-  Button: PaginationButton,
 });
+
+Pagination.displayName = "Pagination";

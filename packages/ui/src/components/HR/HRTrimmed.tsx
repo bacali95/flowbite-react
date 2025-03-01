@@ -1,30 +1,40 @@
-import { forwardRef } from "react";
-import type { ComponentProps } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
+"use client";
 
-export interface FlowbiteHRTrimmedTheme {
+import type { ComponentProps } from "react";
+import { forwardRef } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { hrTheme } from "./theme";
+
+export interface HRTrimmedTheme {
   base: string;
 }
 
-export interface HRTrimmedProps extends Omit<ComponentProps<"hr">, "ref"> {
-  theme?: DeepPartial<FlowbiteHRTrimmedTheme>;
-}
+export interface HRTrimmedProps extends Omit<ComponentProps<"hr">, "ref">, ThemingProps<HRTrimmedTheme> {}
 
-export const HRTrimmed = forwardRef<HTMLHRElement, HRTrimmedProps>(
-  ({ theme: customTheme = {}, className, ...props }, ref) => {
-    const theme = mergeDeep(getTheme().hr.trimmed, customTheme);
+export const HRTrimmed = forwardRef<HTMLHRElement, HRTrimmedProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [hrTheme.trimmed, provider.theme?.hr?.trimmed, props.theme],
+    [get(provider.clearTheme, "hr.trimmed"), props.clearTheme],
+    [get(provider.applyTheme, "hr.trimmed"), props.applyTheme],
+  );
 
-    return (
-      <hr
-        className={twMerge(theme.base, className)}
-        role="separator"
-        data-testid="flowbite-hr-trimmed"
-        ref={ref}
-        {...props}
-      />
-    );
-  },
-);
+  const { className, ...restProps } = resolveProps(props, provider.props?.hrTrimmed);
+
+  return (
+    <hr
+      ref={ref}
+      className={twMerge(theme.base, className)}
+      data-testid="flowbite-hr-trimmed"
+      role="separator"
+      {...restProps}
+    />
+  );
+});
+
+HRTrimmed.displayName = "HRTrimmed";

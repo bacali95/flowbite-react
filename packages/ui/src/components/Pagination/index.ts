@@ -1,16 +1,17 @@
 export { Pagination } from "./Pagination";
 export type {
-  FlowbitePaginationLayoutTheme,
-  FlowbitePaginationNavigationTheme,
-  FlowbitePaginationPagesTheme,
-  FlowbitePaginationRootTheme,
-  FlowbitePaginationTheme,
+  PaginationLayoutTheme,
+  PaginationNavigationTheme,
+  PaginationPagesTheme,
   PaginationProps,
+  PaginationRootTheme,
+  PaginationTheme,
 } from "./Pagination";
 export { PaginationButton } from "./PaginationButton";
 export type {
-  FlowbitePaginationButtonTheme,
   PaginationButtonProps,
+  PaginationButtonTheme,
   PaginationNavigation,
   PaginationPrevButtonProps,
 } from "./PaginationButton";
+export { paginationTheme } from "./theme";

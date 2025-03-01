@@ -27,7 +27,7 @@ export function ComponentsSection() {
           ))}
         </div>
         <div className="mb-4 flex w-full justify-center text-center">
-          <Button as={Link} href="/docs/components/accordion" color="light">
+          <Button as={Link} href="/docs/components/accordion" color="alternative">
             View all components
           </Button>
         </div>

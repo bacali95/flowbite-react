@@ -1,12 +1,10 @@
 "use client";
 
-import type { FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../../helpers/merge-deep";
+import { twMerge } from "../../../helpers/tailwind-merge";
 import { useDatePickerContext } from "../DatepickerContext";
 import { isDateEqual, isDateInRange, startOfYearPeriod, Views } from "../helpers";
 
-export interface FlowbiteDatepickerViewsYearsTheme {
+export interface DatepickerViewsYearsTheme {
   items: {
     base: string;
     item: {
@@ -17,14 +15,10 @@ export interface FlowbiteDatepickerViewsYearsTheme {
   };
 }
 
-export interface DatepickerViewsYearsProps {
-  theme?: FlowbiteDatepickerViewsYearsTheme;
-}
-
-export const DatepickerViewsYears: FC<DatepickerViewsYearsProps> = ({ theme: customTheme = {} }) => {
+export function DatepickerViewsYears() {
   const { theme: rootTheme, selectedDate, minDate, maxDate, viewDate, setViewDate, setView } = useDatePickerContext();
 
-  const theme = mergeDeep(rootTheme.views.years, customTheme);
+  const theme = rootTheme.views.years;
 
   return (
     <div className={theme.items.base}>
@@ -60,4 +54,6 @@ export const DatepickerViewsYears: FC<DatepickerViewsYearsProps> = ({ theme: cus
       })}
     </div>
   );
-};
+}
+
+DatepickerViewsYears.displayName = "DatepickerViewsYears";

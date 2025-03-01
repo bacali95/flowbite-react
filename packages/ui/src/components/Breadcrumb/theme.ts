@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteBreadcrumbTheme } from "./Breadcrumb";
+import type { BreadcrumbTheme } from "./Breadcrumb";
 
-export const breadcrumbTheme: FlowbiteBreadcrumbTheme = createTheme({
+export const breadcrumbTheme = createTheme<BreadcrumbTheme>({
   root: {
     base: "",
     list: "flex items-center",

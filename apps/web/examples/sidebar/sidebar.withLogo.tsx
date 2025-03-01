@@ -1,48 +1,46 @@
-// TODO: try to make it RSC - failing because of `<SidebarItem />` icon prop
-
 "use client";
 
-import { Sidebar } from "flowbite-react";
+import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems, SidebarLogo } from "flowbite-react";
 import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser, HiViewBoards } from "react-icons/hi";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
 "use client";
 
-import { Sidebar } from "flowbite-react";
+import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems, SidebarLogo } from "flowbite-react";
 import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser, HiViewBoards } from "react-icons/hi";
 
 export function Component() {
   return (
     <Sidebar aria-label="Sidebar with logo branding example">
-      <Sidebar.Logo href="#" img="/favicon.svg" imgAlt="Flowbite logo">
+      <SidebarLogo href="#" img="/favicon.svg" imgAlt="Flowbite logo">
         Flowbite
-      </Sidebar.Logo>
-      <Sidebar.Items>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiChartPie}>
+      </SidebarLogo>
+      <SidebarItems>
+        <SidebarItemGroup>
+          <SidebarItem href="#" icon={HiChartPie}>
             Dashboard
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiViewBoards}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiViewBoards}>
             Kanban
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiInbox}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiInbox}>
             Inbox
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiUser}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiUser}>
             Users
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiShoppingBag}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiShoppingBag}>
             Products
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiArrowSmRight}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiArrowSmRight}>
             Sign In
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiTable}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiTable}>
             Sign Up
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
-      </Sidebar.Items>
+          </SidebarItem>
+        </SidebarItemGroup>
+      </SidebarItems>
     </Sidebar>
   );
 }
@@ -51,34 +49,34 @@ export function Component() {
 export function Component() {
   return (
     <Sidebar aria-label="Sidebar with logo branding example">
-      <Sidebar.Logo href="#" img="/favicon.svg" imgAlt="Flowbite logo">
+      <SidebarLogo href="#" img="/favicon.svg" imgAlt="Flowbite logo">
         Flowbite
-      </Sidebar.Logo>
-      <Sidebar.Items>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiChartPie}>
+      </SidebarLogo>
+      <SidebarItems>
+        <SidebarItemGroup>
+          <SidebarItem href="#" icon={HiChartPie}>
             Dashboard
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiViewBoards}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiViewBoards}>
             Kanban
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiInbox}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiInbox}>
             Inbox
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiUser}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiUser}>
             Users
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiShoppingBag}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiShoppingBag}>
             Products
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiArrowSmRight}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiArrowSmRight}>
             Sign In
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiTable}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiTable}>
             Sign Up
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
-      </Sidebar.Items>
+          </SidebarItem>
+        </SidebarItemGroup>
+      </SidebarItems>
     </Sidebar>
   );
 }
@@ -86,7 +84,7 @@ export function Component() {
 export const withLogo: CodeData = {
   type: "single",
   code: {
-    fileName: "client",
+    fileName: "index",
     language: "tsx",
     code,
   },

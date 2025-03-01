@@ -55,7 +55,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en" className={`${interFont.variable} font-sans`}>
+    <html lang="en" className={`${interFont.variable} font-sans`} suppressHydrationWarning>
       <head>
         <ThemeModeScript />
       </head>

@@ -13,62 +13,67 @@ import type {
   SetStateAction,
 } from "react";
 import { cloneElement, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { HiOutlineChevronDown, HiOutlineChevronLeft, HiOutlineChevronRight, HiOutlineChevronUp } from "react-icons/hi";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
 import { useBaseFLoating, useFloatingInteractions } from "../../hooks/use-floating";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
+import { ChevronDownIcon } from "../../icons/chevron-down-icon";
+import { ChevronLeftIcon } from "../../icons/chevron-left-icon";
+import { ChevronRightIcon } from "../../icons/chevron-right-icon";
+import { ChevronUpIcon } from "../../icons/chevron-up-icon";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
 import { Button, type ButtonProps } from "../Button";
-import type { FloatingProps, FlowbiteFloatingTheme } from "../Floating";
+import type { FloatingProps, FloatingTheme } from "../Floating";
 import { DropdownContext } from "./DropdownContext";
-import { DropdownDivider, type FlowbiteDropdownDividerTheme } from "./DropdownDivider";
-import { DropdownHeader, type FlowbiteDropdownHeaderTheme } from "./DropdownHeader";
-import { DropdownItem, type FlowbiteDropdownItemTheme } from "./DropdownItem";
+import type { DropdownDividerTheme } from "./DropdownDivider";
+import type { DropdownHeaderTheme } from "./DropdownHeader";
+import type { DropdownItemTheme } from "./DropdownItem";
+import { dropdownTheme } from "./theme";
 
-export interface FlowbiteDropdownFloatingTheme
-  extends FlowbiteFloatingTheme,
-    FlowbiteDropdownDividerTheme,
-    FlowbiteDropdownHeaderTheme {
-  item: FlowbiteDropdownItemTheme;
+export interface DropdownFloatingTheme extends FloatingTheme, DropdownDividerTheme, DropdownHeaderTheme {
+  item: DropdownItemTheme;
 }
 
-export interface FlowbiteDropdownTheme {
-  floating: FlowbiteDropdownFloatingTheme;
+export interface DropdownTheme {
+  floating: DropdownFloatingTheme;
   content: string;
   inlineWrapper: string;
   arrowIcon: string;
 }
 
-export interface DropdownProps extends Pick<FloatingProps, "placement" | "trigger">, Omit<ButtonProps, "theme"> {
+export interface DropdownProps
+  extends Pick<FloatingProps, "placement" | "trigger">,
+    Omit<ButtonProps, keyof ThemingProps<DropdownTheme>>,
+    ThemingProps<DropdownTheme> {
   arrowIcon?: boolean;
   dismissOnClick?: boolean;
   floatingArrow?: boolean;
   inline?: boolean;
   label?: ReactNode;
-  theme?: DeepPartial<FlowbiteDropdownTheme>;
   enableTypeAhead?: boolean;
-  renderTrigger?: (theme: FlowbiteDropdownTheme) => ReactElement;
+  renderTrigger?: (theme: DropdownTheme) => ReactElement;
   "data-testid"?: string;
 }
 
 const icons: Record<string, FC<ComponentProps<"svg">>> = {
-  top: HiOutlineChevronUp,
-  right: HiOutlineChevronRight,
-  bottom: HiOutlineChevronDown,
-  left: HiOutlineChevronLeft,
+  top: ChevronUpIcon,
+  right: ChevronRightIcon,
+  bottom: ChevronDownIcon,
+  left: ChevronLeftIcon,
 };
 
-export interface TriggerProps extends Omit<ButtonProps, "theme"> {
+export interface TriggerProps extends Omit<ButtonProps, keyof ThemingProps<DropdownTheme>> {
   refs: ExtendedRefs<HTMLElement>;
   inline?: boolean;
-  theme: FlowbiteDropdownTheme;
+  theme: DropdownTheme;
   setButtonWidth?: Dispatch<SetStateAction<number | undefined>>;
   getReferenceProps: (userProps?: HTMLProps<Element> | undefined) => Record<string, unknown>;
-  renderTrigger?: (theme: FlowbiteDropdownTheme) => ReactElement;
+  renderTrigger?: (theme: DropdownTheme) => ReactElement;
 }
 
-const Trigger = ({
+function Trigger({
   refs,
   children,
   inline,
@@ -78,7 +83,7 @@ const Trigger = ({
   getReferenceProps,
   renderTrigger,
   ...buttonProps
-}: TriggerProps) => {
+}: TriggerProps) {
   const ref = refs.reference as MutableRefObject<HTMLElement>;
   const a11yProps = getReferenceProps();
 
@@ -102,17 +107,9 @@ const Trigger = ({
       {children}
     </Button>
   );
-};
+}
 
-const DropdownComponent: FC<DropdownProps> = ({
-  children,
-  className,
-  dismissOnClick = true,
-  theme: customTheme = {},
-  enableTypeAhead = true,
-  renderTrigger,
-  ...props
-}) => {
+export function Dropdown(props: DropdownProps) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -120,17 +117,31 @@ const DropdownComponent: FC<DropdownProps> = ({
   const elementsRef = useRef<Array<HTMLElement | null>>([]);
   const labelsRef = useRef<Array<string | null>>([]);
 
-  const theme = mergeDeep(getTheme().dropdown, customTheme);
-  const theirProps = props as Omit<DropdownProps, "theme">;
-  const dataTestId = props["data-testid"] || "flowbite-dropdown-target";
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [dropdownTheme, provider.theme?.dropdown, props.theme],
+    [get(provider.clearTheme, "dropdown"), props.clearTheme],
+    [get(provider.applyTheme, "dropdown"), props.applyTheme],
+  );
+
   const {
-    placement = props.inline ? "bottom-start" : "bottom",
+    children,
+    className,
+    dismissOnClick = true,
+    enableTypeAhead = true,
+    renderTrigger,
+    ...restProps
+  } = resolveProps(props, provider.props?.dropdown);
+
+  const {
+    placement = restProps.inline ? "bottom-start" : "bottom",
     trigger = "click",
     label,
     inline,
     arrowIcon = true,
     ...buttonProps
-  } = theirProps;
+  } = restProps;
+  const dataTestId = restProps["data-testid"] || "flowbite-dropdown-target";
 
   const handleSelect = useCallback((index: number | null) => {
     setSelectedIndex(index);
@@ -178,18 +189,28 @@ const DropdownComponent: FC<DropdownProps> = ({
 
   const Icon = useMemo(() => {
     const [p] = placement.split("-");
-    return icons[p] ?? HiOutlineChevronDown;
+    return icons[p] ?? ChevronDownIcon;
   }, [placement]);
 
   return (
-    <DropdownContext.Provider value={{ theme, activeIndex, dismissOnClick, getItemProps, handleSelect }}>
+    <DropdownContext.Provider
+      value={{
+        theme: props.theme,
+        clearTheme: props.clearTheme,
+        applyTheme: props.applyTheme,
+        activeIndex,
+        dismissOnClick,
+        getItemProps,
+        handleSelect,
+      }}
+    >
       <Trigger
         {...buttonProps}
         refs={refs}
         inline={inline}
         theme={theme}
         data-testid={dataTestId}
-        className={twMerge(theme.floating.target, buttonProps.className)}
+        className={twMerge(theme.floating.target, className)}
         setButtonWidth={setButtonWidth}
         getReferenceProps={getReferenceProps}
         renderTrigger={renderTrigger}
@@ -225,14 +246,6 @@ const DropdownComponent: FC<DropdownProps> = ({
       )}
     </DropdownContext.Provider>
   );
-};
+}
 
-DropdownComponent.displayName = "Dropdown";
-DropdownHeader.displayName = "Dropdown.Header";
-DropdownDivider.displayName = "Dropdown.Divider";
-
-export const Dropdown = Object.assign(DropdownComponent, {
-  Item: DropdownItem,
-  Header: DropdownHeader,
-  Divider: DropdownDivider,
-});
+Dropdown.displayName = "Dropdown";

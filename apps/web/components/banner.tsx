@@ -8,17 +8,17 @@ export function Banner() {
     >
       <div className="items-center md:flex">
         <p className="text-sm font-medium text-gray-900 md:my-0 dark:text-white">
-          <span className="mr-2 hidden rounded bg-cyan-100 px-2.5 py-0.5 text-xs font-semibold text-cyan-800 md:inline dark:bg-cyan-200 dark:text-cyan-800">
+          <span className="mr-2 hidden rounded bg-primary-100 px-2.5 py-0.5 text-xs font-semibold text-primary-800 md:inline dark:bg-primary-200 dark:text-primary-800">
             New
           </span>
           Flowbite React now supports Server Components and has full Next.js App Router support!
           <Link
-            className="ml-2 inline-flex items-center text-sm font-medium text-cyan-600 hover:underline md:ml-2 dark:text-cyan-500"
+            className="ml-2 inline-flex items-center text-sm font-medium text-primary-600 hover:underline md:ml-2 dark:text-primary-500"
             href="/docs/getting-started/server-components"
           >
             Check it out
             <svg
-              className="ml-1.5 size-3 text-cyan-600 dark:text-cyan-500"
+              className="ml-1.5 size-3 text-primary-600 dark:text-primary-500"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

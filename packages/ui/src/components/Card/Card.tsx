@@ -1,35 +1,34 @@
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { omit } from "../../helpers/omit";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import type { FlowbiteBoolean } from "../Flowbite";
+"use client";
 
-export interface FlowbiteCardTheme {
-  root: FlowbiteCardRootTheme;
-  img: FlowbiteCardImageTheme;
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { DeepPartial, FlowbiteBoolean, ThemingProps } from "../../types";
+import { cardTheme } from "./theme";
+
+export interface CardTheme {
+  root: CardRootTheme;
+  img: CardImageTheme;
 }
 
-export interface FlowbiteCardRootTheme {
+export interface CardRootTheme {
   base: string;
   children: string;
   horizontal: FlowbiteBoolean;
   href: string;
 }
 
-export interface FlowbiteCardImageTheme {
+export interface CardImageTheme {
   base: string;
   horizontal: FlowbiteBoolean;
 }
 
-interface CommonCardProps extends ComponentProps<"div"> {
+interface CommonCardProps extends ComponentProps<"div">, ThemingProps<CardTheme> {
   horizontal?: boolean;
   href?: string;
-  /** Overwrites the theme. Will be merged with the context theme.
-   * @default {}
-   */
-  theme?: DeepPartial<FlowbiteCardTheme>;
 }
 
 export type CardProps = (
@@ -37,22 +36,32 @@ export type CardProps = (
   | {
       /** Allows to provide a custom render function for the image component. Useful in Next.JS and Gatsby. **Setting this will disable `imgSrc` and `imgAlt`**.
        */
-      renderImage?: (theme: DeepPartial<FlowbiteCardTheme>, horizontal: boolean) => JSX.Element;
+      renderImage?: (theme: DeepPartial<CardTheme>, horizontal: boolean) => JSX.Element;
       imgAlt?: never;
       imgSrc?: never;
     }
 ) &
   CommonCardProps;
 
-export const Card: FC<CardProps> = (props) => {
-  const { children, className, horizontal, href, theme: customTheme = {} } = props;
-  const Component = typeof href === "undefined" ? "div" : "a";
-  const theirProps = removeCustomProps(props);
+export const Card = forwardRef<HTMLDivElement | HTMLAnchorElement, CardProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [cardTheme, provider.theme?.card, props.theme],
+    [get(provider.clearTheme, "card"), props.clearTheme],
+    [get(provider.applyTheme, "card"), props.applyTheme],
+  );
 
-  const theme = mergeDeep(getTheme().card, customTheme);
+  const { children, className, horizontal, href, imgAlt, imgSrc, renderImage, ...restProps } = resolveProps(
+    props,
+    provider.props?.card,
+  );
+
+  const Component = typeof href === "undefined" ? "div" : "a";
 
   return (
     <Component
+      // @ts-expect-error - bypass
+      ref={ref}
       data-testid="flowbite-card"
       href={href}
       className={twMerge(
@@ -61,39 +70,20 @@ export const Card: FC<CardProps> = (props) => {
         href && theme.root.href,
         className,
       )}
-      {...theirProps}
+      {...restProps}
     >
-      <Image {...props} />
+      {renderImage?.(theme, !!horizontal) ??
+        (imgSrc && (
+          <img
+            data-testid="flowbite-card-image"
+            alt={imgAlt ?? ""}
+            src={imgSrc}
+            className={twMerge(theme.img.base, theme.img.horizontal[props.horizontal ? "on" : "off"])}
+          />
+        ))}
       <div className={theme.root.children}>{children}</div>
     </Component>
   );
-};
+});
 
-const Image: FC<CardProps> = ({ theme: customTheme = {}, ...props }) => {
-  const theme = mergeDeep(getTheme().card, customTheme);
-  if (props.renderImage) {
-    return props.renderImage(theme, props.horizontal ?? false);
-  }
-  if (props.imgSrc) {
-    return (
-      <img
-        data-testid="flowbite-card-image"
-        alt={props.imgAlt ?? ""}
-        src={props.imgSrc}
-        className={twMerge(theme.img.base, theme.img.horizontal[props.horizontal ? "on" : "off"])}
-      />
-    );
-  }
-  return null;
-};
-
-const removeCustomProps = omit([
-  "renderImage",
-  "imgSrc",
-  "imgAlt",
-  "children",
-  "className",
-  "horizontal",
-  "href",
-  "theme",
-]);
+Card.displayName = "Card";

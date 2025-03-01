@@ -1,36 +1,47 @@
-import { forwardRef } from "react";
-import type { ComponentProps } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
+"use client";
 
-export interface FlowbiteHRTextTheme {
+import type { ComponentProps } from "react";
+import { forwardRef } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { hrTheme } from "./theme";
+
+export interface HRTextTheme {
   base: string;
   hrLine: string;
   text: string;
 }
 
-export interface HRTextProps extends Omit<ComponentProps<"hr">, "ref"> {
+export interface HRTextProps extends Omit<ComponentProps<"hr">, "ref">, ThemingProps<HRTextTheme> {
   text: string;
-  theme?: DeepPartial<FlowbiteHRTextTheme>;
 }
 
-export const HRText = forwardRef<HTMLHRElement, HRTextProps>(
-  ({ theme: customTheme = {}, text, className, ...props }, ref) => {
-    const theme = mergeDeep(getTheme().hr.text, customTheme);
+export const HRText = forwardRef<HTMLHRElement, HRTextProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [hrTheme.text, provider.theme?.hr?.text, props.theme],
+    [get(provider.clearTheme, "hr.text"), props.clearTheme],
+    [get(provider.applyTheme, "hr.text"), props.applyTheme],
+  );
 
-    return (
-      <div className={theme.base}>
-        <hr
-          className={twMerge(theme.hrLine, className)}
-          data-testid="flowbite-hr-text"
-          role="separator"
-          ref={ref}
-          {...props}
-        />
-        <span className={theme.text}>{text}</span>
-      </div>
-    );
-  },
-);
+  const { className, text, ...restProps } = resolveProps(props, provider.props?.hrText);
+
+  return (
+    <div className={theme.base}>
+      <hr
+        ref={ref}
+        className={twMerge(theme.hrLine, className)}
+        data-testid="flowbite-hr-text"
+        role="separator"
+        {...restProps}
+      />
+      <span className={theme.text}>{text}</span>
+    </div>
+  );
+});
+
+HRText.displayName = "HRText";

@@ -1,11 +1,15 @@
-import type { ComponentProps, FC, PropsWithChildren } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import type { FlowbiteBoolean } from "../Flowbite";
+"use client";
 
-export interface FlowbiteListGroupItemTheme {
+import { forwardRef, type ComponentProps, type FC } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { FlowbiteBoolean, ThemingProps } from "../../types";
+import { listGroupTheme } from "./theme";
+
+export interface ListGroupItemTheme {
   base: string;
   link: {
     base: string;
@@ -16,33 +20,37 @@ export interface FlowbiteListGroupItemTheme {
   };
 }
 
-export interface ListGroupItemProps extends PropsWithChildren {
+type GenericLinkButtonProps = ComponentProps<"a"> & ComponentProps<"button">;
+
+export interface ListGroupItemProps extends GenericLinkButtonProps, ThemingProps<ListGroupItemTheme> {
   active?: boolean;
-  disabled?: boolean;
-  href?: string;
   icon?: FC<ComponentProps<"svg">>;
-  onClick?: () => void;
-  theme?: DeepPartial<FlowbiteListGroupItemTheme>;
 }
 
-export const ListGroupItem: FC<ListGroupItemProps & ComponentProps<"a"> & ComponentProps<"button">> = ({
-  active: isActive,
-  children,
-  className,
-  href,
-  icon: Icon,
-  onClick,
-  theme: customTheme = {},
-  disabled,
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().listGroup.item, customTheme);
+export const ListGroupItem = forwardRef<HTMLLIElement, ListGroupItemProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [listGroupTheme.item, provider.theme?.listGroup?.item, props.theme],
+    [get(provider.clearTheme, "listGroup.item"), props.clearTheme],
+    [get(provider.applyTheme, "listGroup.item"), props.applyTheme],
+  );
+
+  const {
+    active: isActive,
+    children,
+    className,
+    href,
+    icon: Icon,
+    onClick,
+    disabled,
+    ...restProps
+  } = resolveProps(props, provider.props?.listGroupItem);
 
   const isLink = typeof href !== "undefined";
   const Component = isLink ? "a" : "button";
 
   return (
-    <li className={twMerge(theme.base, className)}>
+    <li ref={ref} className={twMerge(theme.base, className)}>
       <Component
         href={href}
         onClick={onClick}
@@ -54,11 +62,13 @@ export const ListGroupItem: FC<ListGroupItemProps & ComponentProps<"a"> & Compon
           theme.link.base,
           theme.link.href[isLink ? "on" : "off"],
         )}
-        {...props}
+        {...restProps}
       >
         {Icon && <Icon aria-hidden data-testid="flowbite-list-group-item-icon" className={theme.link.icon} />}
         {children}
       </Component>
     </li>
   );
-};
+});
+
+ListGroupItem.displayName = "ListGroupItem";

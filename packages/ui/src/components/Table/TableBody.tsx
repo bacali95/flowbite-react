@@ -1,36 +1,43 @@
 "use client";
 
 import { forwardRef, type ComponentPropsWithRef } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import type { DeepPartial } from "../../types";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
 import { TableBodyContext } from "./TableBodyContext";
-import type { FlowbiteTableCellTheme } from "./TableCell";
+import type { TableCellTheme } from "./TableCell";
 import { useTableContext } from "./TableContext";
+import { tableTheme } from "./theme";
 
-export interface FlowbiteTableBodyTheme {
+export interface TableBodyTheme {
   base: string;
-  cell: FlowbiteTableCellTheme;
+  cell: TableCellTheme;
 }
 
-export interface TableBodyProps extends ComponentPropsWithRef<"tbody"> {
-  theme?: DeepPartial<FlowbiteTableBodyTheme>;
-}
+export interface TableBodyProps extends ComponentPropsWithRef<"tbody">, ThemingProps<TableBodyTheme> {}
 
-export const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>(
-  ({ children, className, theme: customTheme = {}, ...props }, ref) => {
-    const { theme: rootTheme } = useTableContext();
+export const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>((props, ref) => {
+  const { theme: rootTheme, clearTheme: rootClearTheme, applyTheme: rootApplyTheme } = useTableContext();
 
-    const theme = mergeDeep(rootTheme.body, customTheme);
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [tableTheme.body, provider.theme?.table?.body, rootTheme?.body, props.theme],
+    [get(provider.clearTheme, "table.body"), get(rootClearTheme, "body"), props.clearTheme],
+    [get(provider.applyTheme, "table.body"), get(rootApplyTheme, "body"), props.applyTheme],
+  );
 
-    return (
-      <TableBodyContext.Provider value={{ theme }}>
-        <tbody className={twMerge(theme.base, className)} ref={ref} {...props}>
-          {children}
-        </tbody>
-      </TableBodyContext.Provider>
-    );
-  },
-);
+  const { className, ...restProps } = resolveProps(props, provider.props?.tableBody);
 
-TableBody.displayName = "Table.Body";
+  return (
+    <TableBodyContext.Provider
+      value={{ theme: props.theme, clearTheme: props.clearTheme, applyTheme: props.applyTheme }}
+    >
+      <tbody ref={ref} className={twMerge(theme.base, className)} {...restProps} />
+    </TableBodyContext.Provider>
+  );
+});
+
+TableBody.displayName = "TableBody";

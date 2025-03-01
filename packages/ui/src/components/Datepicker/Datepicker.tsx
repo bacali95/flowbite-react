@@ -1,13 +1,17 @@
 "use client";
 
-import type { ForwardRefRenderFunction, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
-import { HiArrowLeft, HiArrowRight, HiCalendar } from "react-icons/hi";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import { TextInput, type FlowbiteTextInputTheme, type TextInputProps } from "../TextInput";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { ArrowLeftIcon } from "../../icons/arrow-left-icon";
+import { ArrowRightIcon } from "../../icons/arrow-right-icon";
+import { CalendarIcon } from "../../icons/calendar-icon";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { TextInput, type TextInputProps, type TextInputTheme } from "../TextInput";
 import { DatepickerContext } from "./DatepickerContext";
 import {
   addMonths,
@@ -19,27 +23,28 @@ import {
   Views,
   WeekStart,
 } from "./helpers";
-import type { FlowbiteDatepickerViewsDaysTheme } from "./Views/Days";
+import { datePickerTheme } from "./theme";
+import type { DatepickerViewsDaysTheme } from "./Views/Days";
 import { DatepickerViewsDays } from "./Views/Days";
-import { DatepickerViewsDecades, type FlowbiteDatepickerViewsDecadesTheme } from "./Views/Decades";
-import { DatepickerViewsMonth, type FlowbiteDatepickerViewsMonthsTheme } from "./Views/Months";
-import { DatepickerViewsYears, type FlowbiteDatepickerViewsYearsTheme } from "./Views/Years";
+import { DatepickerViewsDecades, type DatepickerViewsDecadesTheme } from "./Views/Decades";
+import { DatepickerViewsMonth, type DatepickerViewsMonthsTheme } from "./Views/Months";
+import { DatepickerViewsYears, type DatepickerViewsYearsTheme } from "./Views/Years";
 
-export interface FlowbiteDatepickerTheme {
+export interface DatepickerTheme {
   root: {
     base: string;
-    input?: FlowbiteTextInputTheme;
+    input?: TextInputTheme;
   };
-  popup: FlowbiteDatepickerPopupTheme;
+  popup: DatepickerPopupTheme;
   views: {
-    days: FlowbiteDatepickerViewsDaysTheme;
-    months: FlowbiteDatepickerViewsMonthsTheme;
-    years: FlowbiteDatepickerViewsYearsTheme;
-    decades: FlowbiteDatepickerViewsDecadesTheme;
+    days: DatepickerViewsDaysTheme;
+    months: DatepickerViewsMonthsTheme;
+    years: DatepickerViewsYearsTheme;
+    decades: DatepickerViewsDecadesTheme;
   };
 }
 
-export interface FlowbiteDatepickerPopupTheme {
+export interface DatepickerPopupTheme {
   root: {
     base: string;
     inline: string;
@@ -82,7 +87,9 @@ export interface DatepickerRef {
   clear: () => void;
 }
 
-export interface DatepickerProps extends Omit<TextInputProps, "theme" | "onChange" | "value" | "defaultValue"> {
+export interface DatepickerProps
+  extends Omit<TextInputProps, keyof ThemingProps<DatepickerTheme> | "onChange" | "value" | "defaultValue">,
+    ThemingProps<DatepickerTheme> {
   defaultValue?: Date;
   open?: boolean;
   inline?: boolean;
@@ -95,14 +102,20 @@ export interface DatepickerProps extends Omit<TextInputProps, "theme" | "onChang
   maxDate?: Date;
   language?: string;
   weekStart?: WeekStart;
-  theme?: DeepPartial<FlowbiteDatepickerTheme>;
   onChange?: (date: Date | null) => void;
   value?: Date | null;
   label?: string;
 }
 
-const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps> = (
-  {
+export const Datepicker = forwardRef<DatepickerRef, DatepickerProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [datePickerTheme, provider.theme?.datepicker, props.theme],
+    [get(provider.clearTheme, "datepicker"), props.clearTheme],
+    [get(provider.applyTheme, "datepicker"), props.applyTheme],
+  );
+
+  const {
     title,
     open,
     inline = false,
@@ -117,15 +130,12 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
     language = "en",
     weekStart = WeekStart.Sunday,
     className,
-    theme: customTheme = {},
     onChange,
     label,
     value,
-    ...props
-  },
-  ref,
-) => {
-  const theme = mergeDeep(getTheme().datepicker, customTheme);
+    ...restProps
+  } = resolveProps(props, provider.props?.datepicker);
+
   const initialDate = defaultValue ? getFirstDateInRange(defaultValue, minDate, maxDate) : null;
 
   const effectiveDefaultView = useMemo(() => {
@@ -143,7 +153,7 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
   const datepickerRef = useRef<HTMLDivElement>(null);
 
   // Triggers when user select the date
-  const changeSelectedDate = (date: Date | null, useAutohide: boolean) => {
+  function changeSelectedDate(date: Date | null, useAutohide: boolean) {
     setSelectedDate(date);
 
     if ((date === null || date) && onChange) {
@@ -153,14 +163,14 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
     if (autoHide && view === Views.Days && useAutohide == true && !inline) {
       setIsOpen(false);
     }
-  };
+  }
 
-  const clearDate = () => {
+  function clearDate() {
     changeSelectedDate(initialDate, true);
     if (defaultValue) {
       setViewDate(defaultValue);
     }
-  };
+  }
 
   useImperativeHandle(ref, () => ({
     focus() {
@@ -172,22 +182,22 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
   }));
 
   // Render the DatepickerView* node
-  const renderView = (type: Views): ReactNode => {
+  function renderView(type: Views): ReactNode {
     switch (type) {
       case Views.Decades:
-        return <DatepickerViewsDecades theme={theme.views.decades} />;
+        return <DatepickerViewsDecades />;
       case Views.Years:
-        return <DatepickerViewsYears theme={theme.views.years} />;
+        return <DatepickerViewsYears />;
       case Views.Months:
-        return <DatepickerViewsMonth theme={theme.views.months} />;
+        return <DatepickerViewsMonth />;
       case Views.Days:
       default:
-        return <DatepickerViewsDays theme={theme.views.days} />;
+        return <DatepickerViewsDays />;
     }
-  };
+  }
 
   // Coordinate the next view based on current view (statemachine-like)
-  const getNextView = (): Views => {
+  function getNextView(): Views {
     switch (view) {
       case Views.Days:
         return Views.Months;
@@ -197,10 +207,10 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
         return Views.Decades;
     }
     return view;
-  };
+  }
 
   // Get the view title based on active View
-  const getViewTitle = (): string => {
+  function getViewTitle(): string {
     switch (view) {
       case Views.Decades:
         return `${startOfYearPeriod(viewDate, 100) - 10} - ${startOfYearPeriod(viewDate, 100) + 100}`;
@@ -212,10 +222,10 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
       default:
         return getFormattedDate(language, viewDate, { month: "long", year: "numeric" });
     }
-  };
+  }
 
   // Navigate to prev/next for given view's date by value
-  const getViewDatePage = (view: Views, date: Date, value: number): Date => {
+  function getViewDatePage(view: Views, date: Date, value: number): Date {
     switch (view) {
       case Views.Days:
         return new Date(addMonths(date, value));
@@ -228,7 +238,7 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
       default:
         return new Date(addYears(date, value * 10));
     }
-  };
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -283,7 +293,7 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
         {!inline && (
           <TextInput
             theme={theme.root.input}
-            icon={HiCalendar}
+            icon={CalendarIcon}
             ref={inputRef}
             onFocus={() => {
               if (selectedDate && !isDateEqual(viewDate, selectedDate)) {
@@ -292,9 +302,9 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
               setIsOpen(true);
             }}
             value={displayValue}
-            readOnly
             defaultValue={initialDate ? getFormattedDate(language, initialDate) : label}
-            {...props}
+            readOnly
+            {...restProps}
           />
         )}
         {(isOpen || inline) && (
@@ -311,7 +321,7 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
                     )}
                     onClick={() => setViewDate(getViewDatePage(view, viewDate, -1))}
                   >
-                    <HiArrowLeft />
+                    <ArrowLeftIcon />
                   </button>
                   <button
                     type="button"
@@ -331,7 +341,7 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
                     )}
                     onClick={() => setViewDate(getViewDatePage(view, viewDate, 1))}
                   >
-                    <HiArrowRight />
+                    <ArrowRightIcon />
                   </button>
                 </div>
               </div>
@@ -370,8 +380,6 @@ const DatepickerRender: ForwardRefRenderFunction<DatepickerRef, DatepickerProps>
       </div>
     </DatepickerContext.Provider>
   );
-};
-
-export const Datepicker = forwardRef(DatepickerRender);
+});
 
 Datepicker.displayName = "Datepicker";

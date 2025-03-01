@@ -1,15 +1,19 @@
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
-import type { FlowbiteStateColors } from "../Flowbite";
+"use client";
 
-export interface FlowbiteLabelTheme {
-  root: FlowbiteLabelRootTheme;
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { DynamicStringEnumKeysOf, FlowbiteStateColors, ThemingProps } from "../../types";
+import { labelTheme } from "./theme";
+
+export interface LabelTheme {
+  root: LabelRootTheme;
 }
 
-export interface FlowbiteLabelRootTheme {
+export interface LabelRootTheme {
   base: string;
   colors: LabelColors;
   disabled: string;
@@ -20,33 +24,29 @@ export interface LabelColors extends FlowbiteStateColors {
   default: string;
 }
 
-export interface LabelProps extends Omit<ComponentProps<"label">, "color"> {
+export interface LabelProps extends Omit<ComponentProps<"label">, "color">, ThemingProps<LabelTheme> {
   color?: DynamicStringEnumKeysOf<LabelColors>;
   disabled?: boolean;
-  theme?: DeepPartial<FlowbiteLabelTheme>;
-  value?: string;
 }
 
-export const Label: FC<LabelProps> = ({
-  children,
-  className,
-  color = "default",
-  disabled = false,
-  theme: customTheme = {},
-  value,
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().label, customTheme);
+export const Label = forwardRef<HTMLLabelElement, LabelProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [labelTheme, provider.theme?.label, props.theme],
+    [get(provider.clearTheme, "label"), props.clearTheme],
+    [get(provider.applyTheme, "label"), props.applyTheme],
+  );
+
+  const { className, color = "default", disabled = false, ...restProps } = resolveProps(props, provider.props?.label);
 
   return (
     <label
+      ref={ref}
       className={twMerge(theme.root.base, theme.root.colors[color], disabled && theme.root.disabled, className)}
       data-testid="flowbite-label"
-      {...props}
-    >
-      {value ?? children ?? ""}
-    </label>
+      {...restProps}
+    />
   );
-};
+});
 
 Label.displayName = "Label";

@@ -1,38 +1,7 @@
 import { Footer, FooterBrand, FooterCopyright, FooterDivider, FooterLink, FooterLinkGroup } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
-"use client";
-
-import { Footer } from "flowbite-react";
-
-export function Component() {
-  return (
-    <Footer container>
-      <div className="w-full text-center">
-        <div className="w-full justify-between sm:flex sm:items-center sm:justify-between">
-          <Footer.Brand
-            href="https://flowbite.com"
-            src="https://flowbite.com/docs/images/logo.svg"
-            alt="Flowbite Logo"
-            name="Flowbite"
-          />
-          <Footer.LinkGroup>
-            <Footer.Link href="#">About</Footer.Link>
-            <Footer.Link href="#">Privacy Policy</Footer.Link>
-            <Footer.Link href="#">Licensing</Footer.Link>
-            <Footer.Link href="#">Contact</Footer.Link>
-          </Footer.LinkGroup>
-        </div>
-        <Footer.Divider />
-        <Footer.Copyright href="#" by="Flowbite™" year={2022} />
-      </div>
-    </Footer>
-  );
-}
-`;
-
-const codeRSC = `
 import { Footer, FooterBrand, FooterCopyright, FooterDivider, FooterLink, FooterLinkGroup } from "flowbite-react";
 
 export function Component() {
@@ -88,18 +57,11 @@ export function Component() {
 
 export const withLogo: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "footer/footer.withLogo.tsx",
   component: <Component />,
   iframe: 220,

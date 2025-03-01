@@ -1,11 +1,11 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteModalTheme } from "./Modal";
+import type { ModalTheme } from "./Modal";
 
-export const modalTheme: FlowbiteModalTheme = createTheme({
+export const modalTheme = createTheme<ModalTheme>({
   root: {
     base: "fixed inset-x-0 top-0 z-50 h-screen overflow-y-auto overflow-x-hidden md:inset-0 md:h-full",
     show: {
-      on: "flex bg-gray-900 bg-opacity-50 dark:bg-opacity-80",
+      on: "flex bg-gray-900/50 dark:bg-gray-900/80",
       off: "hidden",
     },
     sizes: {

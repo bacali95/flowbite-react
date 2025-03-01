@@ -1,35 +1,36 @@
 "use client";
 
-import type { ComponentProps, ElementType, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import type { DeepPartial } from "../../types";
+import { forwardRef, type ComponentProps, type ElementType } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
 import { useNavbarContext } from "./NavbarContext";
+import { navbarTheme } from "./theme";
 
-export interface FlowbiteNavbarBrandTheme {
+export interface NavbarBrandTheme {
   base: string;
 }
 
-export interface NavbarBrandProps extends ComponentProps<"a">, Record<string, unknown> {
+export interface NavbarBrandProps extends ComponentProps<"a">, ThemingProps<NavbarBrandTheme> {
   as?: ElementType;
   href?: string;
-  theme?: DeepPartial<FlowbiteNavbarBrandTheme>;
 }
 
-export const NavbarBrand: FC<NavbarBrandProps> = ({
-  as: Component = "a",
-  children,
-  className,
-  theme: customTheme = {},
-  ...props
-}) => {
-  const { theme: rootTheme } = useNavbarContext();
+export const NavbarBrand = forwardRef<HTMLAnchorElement, NavbarBrandProps>((props, ref) => {
+  const { theme: rootTheme, clearTheme: rootClearTheme, applyTheme: rootApplyTheme } = useNavbarContext();
 
-  const theme = mergeDeep(rootTheme.brand, customTheme);
-
-  return (
-    <Component className={twMerge(theme.base, className)} {...props}>
-      {children}
-    </Component>
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [navbarTheme.brand, provider.theme?.navbar?.brand, rootTheme?.brand, props.theme],
+    [get(provider.clearTheme, "navbar.brand"), get(rootClearTheme, "brand"), props.clearTheme],
+    [get(provider.applyTheme, "navbar.brand"), get(rootApplyTheme, "brand"), props.applyTheme],
   );
-};
+
+  const { as: Component = "a", className, ...restProps } = resolveProps(props, provider.props?.navbarBrand);
+
+  return <Component ref={ref} className={twMerge(theme.base, className)} {...restProps} />;
+});
+NavbarBrand.displayName = "NavbarBrand";

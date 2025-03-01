@@ -1,17 +1,17 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { FlowbiteNavbarTheme } from "./Navbar";
+import type { ThemingProps } from "../../types";
+import type { NavbarTheme } from "./Navbar";
 
-type NavbarContext = {
-  theme: FlowbiteNavbarTheme;
+export interface NavbarContextValue extends ThemingProps<NavbarTheme> {
   isOpen?: boolean;
   setIsOpen: (isOpen: boolean) => void;
-};
+}
 
-export const NavbarContext = createContext<NavbarContext | undefined>(undefined);
+export const NavbarContext = createContext<NavbarContextValue | undefined>(undefined);
 
-export function useNavbarContext(): NavbarContext {
+export function useNavbarContext(): NavbarContextValue {
   const context = useContext(NavbarContext);
 
   if (!context) {

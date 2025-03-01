@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteAvatarTheme } from "./Avatar";
+import type { AvatarTheme } from "./Avatar";
 
-export const avatarTheme: FlowbiteAvatarTheme = createTheme({
+export const avatarTheme = createTheme<AvatarTheme>({
   root: {
     base: "flex items-center justify-center space-x-4 rounded",
     bordered: "p-1 ring-2",

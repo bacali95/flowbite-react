@@ -1,33 +1,18 @@
 import { Badge } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
-"use client";
-
 import { Badge } from "flowbite-react";
 
 export function Component() {
   return (
     <div className="flex flex-wrap gap-2">
-      <Badge href="#">Default</Badge>
-      <Badge size="sm" href="#">
-        Default
-      </Badge>
-    </div>
-  );
-}
-`;
-
-const codeRSC = `
-import { Badge } from "flowbite-react";
-
-export function Component() {
-  return (
-    <div className="flex flex-wrap gap-2">
-      <Badge href="#">Default</Badge>
-      <Badge size="sm" href="#">
-        Default
-      </Badge>
+      <a href="#">
+        <Badge>Default</Badge>
+      </a>
+      <a href="#">
+        <Badge size="sm">Default</Badge>
+      </a>
     </div>
   );
 }
@@ -36,28 +21,23 @@ export function Component() {
 export function Component() {
   return (
     <div className="flex flex-wrap gap-2">
-      <Badge href="#">Default</Badge>
-      <Badge size="sm" href="#">
-        Default
-      </Badge>
+      <a href="#">
+        <Badge>Default</Badge>
+      </a>
+      <a href="#">
+        <Badge size="sm">Default</Badge>
+      </a>
     </div>
   );
 }
 
 export const asLink: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "badge/badge.asLink.tsx",
   component: <Component />,
 };

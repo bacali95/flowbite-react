@@ -1,13 +1,22 @@
+"use client";
+
 import type { ComponentProps, FC, ReactNode } from "react";
 import { forwardRef } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
-import type { FlowbiteBoolean, FlowbiteColors, FlowbiteSizes } from "../Flowbite";
-import { HelperText } from "../HelperText";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type {
+  DynamicStringEnumKeysOf,
+  FlowbiteBoolean,
+  FlowbiteColors,
+  FlowbiteSizes,
+  ThemingProps,
+} from "../../types";
+import { textInputTheme } from "./theme";
 
-export interface FlowbiteTextInputTheme {
+export interface TextInputTheme {
   base: string;
   addon: string;
   field: {
@@ -22,8 +31,8 @@ export interface FlowbiteTextInputTheme {
     };
     input: {
       base: string;
-      sizes: FlowbiteTextInputSizes;
-      colors: FlowbiteTextInputColors;
+      sizes: TextInputSizes;
+      colors: TextInputColors;
       withIcon: FlowbiteBoolean;
       withRightIcon: FlowbiteBoolean;
       withAddon: FlowbiteBoolean;
@@ -32,80 +41,74 @@ export interface FlowbiteTextInputTheme {
   };
 }
 
-export interface FlowbiteTextInputColors
-  extends Pick<FlowbiteColors, "gray" | "info" | "failure" | "warning" | "success"> {
+export interface TextInputColors extends Pick<FlowbiteColors, "gray" | "info" | "failure" | "warning" | "success"> {
   [key: string]: string;
 }
 
-export interface FlowbiteTextInputSizes extends Pick<FlowbiteSizes, "sm" | "md" | "lg"> {
+export interface TextInputSizes extends Pick<FlowbiteSizes, "sm" | "md" | "lg"> {
   [key: string]: string;
 }
 
-export interface TextInputProps extends Omit<ComponentProps<"input">, "ref" | "color"> {
+export interface TextInputProps extends Omit<ComponentProps<"input">, "ref" | "color">, ThemingProps<TextInputTheme> {
   addon?: ReactNode;
-  color?: DynamicStringEnumKeysOf<FlowbiteTextInputColors>;
-  helperText?: ReactNode;
+  color?: DynamicStringEnumKeysOf<TextInputColors>;
   icon?: FC<ComponentProps<"svg">>;
   rightIcon?: FC<ComponentProps<"svg">>;
   shadow?: boolean;
-  sizing?: DynamicStringEnumKeysOf<FlowbiteTextInputSizes>;
-  theme?: DeepPartial<FlowbiteTextInputTheme>;
+  sizing?: DynamicStringEnumKeysOf<TextInputSizes>;
 }
 
-export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  (
-    {
-      addon,
-      className,
-      color = "gray",
-      helperText,
-      icon: Icon,
-      rightIcon: RightIcon,
-      shadow,
-      sizing = "md",
-      theme: customTheme = {},
-      type = "text",
-      ...props
-    },
-    ref,
-  ) => {
-    const theme = mergeDeep(getTheme().textInput, customTheme);
+export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [textInputTheme, provider.theme?.textInput, props.theme],
+    [get(provider.clearTheme, "textInput"), props.clearTheme],
+    [get(provider.applyTheme, "textInput"), props.applyTheme],
+  );
 
-    return (
-      <>
-        <div className={twMerge(theme.base, className)}>
-          {addon && <span className={theme.addon}>{addon}</span>}
-          <div className={theme.field.base}>
-            {Icon && (
-              <div className={theme.field.icon.base}>
-                <Icon className={theme.field.icon.svg} />
-              </div>
-            )}
-            {RightIcon && (
-              <div data-testid="right-icon" className={theme.field.rightIcon.base}>
-                <RightIcon className={theme.field.rightIcon.svg} />
-              </div>
-            )}
-            <input
-              className={twMerge(
-                theme.field.input.base,
-                theme.field.input.colors[color],
-                theme.field.input.sizes[sizing],
-                theme.field.input.withIcon[Icon ? "on" : "off"],
-                theme.field.input.withRightIcon[RightIcon ? "on" : "off"],
-                theme.field.input.withAddon[addon ? "on" : "off"],
-                theme.field.input.withShadow[shadow ? "on" : "off"],
-              )}
-              type={type}
-              {...props}
-              ref={ref}
-            />
+  const {
+    addon,
+    className,
+    color = "gray",
+    icon: Icon,
+    rightIcon: RightIcon,
+    shadow,
+    sizing = "md",
+    type = "text",
+    ...restProps
+  } = resolveProps(props, provider.props?.textInput);
+
+  return (
+    <div className={twMerge(theme.base, className)}>
+      {addon && <span className={theme.addon}>{addon}</span>}
+      <div className={theme.field.base}>
+        {Icon && (
+          <div className={theme.field.icon.base}>
+            <Icon className={theme.field.icon.svg} />
           </div>
-        </div>
-        {helperText && <HelperText color={color}>{helperText}</HelperText>}
-      </>
-    );
-  },
-);
+        )}
+        {RightIcon && (
+          <div data-testid="right-icon" className={theme.field.rightIcon.base}>
+            <RightIcon className={theme.field.rightIcon.svg} />
+          </div>
+        )}
+        <input
+          className={twMerge(
+            theme.field.input.base,
+            theme.field.input.colors[color],
+            theme.field.input.sizes[sizing],
+            theme.field.input.withIcon[Icon ? "on" : "off"],
+            theme.field.input.withRightIcon[RightIcon ? "on" : "off"],
+            theme.field.input.withAddon[addon ? "on" : "off"],
+            theme.field.input.withShadow[shadow ? "on" : "off"],
+          )}
+          type={type}
+          {...restProps}
+          ref={ref}
+        />
+      </div>
+    </div>
+  );
+});
 
 TextInput.displayName = "TextInput";

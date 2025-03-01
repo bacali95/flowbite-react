@@ -1,29 +1,42 @@
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
+"use client";
 
-export interface FlowbiteBlockquoteTheme {
-  root: FlowbiteBlockquoteRootTheme;
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { blockquoteTheme } from "./theme";
+
+export interface BlockquoteTheme {
+  root: BlockquoteRootTheme;
 }
 
-export interface FlowbiteBlockquoteRootTheme {
+export interface BlockquoteRootTheme {
   base: string;
 }
 
-export interface BlockquoteProps extends ComponentProps<"blockquote"> {
-  theme?: DeepPartial<FlowbiteBlockquoteTheme>;
-}
+export interface BlockquoteProps extends ComponentProps<"blockquote">, ThemingProps<BlockquoteTheme> {}
 
-export const Blockquote: FC<BlockquoteProps> = ({ children, className, theme: customTheme = {}, ...props }) => {
-  const theme = mergeDeep(getTheme().blockquote, customTheme);
+export const Blockquote = forwardRef<HTMLQuoteElement, BlockquoteProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [blockquoteTheme, provider.theme?.blockquote, props.theme],
+    [get(provider.clearTheme, "blockquote"), props.clearTheme],
+    [get(provider.applyTheme, "blockquote"), props.applyTheme],
+  );
+
+  const { className, ...restProps } = resolveProps(props, provider.props?.blockquote);
 
   return (
-    <blockquote className={twMerge(theme.root.base, className)} data-testid="flowbite-blockquote" {...props}>
-      {children}
-    </blockquote>
+    <blockquote
+      ref={ref}
+      className={twMerge(theme.root.base, className)}
+      data-testid="flowbite-blockquote"
+      {...restProps}
+    />
   );
-};
+});
 
 Blockquote.displayName = "Blockquote";

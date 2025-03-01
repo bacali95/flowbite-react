@@ -1,10 +1,15 @@
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
+"use client";
 
-export interface FlowbiteRatingAdvancedTheme {
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { ratingAdvancedTheme } from "./theme";
+
+export interface RatingAdvancedTheme {
   base: string;
   label: string;
   progress: {
@@ -14,22 +19,22 @@ export interface FlowbiteRatingAdvancedTheme {
   };
 }
 
-export interface RatingAdvancedProps extends ComponentProps<"div"> {
+export interface RatingAdvancedProps extends ComponentProps<"div">, ThemingProps<RatingAdvancedTheme> {
   percentFilled?: number;
-  theme?: DeepPartial<FlowbiteRatingAdvancedTheme>;
 }
 
-export const RatingAdvanced: FC<RatingAdvancedProps> = ({
-  children,
-  className,
-  percentFilled = 0,
-  theme: customTheme = {},
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().ratingAdvanced, customTheme);
+export const RatingAdvanced = forwardRef<HTMLDivElement, RatingAdvancedProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [ratingAdvancedTheme, provider.theme?.ratingAdvanced, props.theme],
+    [get(provider.clearTheme, "ratingAdvanced"), props.clearTheme],
+    [get(provider.applyTheme, "ratingAdvanced"), props.applyTheme],
+  );
+
+  const { children, className, percentFilled = 0, ...restProps } = resolveProps(props, provider.props?.ratingAdvanced);
 
   return (
-    <div className={twMerge(theme.base, className)} {...props}>
+    <div ref={ref} className={twMerge(theme.base, className)} {...restProps}>
       <span className={theme.label}>{children}</span>
       <div className={theme.progress.base}>
         <div
@@ -41,4 +46,6 @@ export const RatingAdvanced: FC<RatingAdvancedProps> = ({
       <span className={theme.progress.label}>{`${percentFilled}%`}</span>
     </div>
   );
-};
+});
+
+RatingAdvanced.displayName = "RatingAdvanced";

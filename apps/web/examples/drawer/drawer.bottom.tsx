@@ -1,13 +1,13 @@
 "use client";
 
-import { Button, Drawer } from "flowbite-react";
+import { Button, Drawer, DrawerHeader, DrawerItems } from "flowbite-react";
 import { useState } from "react";
 import type { CodeData } from "~/components/code-demo";
 
 const code = `
 "use client";
 
-import { Button, Drawer } from "flowbite-react";
+import { Button, Drawer, DrawerHeader, DrawerItems } from "flowbite-react";
 import { useState } from "react";
 
 export function Component() {
@@ -21,8 +21,8 @@ export function Component() {
         <Button onClick={() => setIsOpen(true)}>Show bottom drawer</Button>
       </div>
       <Drawer open={isOpen} onClose={handleClose} position="bottom">
-        <Drawer.Header title="Drawer" />
-        <Drawer.Items>
+        <DrawerHeader title="Drawer" />
+        <DrawerItems>
           <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
             Supercharge your hiring by taking advantage of our&nbsp;
             <a href="#" className="text-cyan-600 underline hover:no-underline dark:text-cyan-500">
@@ -60,7 +60,7 @@ export function Component() {
               </svg>
             </a>
           </div>
-        </Drawer.Items>
+        </DrawerItems>
       </Drawer>
     </>
   );
@@ -78,8 +78,8 @@ export function Component() {
         <Button onClick={() => setIsOpen(true)}>Show bottom drawer</Button>
       </div>
       <Drawer open={isOpen} onClose={handleClose} position="bottom">
-        <Drawer.Header title="Drawer" />
-        <Drawer.Items>
+        <DrawerHeader title="Drawer" />
+        <DrawerItems>
           <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
             Supercharge your hiring by taking advantage of our&nbsp;
             <a href="#" className="text-cyan-600 underline hover:no-underline dark:text-cyan-500">
@@ -117,7 +117,7 @@ export function Component() {
               </svg>
             </a>
           </div>
-        </Drawer.Items>
+        </DrawerItems>
       </Drawer>
     </>
   );
@@ -125,13 +125,11 @@ export function Component() {
 
 export const bottom: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "drawer/drawer.bottom.tsx",
   component: <Component />,
   iframe: 600,

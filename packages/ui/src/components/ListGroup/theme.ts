@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteListGroupTheme } from "./ListGroup";
+import type { ListGroupTheme } from "./ListGroup";
 
-export const listGroupTheme: FlowbiteListGroupTheme = createTheme({
+export const listGroupTheme = createTheme<ListGroupTheme>({
   root: {
     base: "list-none rounded-lg border border-gray-200 bg-white text-left text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white",
   },

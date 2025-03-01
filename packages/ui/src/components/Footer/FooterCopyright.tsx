@@ -1,34 +1,38 @@
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
+"use client";
 
-export interface FlowbiteFooterCopyrightTheme {
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { footerTheme } from "./theme";
+
+export interface FooterCopyrightTheme {
   base: string;
   href: string;
   span: string;
 }
 
-export interface CopyrightProps extends ComponentProps<"div"> {
+export interface FooterCopyrightProps extends ComponentProps<"div">, ThemingProps<FooterCopyrightTheme> {
   by: string;
   href?: string;
-  theme?: DeepPartial<FlowbiteFooterCopyrightTheme>;
   year?: number;
 }
 
-export const FooterCopyright: FC<CopyrightProps> = ({
-  by,
-  className,
-  href,
-  theme: customTheme = {},
-  year,
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().footer.copyright, customTheme);
+export const FooterCopyright = forwardRef<HTMLDivElement, FooterCopyrightProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [footerTheme.copyright, provider.theme?.footer?.copyright, props.theme],
+    [get(provider.clearTheme, "footer.copyright"), props.clearTheme],
+    [get(provider.applyTheme, "footer.copyright"), props.applyTheme],
+  );
+
+  const { by, className, href, year, ...restProps } = resolveProps(props, provider.props?.footerCopyright);
 
   return (
-    <div data-testid="flowbite-footer-copyright" className={twMerge(theme.base, className)} {...props}>
+    <div ref={ref} data-testid="flowbite-footer-copyright" className={twMerge(theme.base, className)} {...restProps}>
       © {year}
       {href ? (
         <a href={href} className={theme.href}>
@@ -41,4 +45,6 @@ export const FooterCopyright: FC<CopyrightProps> = ({
       )}
     </div>
   );
-};
+});
+
+FooterCopyright.displayName = "FooterCopyright";

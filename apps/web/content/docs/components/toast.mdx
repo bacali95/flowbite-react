@@ -39,13 +39,13 @@ Add a button to the toast component to allow the user to perform an action or cl
 
 ## Interactive toast
 
-This component can be used to show more complex messages with buttons and other elements that can be used to perform actions and use the `<Toast.Toggle>` component to allow the user to close the toast component.
+This component can be used to show more complex messages with buttons and other elements that can be used to perform actions and use the `<ToastToggle>` component to allow the user to close the toast component.
 
 <Example name="toast.interactive" />
 
 ## Custom dismissal handling
 
-By passing the `onDismiss` callback prop to the `<Toast.Toggle>` component, you gain the ability to define your preferred dismissal handling (ex: using other toast libraries like `react-toastfy`). When `onDismiss` is provided, the internal state of the `<Toast />` component will remain unchanged upon clicking `<Toast.Toggle>`.
+By passing the `onDismiss` callback prop to the `<ToastToggle>` component, you gain the ability to define your preferred dismissal handling (ex: using other toast libraries like `react-toastfy`). When `onDismiss` is provided, the internal state of the `<Toast />` component will remain unchanged upon clicking `<ToastToggle>`.
 
 <Example name="toast.customDismissal" />
 

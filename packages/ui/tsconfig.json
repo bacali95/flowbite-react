@@ -6,8 +6,8 @@
     "jsx": "react-jsx",
 
     /* Modules */
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
 
     /* Interop Constraints */

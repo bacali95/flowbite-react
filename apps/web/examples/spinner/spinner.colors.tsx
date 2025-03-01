@@ -1,26 +1,7 @@
 import { Spinner } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
-"use client";
-
-import { Spinner } from "flowbite-react";
-
-export function Component() {
-  return (
-    <div className="flex flex-wrap gap-2">
-      <Spinner color="info" aria-label="Info spinner example" />
-      <Spinner color="success" aria-label="Success spinner example" />
-      <Spinner color="failure" aria-label="Failure spinner example" />
-      <Spinner color="warning" aria-label="Warning spinner example" />
-      <Spinner color="pink" aria-label="Pink spinner example" />
-      <Spinner color="purple" aria-label="Purple spinner example" />
-    </div>
-  );
-}
-`;
-
-const codeRSC = `
 import { Spinner } from "flowbite-react";
 
 export function Component() {
@@ -52,18 +33,11 @@ export function Component() {
 
 export const colors: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "spinner/spinner.colors.tsx",
   component: <Component />,
 };

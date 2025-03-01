@@ -1,38 +1,48 @@
+"use client";
+
 import type { Placement } from "@floating-ui/core";
-import type { ComponentProps, FC, ReactNode } from "react";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import { Floating, type FlowbiteFloatingTheme } from "../Floating";
+import type { ComponentProps, ReactNode } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import { Floating, type FloatingTheme } from "../Floating";
+import { tooltipTheme } from "./theme";
 
-export type FlowbiteTooltipTheme = FlowbiteFloatingTheme;
+export type TooltipTheme = FloatingTheme;
 
-export interface TooltipProps extends Omit<ComponentProps<"div">, "content" | "style"> {
+export interface TooltipProps extends Omit<ComponentProps<"div">, "content" | "style">, ThemingProps<TooltipTheme> {
   animation?: false | `duration-${number}`;
   arrow?: boolean;
   content: ReactNode;
   placement?: "auto" | Placement;
   style?: "dark" | "light" | "auto";
-  theme?: DeepPartial<FlowbiteTooltipTheme>;
   trigger?: "hover" | "click";
 }
 
 /**
  * @see https://floating-ui.com/docs/react-dom-interactions
  */
-export const Tooltip: FC<TooltipProps> = ({
-  animation = "duration-300",
-  arrow = true,
-  children,
-  className,
-  content,
-  placement = "top",
-  style = "dark",
-  theme: customTheme = {},
-  trigger = "hover",
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().tooltip, customTheme);
+export function Tooltip(props: TooltipProps) {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [tooltipTheme, provider.theme?.tooltip, props.theme],
+    [get(provider.clearTheme, "tooltip"), props.clearTheme],
+    [get(provider.applyTheme, "tooltip"), props.applyTheme],
+  );
+
+  const {
+    animation = "duration-300",
+    arrow = true,
+    children,
+    className,
+    content,
+    placement = "top",
+    style = "dark",
+    trigger = "hover",
+    ...restProps
+  } = resolveProps(props, provider.props?.tooltip);
 
   return (
     <Floating
@@ -44,11 +54,11 @@ export const Tooltip: FC<TooltipProps> = ({
       theme={theme}
       trigger={trigger}
       className={className}
-      {...props}
+      {...restProps}
     >
       {children}
     </Floating>
   );
-};
+}
 
 Tooltip.displayName = "Tooltip";

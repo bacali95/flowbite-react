@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Drawer, Label, Textarea, TextInput } from "flowbite-react";
+import { Button, Drawer, DrawerHeader, DrawerItems, Label, Textarea, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { HiEnvelope } from "react-icons/hi2";
 import type { CodeData } from "~/components/code-demo";
@@ -8,7 +8,7 @@ import type { CodeData } from "~/components/code-demo";
 const code = `
 "use client";
 
-import { Button, Drawer, Label, Textarea, TextInput } from "flowbite-react";
+import { Button, Drawer, DrawerHeader, DrawerItems, Label, Textarea, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { HiEnvelope } from "react-icons/hi2";
 
@@ -23,8 +23,8 @@ export function Component() {
         <Button onClick={() => setIsOpen(true)}>Show contact form</Button>
       </div>
       <Drawer open={isOpen} onClose={handleClose}>
-        <Drawer.Header title="CONTACT US" titleIcon={HiEnvelope} />
-        <Drawer.Items>
+        <DrawerHeader title="CONTACT US" titleIcon={HiEnvelope} />
+        <DrawerItems>
           <form action="#">
             <div className="mb-6 mt-3">
               <Label htmlFor="email" className="mb-2 block">
@@ -60,7 +60,7 @@ export function Component() {
               </a>
             </p>
           </form>
-        </Drawer.Items>
+        </DrawerItems>
       </Drawer>
     </>
   );
@@ -78,8 +78,8 @@ export function Component() {
         <Button onClick={() => setIsOpen(true)}>Show contact form</Button>
       </div>
       <Drawer open={isOpen} onClose={handleClose}>
-        <Drawer.Header title="CONTACT US" titleIcon={HiEnvelope} />
-        <Drawer.Items>
+        <DrawerHeader title="CONTACT US" titleIcon={HiEnvelope} />
+        <DrawerItems>
           <form action="#">
             <div className="mb-6 mt-3">
               <Label htmlFor="email" className="mb-2 block">
@@ -115,7 +115,7 @@ export function Component() {
               </a>
             </p>
           </form>
-        </Drawer.Items>
+        </DrawerItems>
       </Drawer>
     </>
   );
@@ -123,13 +123,11 @@ export function Component() {
 
 export const contactForm: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "drawer/drawer.contactForm.tsx",
   component: <Component />,
   iframe: 600,

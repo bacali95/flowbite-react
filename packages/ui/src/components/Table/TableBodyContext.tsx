@@ -1,15 +1,14 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { FlowbiteTableBodyTheme } from "./TableBody";
+import type { ThemingProps } from "../../types";
+import type { TableBodyTheme } from "./TableBody";
 
-export type TableBodyContext = {
-  theme: FlowbiteTableBodyTheme;
-};
+export type TableBodyContextValue = ThemingProps<TableBodyTheme>;
 
-export const TableBodyContext = createContext<TableBodyContext | undefined>(undefined);
+export const TableBodyContext = createContext<TableBodyContextValue | undefined>(undefined);
 
-export function useTableBodyContext(): TableBodyContext {
+export function useTableBodyContext(): TableBodyContextValue {
   const context = useContext(TableBodyContext);
 
   if (!context) {

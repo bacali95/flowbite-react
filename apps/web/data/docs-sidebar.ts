@@ -6,8 +6,7 @@ export interface DocsSidebarSection {
 export interface DocsSidebarItem {
   title: string;
   href: string;
-  isNew?: boolean;
-  isExternal?: boolean;
+  tag?: "new" | "updated";
 }
 
 export const DOCS_SIDEBAR: DocsSidebarSection[] = [
@@ -20,7 +19,7 @@ export const DOCS_SIDEBAR: DocsSidebarSection[] = [
       { title: "Editor Setup", href: "/docs/getting-started/editor-setup" },
       { title: "Server Components", href: "/docs/getting-started/server-components" },
       { title: "License", href: "/docs/getting-started/license" },
-      { title: "Changelog", href: "https://github.com/themesberg/flowbite-react/releases", isExternal: true },
+      { title: "Changelog", href: "https://github.com/themesberg/flowbite-react/releases" },
       { title: "Contributing", href: "/docs/getting-started/contributing" },
     ],
   },
@@ -31,18 +30,19 @@ export const DOCS_SIDEBAR: DocsSidebarSection[] = [
       { title: "Remix", href: "/docs/guides/remix" },
       { title: "Astro", href: "/docs/guides/astro" },
       { title: "Gatsby", href: "/docs/guides/gatsby" },
-      { title: "AdonisJS", href: "/docs/guides/adonis-js", isNew: true },
+      { title: "AdonisJS", href: "/docs/guides/adonis-js" },
       { title: "RedwoodJS", href: "/docs/guides/redwood-js" },
       { title: "Laravel", href: "/docs/guides/laravel" },
       { title: "Vite", href: "/docs/guides/vite" },
       { title: "Parcel", href: "/docs/guides/parcel" },
-      { title: "Create React App", href: "/docs/guides/create-react-app" },
     ],
   },
   {
     title: "customize",
     items: [
-      { title: "Theme", href: "/docs/customize/theme" },
+      { title: "Theme", href: "/docs/customize/theme", tag: "updated" },
+      { title: "Plugin", href: "/docs/customize/plugin", tag: "new" },
+      { title: "Prefix", href: "/docs/customize/prefix", tag: "new" },
       { title: "Dark Mode", href: "/docs/customize/dark-mode" },
     ],
   },
@@ -59,15 +59,15 @@ export const DOCS_SIDEBAR: DocsSidebarSection[] = [
       { title: "Button group", href: "/docs/components/button-group" },
       { title: "Card", href: "/docs/components/card" },
       { title: "Carousel", href: "/docs/components/carousel" },
-      { title: "Clipboard", href: "/docs/components/clipboard", isNew: true },
+      { title: "Clipboard", href: "/docs/components/clipboard" },
       { title: "Datepicker", href: "/docs/components/datepicker" },
-      { title: "Drawer", href: "/docs/components/drawer", isNew: true },
+      { title: "Drawer", href: "/docs/components/drawer" },
       { title: "Dropdown", href: "/docs/components/dropdown" },
       { title: "Footer", href: "/docs/components/footer" },
       { title: "Forms", href: "/docs/components/forms" },
       { title: "KBD", href: "/docs/components/kbd" },
       { title: "List group", href: "/docs/components/list-group" },
-      { title: "Mega menu", href: "/docs/components/mega-menu", isNew: true },
+      { title: "Mega menu", href: "/docs/components/mega-menu" },
       { title: "Modal", href: "/docs/components/modal" },
       { title: "Navbar", href: "/docs/components/navbar" },
       { title: "Pagination", href: "/docs/components/pagination" },
@@ -94,8 +94,8 @@ export const DOCS_SIDEBAR: DocsSidebarSection[] = [
     title: "typography",
     items: [
       { title: "Blockquote", href: "/docs/typography/blockquote" },
+      { title: "HR", href: "/docs/typography/hr" },
       { title: "List", href: "/docs/typography/list" },
-      { title: "HR", href: "/docs/typography/hr", isNew: true },
     ],
   },
 ];

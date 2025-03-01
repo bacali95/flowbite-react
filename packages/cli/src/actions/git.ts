@@ -1,6 +1,6 @@
 import * as p from "@clack/prompts";
 import { $ } from "execa";
-import { Context } from "../context.js";
+import type { Context } from "../context.js";
 
 export async function getGit(context: Context) {
   let data: boolean;

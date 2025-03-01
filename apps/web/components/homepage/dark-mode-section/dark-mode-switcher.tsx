@@ -6,7 +6,7 @@ export function DarkModeSwitcher() {
   const { setMode } = useThemeMode();
 
   return (
-    <div className="flex flex-row gap-8 text-cyan-500">
+    <div className="flex flex-row gap-8 text-primary-500">
       <div className="flex flex-col items-center gap-2 font-medium text-gray-900 dark:text-gray-400">
         <button
           aria-label="Light mode"
@@ -31,7 +31,7 @@ export function DarkModeSwitcher() {
           </span>
         </button>{" "}
         <svg
-          className="size-11 rounded-lg bg-cyan-700 p-2 text-white dark:hidden dark:bg-gray-700"
+          className="size-11 rounded-lg bg-primary-700 p-2 text-white dark:hidden dark:bg-gray-700"
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,7 @@ export function DarkModeSwitcher() {
       </div>{" "}
       <div className="flex flex-col items-center gap-2 font-medium text-gray-400 dark:text-white">
         <svg
-          className="hidden size-11 rounded-lg bg-cyan-700 p-2 dark:block"
+          className="hidden size-11 rounded-lg bg-primary-700 p-2 dark:block"
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"

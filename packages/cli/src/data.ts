@@ -10,5 +10,4 @@ export const REPOS: { key: string; name: string; url: string }[] = [
   { key: "laravel", name: "Laravel", url: "https://github.com/themesberg/flowbite-react-template-laravel.git" },
   { key: "vite", name: "Vite", url: "https://github.com/themesberg/flowbite-react-template-vite.git" },
   { key: "parcel", name: "Parcel", url: "https://github.com/themesberg/flowbite-react-template-parcel.git" },
-  { key: "cra", name: "Create React App", url: "https://github.com/themesberg/flowbite-react-template-cra.git" },
 ];

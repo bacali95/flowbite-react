@@ -1,5 +1,5 @@
 import { Popover } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
 import { Popover } from "flowbite-react";
@@ -7,7 +7,7 @@ import { Popover } from "flowbite-react";
 export function Component() {
   return (
     <p className="text-gray-500 dark:text-gray-400">
-      Due to its central geographic location in Southern Europe,{' '}
+      Due to its central geographic location in Southern Europe,{" "}
       <Popover
         trigger="hover"
         content={
@@ -24,7 +24,7 @@ export function Component() {
                     href="#"
                     className="flex items-center font-medium text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-500 dark:hover:text-blue-600"
                   >
-                    Read more{' '}
+                    Read more{" "}
                     <svg
                       className="ms-1.5 h-2 w-2 rtl:rotate-180"
                       aria-hidden="true"
@@ -55,7 +55,7 @@ export function Component() {
         <a href="#" className="text-blue-600 underline hover:no-underline dark:text-blue-500">
           Italy
         </a>
-      </Popover>{' '}
+      </Popover>{" "}
       has historically been home to myriad peoples and cultures. In addition to the various ancient peoples dispersed
       throughout what is now modern-day Italy, the most predominant being the Indo-European Italic peoples who gave the
       peninsula its name, beginning from the classical era, Phoenicians and Carthaginians founded colonies mostly in
@@ -127,13 +127,11 @@ export function Component() {
 
 export const image: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "popover/popover.image.tsx",
   component: <Component />,
 };

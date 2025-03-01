@@ -1,2 +1,2 @@
 export { Floating } from "./Floating";
-export type { FloatingProps, FloatingStyle, FlowbiteFloatingArrowTheme, FlowbiteFloatingTheme } from "./Floating";
+export type { FloatingArrowTheme, FloatingProps, FloatingStyle, FloatingTheme } from "./Floating";

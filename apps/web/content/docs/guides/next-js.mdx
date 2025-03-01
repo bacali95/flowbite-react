@@ -37,28 +37,22 @@ npx create-next-app@latest --tailwind
 
 ### Install Flowbite React
 
-Run the following command to install `flowbite-react`:
+1. Run the following command to install `flowbite-react`:
 
 ```bash
 npm i flowbite-react
 ```
 
-### Configure Tailwind CSS
+2. Add `flowbite-react/tailwind` plugin to `tailwind.config.ts`:
 
-Open `tailwind.config.ts` and update `content` and `plugins` to include Flowbite React:
-
-```js {1,7,11}
+```js {1,7}
 import flowbite from "flowbite-react/tailwind";
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    // ...
-    flowbite.content(),
-  ],
   plugins: [
     // ...
-    flowbite.plugin(),
+    flowbite,
   ],
 };
 ```
@@ -117,20 +111,16 @@ module.exports = {
 npm i flowbite-react
 ```
 
-2. Add the Flowbite React `content` path and `plugin` to `tailwind.config.js`:
+2. Add `flowbite-react/tailwind` plugin to `tailwind.config.js`:
 
-```js {1,7,11}
+```js {1,7}
 const flowbite = require("flowbite-react/tailwind");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    // ...
-    flowbite.content(),
-  ],
   plugins: [
     // ...
-    flowbite.plugin(),
+    flowbite,
   ],
 };
 ```
@@ -190,11 +180,7 @@ Now that you have successfully installed Flowbite React you can start using the 
 import { Button } from "flowbite-react";
 
 export default function MyPage() {
-  return (
-    <div>
-      <Button>Click me</Button>
-    </div>
-  );
+  return <Button>Click me</Button>;
 }
 ```
 

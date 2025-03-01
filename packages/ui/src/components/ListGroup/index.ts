@@ -1,4 +1,5 @@
 export { ListGroup } from "./ListGroup";
-export type { FlowbiteListGroupRootTheme, FlowbiteListGroupTheme, ListGroupProps } from "./ListGroup";
+export type { ListGroupProps, ListGroupRootTheme, ListGroupTheme } from "./ListGroup";
 export { ListGroupItem } from "./ListGroupItem";
-export type { FlowbiteListGroupItemTheme, ListGroupItemProps } from "./ListGroupItem";
+export type { ListGroupItemProps, ListGroupItemTheme } from "./ListGroupItem";
+export { listGroupTheme } from "./theme";

@@ -1,96 +1,37 @@
 import { Button, ButtonGroup } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
-"use client";
-
-import { Button } from "flowbite-react";
-
-export function Component() {
-  return (
-    <div className="flex flex-wrap gap-2">
-      <Button.Group outline>
-        <Button color="gray">Profile</Button>
-        <Button color="gray">Settings</Button>
-        <Button color="gray">Messages</Button>
-      </Button.Group>
-      <Button.Group outline>
-        <Button gradientMonochrome="info">Profile</Button>
-        <Button gradientMonochrome="info">Settings</Button>
-        <Button gradientMonochrome="info">Messages</Button>
-      </Button.Group>
-      <Button.Group outline>
-        <Button gradientDuoTone="cyanToBlue">Profile</Button>
-        <Button gradientDuoTone="cyanToBlue">Settings</Button>
-        <Button gradientDuoTone="cyanToBlue">Messages</Button>
-      </Button.Group>
-    </div>
-  );
-}
-`;
-
-const codeRSC = `
 import { Button, ButtonGroup } from "flowbite-react";
 
 export function Component() {
   return (
-    <div className="flex flex-wrap gap-2">
-      <ButtonGroup outline>
-        <Button color="gray">Profile</Button>
-        <Button color="gray">Settings</Button>
-        <Button color="gray">Messages</Button>
-      </ButtonGroup>
-      <ButtonGroup outline>
-        <Button gradientMonochrome="info">Profile</Button>
-        <Button gradientMonochrome="info">Settings</Button>
-        <Button gradientMonochrome="info">Messages</Button>
-      </ButtonGroup>
-      <ButtonGroup outline>
-        <Button gradientDuoTone="cyanToBlue">Profile</Button>
-        <Button gradientDuoTone="cyanToBlue">Settings</Button>
-        <Button gradientDuoTone="cyanToBlue">Messages</Button>
-      </ButtonGroup>
-    </div>
+    <ButtonGroup outline>
+      <Button>Profile</Button>
+      <Button>Settings</Button>
+      <Button>Messages</Button>
+    </ButtonGroup>
   );
 }
 `;
 
 export function Component() {
   return (
-    <div className="flex flex-wrap gap-2">
-      <ButtonGroup outline>
-        <Button color="gray">Profile</Button>
-        <Button color="gray">Settings</Button>
-        <Button color="gray">Messages</Button>
-      </ButtonGroup>
-      <ButtonGroup outline>
-        <Button gradientMonochrome="info">Profile</Button>
-        <Button gradientMonochrome="info">Settings</Button>
-        <Button gradientMonochrome="info">Messages</Button>
-      </ButtonGroup>
-      <ButtonGroup outline>
-        <Button gradientDuoTone="cyanToBlue">Profile</Button>
-        <Button gradientDuoTone="cyanToBlue">Settings</Button>
-        <Button gradientDuoTone="cyanToBlue">Messages</Button>
-      </ButtonGroup>
-    </div>
+    <ButtonGroup outline>
+      <Button>Profile</Button>
+      <Button>Settings</Button>
+      <Button>Messages</Button>
+    </ButtonGroup>
   );
 }
 
 export const outline: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "buttonGroup/buttonGroup.outline.tsx",
   component: <Component />,
 };

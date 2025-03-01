@@ -1,39 +1,48 @@
-import type { ComponentProps, FC, ReactElement } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
-import type { FlowbiteBoolean, FlowbiteColors, FlowbitePositions, FlowbiteSizes } from "../Flowbite";
-import type { FlowbiteAvatarGroupTheme } from "./AvatarGroup";
-import { AvatarGroup } from "./AvatarGroup";
-import type { FlowbiteAvatarGroupCounterTheme } from "./AvatarGroupCounter";
-import { AvatarGroupCounter } from "./AvatarGroupCounter";
+"use client";
 
-export interface FlowbiteAvatarTheme {
-  root: FlowbiteAvatarRootTheme;
-  group: FlowbiteAvatarGroupTheme;
-  groupCounter: FlowbiteAvatarGroupCounterTheme;
+import { forwardRef, type ComponentProps, type ReactElement } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type {
+  DynamicStringEnumKeysOf,
+  FlowbiteBoolean,
+  FlowbiteColors,
+  FlowbitePositions,
+  FlowbiteSizes,
+  ThemingProps,
+} from "../../types";
+import type { AvatarGroupTheme } from "./AvatarGroup";
+import type { AvatarGroupCounterTheme } from "./AvatarGroupCounter";
+import { avatarTheme } from "./theme";
+
+export interface AvatarTheme {
+  root: AvatarRootTheme;
+  group: AvatarGroupTheme;
+  groupCounter: AvatarGroupCounterTheme;
 }
 
-export interface FlowbiteAvatarRootTheme {
+export interface AvatarRootTheme {
   base: string;
   bordered: string;
   color: AvatarColors;
-  img: FlowbiteAvatarImageTheme;
-  initials: FlowbiteAvatarInitialsTheme;
+  img: AvatarImageTheme;
+  initials: AvatarInitialsTheme;
   rounded: string;
   size: AvatarSizes;
   stacked: string;
-  status: FlowbiteAvatarStatusTheme;
+  status: AvatarStatusTheme;
   statusPosition: FlowbitePositions;
 }
 
-export interface FlowbiteAvatarImageTheme extends FlowbiteBoolean {
+export interface AvatarImageTheme extends FlowbiteBoolean {
   base: string;
   placeholder: string;
 }
 
-export interface FlowbiteAvatarStatusTheme {
+export interface AvatarStatusTheme {
   away: string;
   base: string;
   busy: string;
@@ -41,7 +50,7 @@ export interface FlowbiteAvatarStatusTheme {
   online: string;
 }
 
-export interface FlowbiteAvatarInitialsTheme {
+export interface AvatarInitialsTheme {
   base: string;
   text: string;
 }
@@ -61,7 +70,7 @@ export interface AvatarImageProps {
   "data-testid": string;
 }
 
-export interface AvatarProps extends Omit<ComponentProps<"div">, "color"> {
+export interface AvatarProps extends Omit<ComponentProps<"div">, "color">, ThemingProps<AvatarTheme> {
   alt?: string;
   bordered?: boolean;
   img?: string | ((props: AvatarImageProps) => ReactElement);
@@ -72,26 +81,31 @@ export interface AvatarProps extends Omit<ComponentProps<"div">, "color"> {
   status?: "away" | "busy" | "offline" | "online";
   statusPosition?: keyof FlowbitePositions;
   placeholderInitials?: string;
-  theme?: DeepPartial<FlowbiteAvatarTheme>;
 }
 
-const AvatarComponent: FC<AvatarProps> = ({
-  alt = "",
-  bordered = false,
-  children,
-  className,
-  color = "light",
-  img,
-  placeholderInitials = "",
-  rounded = false,
-  size = "md",
-  stacked = false,
-  status,
-  statusPosition = "top-left",
-  theme: customTheme = {},
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().avatar, customTheme);
+export const Avatar = forwardRef<HTMLDivElement, AvatarProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [avatarTheme, provider.theme?.avatar, props.theme],
+    [get(provider.clearTheme, "avatar"), props.clearTheme],
+    [get(provider.applyTheme, "avatar"), props.applyTheme],
+  );
+
+  const {
+    alt = "",
+    bordered = false,
+    children,
+    className,
+    color = "light",
+    img,
+    placeholderInitials = "",
+    rounded = false,
+    size = "md",
+    stacked = false,
+    status,
+    statusPosition = "top-left",
+    ...restProps
+  } = resolveProps(props, provider.props?.avatar);
 
   const imgClassName = twMerge(
     theme.root.img.base,
@@ -107,8 +121,9 @@ const AvatarComponent: FC<AvatarProps> = ({
     className: twMerge(imgClassName, theme.root.img.on),
     "data-testid": "flowbite-avatar-img",
   };
+
   return (
-    <div className={twMerge(theme.root.base, className)} data-testid="flowbite-avatar" {...props}>
+    <div ref={ref} className={twMerge(theme.root.base, className)} data-testid="flowbite-avatar" {...restProps}>
       <div className="relative">
         {img ? (
           typeof img === "string" ? (
@@ -159,11 +174,6 @@ const AvatarComponent: FC<AvatarProps> = ({
       {children && <div>{children}</div>}
     </div>
   );
-};
-
-AvatarComponent.displayName = "Avatar";
-
-export const Avatar = Object.assign(AvatarComponent, {
-  Group: AvatarGroup,
-  Counter: AvatarGroupCounter,
 });
+
+Avatar.displayName = "Avatar";

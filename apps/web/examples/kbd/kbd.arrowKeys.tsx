@@ -1,26 +1,12 @@
-import { Kbd } from "flowbite-react";
-import { MdKeyboardArrowDown, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardArrowUp } from "react-icons/md";
-import { type CodeData } from "~/components/code-demo";
-
-const code = `
 "use client";
 
 import { Kbd } from "flowbite-react";
 import { MdKeyboardArrowDown, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardArrowUp } from "react-icons/md";
+import type { CodeData } from "~/components/code-demo";
 
-export function Component() {
-  return (
-    <div className="flex flex-wrap gap-1">
-      <Kbd icon={MdKeyboardArrowUp} />
-      <Kbd icon={MdKeyboardArrowDown} />
-      <Kbd icon={MdKeyboardArrowLeft} />
-      <Kbd icon={MdKeyboardArrowRight} />
-    </div>
-  );
-}
-`;
+const code = `
+"use client";
 
-const codeRSC = `
 import { Kbd } from "flowbite-react";
 import { MdKeyboardArrowDown, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardArrowUp } from "react-icons/md";
 
@@ -49,18 +35,11 @@ export function Component() {
 
 export const arrowKeys: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "kbd/kbd.arrowKeys.tsx",
   component: <Component />,
 };

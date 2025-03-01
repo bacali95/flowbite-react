@@ -43,53 +43,9 @@ function Component() {
 }
 ```
 
-## Compound components
-
-Compound components DO NOT work in React Server Components, therefore each component must be specifically imported as such:
-
-Incorrect usage:
-
-```jsx
-// errors
-
-import { Button } from "flowbite-react";
-
-function Component() {
-  return (
-    <Button.Group>
-      <Button color="gray">Profile</Button>
-      <Button color="gray">Settings</Button>
-      <Button color="gray">Messages</Button>
-    </Button.Group>
-  );
-}
-```
-
-Correct usage:
-
-```jsx
-// works
-
-import { Button, ButtonGroup } from "flowbite-react";
-
-function Component() {
-  return (
-    <ButtonGroup>
-      <Button color="gray">Profile</Button>
-      <Button color="gray">Settings</Button>
-      <Button color="gray">Messages</Button>
-    </ButtonGroup>
-  );
-}
-```
-
 ## Support
 
 All Flowbite React components are server-ready, meaning they can be rendered inside React Server Components without the need of `"use client"` directive at the top of the file.
-
-Here's a list of all Flowbite React components that are fully rendered on the server:
-
-`Alert`, `Avatar`, `Badge`, `Banner`, `Blockquote`, `Breadcrumb`, `Button`, `Card`, `Checkbox`, `File input`, `Floating Label`, `Footer`, `Helper text`, `Kbd`, `Label`, `List`, `List Group`, `Progress`, `Radio`, `Range slider`, `Select`, `Spinner`, `Textarea`, `Text input`, `Tooltip`.
 
 ## Notes
 

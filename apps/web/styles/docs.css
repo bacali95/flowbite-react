@@ -14,8 +14,8 @@
   @apply mt-0;
 }
 
-#visible-table-of-contents {
-  @apply list-none pl-0;
+#visible-table-of-contents a {
+  @apply py-2;
 }
 
 #visible-table-of-contents ul ul li a {
@@ -24,18 +24,6 @@
 
 #visible-table-of-contents ul ul ul li a {
   @apply pl-9;
-}
-
-#visible-table-of-contents + ul {
-  @apply -ml-3 list-outside list-none pl-0;
-}
-
-#visible-table-of-contents ul ul {
-  @apply pt-3;
-}
-
-#visible-table-of-contents li {
-  @apply pb-3;
 }
 
 #visible-table-of-contents a {
@@ -50,6 +38,10 @@
 #mainContent > h1,
 #mainContent > div > h1 {
   @apply mb-2 inline-block w-full text-3xl font-extrabold tracking-tight text-gray-900;
+}
+
+#mainContent > *:first-child {
+  @apply mt-0;
 }
 
 #mainContent > h2,
@@ -78,13 +70,13 @@
 #mainContent > div > ul > li > a,
 #mainContent > ol > li > a,
 #mainContent > div > ol > li > a {
-  @apply font-medium text-gray-900 underline decoration-cyan-700 decoration-1 underline-offset-2;
+  @apply font-medium text-gray-900 underline decoration-primary-700 decoration-1 underline-offset-2;
 }
 
 #mainContent > p > code,
 #mainContent > ul > li > code,
 #mainContent > ol > li > code {
-  @apply whitespace-nowrap break-all rounded-sm bg-gray-50 px-1 font-mono text-sm text-primary-600;
+  @apply whitespace-nowrap break-all rounded border border-primary-100 bg-gray-50 px-1 text-sm text-primary-700;
   font-family:
     Menlo,
     ui-monospace,
@@ -386,8 +378,9 @@ code.language-html .token.comment {
   padding: initial;
 }
 #carbonads {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
-    Helvetica, Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
   @apply m-0;
 }
 #carbonads {
@@ -479,13 +472,13 @@ code.language-html .token.comment {
   #mainContent > div > ul > li > a,
   #mainContent > ol > li > a,
   #mainContent > div > ol > li > a {
-    @apply text-white decoration-cyan-700;
+    @apply text-white decoration-primary-700;
   }
 
   #mainContent > p > code,
   #mainContent > ul > li > code,
   #mainContent > ol > li > code {
-    @apply bg-gray-800 text-primary-400;
+    @apply border-gray-700 bg-gray-800 text-primary-400;
   }
 
   #mainContent > p > a:hover,

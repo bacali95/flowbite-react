@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteDrawerTheme } from "./Drawer";
+import type { DrawerTheme } from "./Drawer";
 
-export const drawerTheme: FlowbiteDrawerTheme = createTheme({
+export const drawerTheme = createTheme<DrawerTheme>({
   root: {
     base: "fixed z-40 overflow-y-auto bg-white p-4 transition-transform dark:bg-gray-800",
     backdrop: "fixed inset-0 z-30 bg-gray-900/50 dark:bg-gray-900/80",

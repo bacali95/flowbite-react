@@ -1,80 +1,67 @@
-import type { ComponentProps, FC } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import type { FlowbiteFooterBrandTheme } from "./FooterBrand";
-import { FooterBrand } from "./FooterBrand";
-import type { FlowbiteFooterCopyrightTheme } from "./FooterCopyright";
-import { FooterCopyright } from "./FooterCopyright";
-import type { FlowbiteFooterDividerTheme } from "./FooterDivider";
-import { FooterDivider } from "./FooterDivider";
-import type { FlowbiteFooterIconTheme } from "./FooterIcon";
-import { FooterIcon } from "./FooterIcon";
-import { FooterLink } from "./FooterLink";
-import type { FlowbiteFooterLinkGroupTheme } from "./FooterLinkGroup";
-import { FooterLinkGroup } from "./FooterLinkGroup";
-import type { FlowbiteFooterTitleTheme } from "./FooterTitle";
-import { FooterTitle } from "./FooterTitle";
+"use client";
 
-export interface FlowbiteFooterTheme {
-  brand: FlowbiteFooterBrandTheme;
-  copyright: FlowbiteFooterCopyrightTheme;
-  divider: FlowbiteFooterDividerTheme;
-  groupLink: FlowbiteFooterLinkGroupTheme;
-  icon: FlowbiteFooterIconTheme;
-  root: FlowbiteFooterRootTheme;
-  title: FlowbiteFooterTitleTheme;
+import { forwardRef, type ComponentProps } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import type { FooterBrandTheme } from "./FooterBrand";
+import type { FooterCopyrightTheme } from "./FooterCopyright";
+import type { FooterDividerTheme } from "./FooterDivider";
+import type { FooterIconTheme } from "./FooterIcon";
+import type { FooterLinkGroupTheme } from "./FooterLinkGroup";
+import type { FooterTitleTheme } from "./FooterTitle";
+import { footerTheme } from "./theme";
+
+export interface FooterTheme {
+  brand: FooterBrandTheme;
+  copyright: FooterCopyrightTheme;
+  divider: FooterDividerTheme;
+  groupLink: FooterLinkGroupTheme;
+  icon: FooterIconTheme;
+  root: FooterRootTheme;
+  title: FooterTitleTheme;
 }
 
-export interface FlowbiteFooterRootTheme {
+export interface FooterRootTheme {
   base: string;
   bgDark: string;
   container: string;
 }
 
-export interface FooterProps extends ComponentProps<"footer"> {
+export interface FooterProps extends ComponentProps<"footer">, ThemingProps<FooterTheme> {
   bgDark?: boolean;
   container?: boolean;
-  theme?: DeepPartial<FlowbiteFooterTheme>;
 }
 
-export const FooterComponent: FC<FooterProps> = ({
-  bgDark = false,
-  children,
-  className,
-  container = false,
-  theme: customTheme = {},
-  ...props
-}) => {
-  const theme = mergeDeep(getTheme().footer, customTheme);
+export const Footer = forwardRef<HTMLElement, FooterProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [footerTheme, provider.theme?.footer, props.theme],
+    [get(provider.clearTheme, "footer"), props.clearTheme],
+    [get(provider.applyTheme, "footer"), props.applyTheme],
+  );
+
+  const {
+    bgDark = false,
+    children,
+    className,
+    container = false,
+    ...restProps
+  } = resolveProps(props, provider.props?.footer);
 
   return (
     <footer
+      ref={ref}
       data-testid="flowbite-footer"
       className={twMerge(theme.root.base, bgDark && theme.root.bgDark, container && theme.root.container, className)}
-      {...props}
+      {...restProps}
     >
       {children}
     </footer>
   );
-};
-
-FooterComponent.displayName = "Footer";
-FooterCopyright.displayName = "Footer.Copyright";
-FooterLink.displayName = "Footer.Link";
-FooterBrand.displayName = "Footer.Brand";
-FooterLinkGroup.displayName = "Footer.LinkGroup";
-FooterIcon.displayName = "Footer.Icon";
-FooterTitle.displayName = "Footer.Title";
-FooterDivider.displayName = "Footer.Divider";
-
-export const Footer = Object.assign(FooterComponent, {
-  Copyright: FooterCopyright,
-  Link: FooterLink,
-  LinkGroup: FooterLinkGroup,
-  Brand: FooterBrand,
-  Icon: FooterIcon,
-  Title: FooterTitle,
-  Divider: FooterDivider,
 });
+
+Footer.displayName = "Footer";

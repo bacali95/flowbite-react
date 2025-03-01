@@ -1,49 +1,52 @@
-import { forwardRef } from "react";
+"use client";
+
 import type { ComponentProps } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import { HRIcon } from "./HRIcon";
-import type { FlowbiteHRIconTheme } from "./HRIcon";
-import type { FlowbiteHRSquareTheme } from "./HRSquare";
-import { HRSquare } from "./HRSquare";
-import { HRText } from "./HRText";
-import type { FlowbiteHRTextTheme } from "./HRText";
-import { HRTrimmed } from "./HRTrimmed";
-import type { FlowbiteHRTrimmedTheme } from "./HRTrimmed";
+import { forwardRef } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { ThemingProps } from "../../types";
+import type { HRIconTheme } from "./HRIcon";
+import type { HRSquareTheme } from "./HRSquare";
+import type { HRTextTheme } from "./HRText";
+import type { HRTrimmedTheme } from "./HRTrimmed";
+import { hrTheme } from "./theme";
 
-export interface FlowbiteHRTheme {
-  root: {
-    base: string;
-  };
-  trimmed: FlowbiteHRTrimmedTheme;
-  icon: FlowbiteHRIconTheme;
-  text: FlowbiteHRTextTheme;
-  square: FlowbiteHRSquareTheme;
+export interface HRTheme {
+  root: HRRootTheme;
+  trimmed: HRTrimmedTheme;
+  icon: HRIconTheme;
+  text: HRTextTheme;
+  square: HRSquareTheme;
 }
 
-export interface HRProps extends Omit<ComponentProps<"hr">, "ref"> {
-  theme?: DeepPartial<FlowbiteHRTheme>;
+export interface HRRootTheme {
+  base: string;
 }
 
-const HRComponent = forwardRef<HTMLHRElement, HRProps>(({ theme: customTheme = {}, className, ...props }, ref) => {
-  const theme = mergeDeep(getTheme().hr.root, customTheme);
+export interface HRProps extends Omit<ComponentProps<"hr">, "ref">, ThemingProps<HRRootTheme> {}
+
+export const HR = forwardRef<HTMLHRElement, HRProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [hrTheme.root, provider.theme?.hr?.root, props.theme],
+    [get(provider.clearTheme, "hr.root"), props.clearTheme],
+    [get(provider.applyTheme, "hr.root"), props.applyTheme],
+  );
+
+  const { className, ...restProps } = resolveProps(props, provider.props?.hr);
 
   return (
-    <hr className={twMerge(theme.base, className)} role="separator" data-testid="flowbite-hr" ref={ref} {...props} />
+    <hr
+      ref={ref}
+      className={twMerge(theme.base, className)}
+      data-testid="flowbite-hr"
+      role="separator"
+      {...restProps}
+    />
   );
 });
 
-HRComponent.displayName = "HR";
-HRTrimmed.displayName = "HR.Trimmed";
-HRIcon.displayName = "HR.Icon";
-HRText.displayName = "HR.Text";
-HRSquare.displayName = "HR.Square";
-
-export const HR = Object.assign(HRComponent, {
-  Trimmed: HRTrimmed,
-  Icon: HRIcon,
-  Text: HRText,
-  Square: HRSquare,
-});
+HR.displayName = "HR";

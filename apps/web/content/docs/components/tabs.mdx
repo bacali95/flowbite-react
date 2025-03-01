@@ -10,16 +10,16 @@ Choose one of the examples below based on various styles, layouts, and content t
 Make sure that you import the component from the `flowbite-react` library:
 
 ```jsx
-import { Tabs } from "flowbite-react";
+import { TabItem, Tabs } from "flowbite-react";
 ```
 
 ## Default tabs
 
-Add the `<Tabs.Item>` child component to the `<Tabs>` component to create a tab item and you can add any type of markup and React components inside of it and it will be shown when clicking on the associated tab item.
+Add the `<TabItem>` child component to the `<Tabs>` component to create a tab item and you can add any type of markup and React components inside of it and it will be shown when clicking on the associated tab item.
 
-You can also choose to add the `active` prop to the `<Tabs.Item>` component to make it active by default and set the title of the tab item using the `title` prop.
+You can also choose to add the `active` prop to the `<TabItem>` component to make it active by default and set the title of the tab item using the `title` prop.
 
-Additionally, if you pass the `disabled` prop to the `<Tabs.Item>` component, it will be disabled and you won't be able to click on it.
+Additionally, if you pass the `disabled` prop to the `<TabItem>` component, it will be disabled and you won't be able to click on it.
 
 <Example name="tabs.root" />
 
@@ -31,7 +31,7 @@ Pass the `variant="underline"` prop to the `<Tabs>` component to make the tabs h
 
 ## Tabs with icons
 
-Pass the `icon` prop to the `<Tabs.Item>` component to add an icon to the tab item.
+Pass the `icon` prop to the `<TabItem>` component to add an icon to the tab item.
 
 <Example name="tabs.withIcons" />
 

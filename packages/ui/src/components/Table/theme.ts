@@ -1,7 +1,7 @@
 import { createTheme } from "../../helpers/create-theme";
-import type { FlowbiteTableTheme } from "./Table";
+import type { TableTheme } from "./Table";
 
-export const tableTheme: FlowbiteTableTheme = createTheme({
+export const tableTheme = createTheme<TableTheme>({
   root: {
     base: "w-full text-left text-sm text-gray-500 dark:text-gray-400",
     shadow: "absolute left-0 top-0 -z-10 h-full w-full rounded-lg bg-white drop-shadow-md dark:bg-black",

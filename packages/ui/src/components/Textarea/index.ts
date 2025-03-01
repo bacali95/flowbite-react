@@ -1,2 +1,3 @@
 export { Textarea } from "./Textarea";
-export type { FlowbiteTextareaTheme, TextareaColors, TextareaProps } from "./Textarea";
+export type { TextareaColors, TextareaProps, TextareaTheme } from "./Textarea";
+export { textareaTheme } from "./theme";

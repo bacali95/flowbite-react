@@ -57,20 +57,16 @@ npx astro add tailwind
 npm i flowbite-react
 ```
 
-2. Add the Flowbite React `content` path and `plugin` to `tailwind.config.mjs`:
+2. Add `flowbite-react/tailwind` plugin to `tailwind.config.mjs`:
 
-```js {1,7,11}
+```js {1,7}
 import flowbite from "flowbite-react/tailwind";
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    // ...
-    flowbite.content(),
-  ],
   plugins: [
     // ...
-    flowbite.plugin(),
+    flowbite,
   ],
 };
 ```

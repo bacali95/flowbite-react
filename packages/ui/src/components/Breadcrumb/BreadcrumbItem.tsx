@@ -1,47 +1,55 @@
+"use client";
+
 import type { ComponentProps, FC } from "react";
 import { forwardRef } from "react";
-import { HiOutlineChevronRight } from "react-icons/hi";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import type { FlowbiteBoolean } from "../Flowbite";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { ChevronRightIcon } from "../../icons/chevron-right-icon";
+import { useThemeProvider } from "../../theme/provider";
+import type { FlowbiteBoolean, ThemingProps } from "../../types";
+import { breadcrumbTheme } from "./theme";
 
-export interface FlowbiteBreadcrumbItemTheme {
+export interface BreadcrumbItemTheme {
   base: string;
   chevron: string;
   href: FlowbiteBoolean;
   icon: string;
 }
 
-export interface BreadcrumbItemProps extends Omit<ComponentProps<"li">, "ref"> {
+export interface BreadcrumbItemProps extends Omit<ComponentProps<"li">, "ref">, ThemingProps<BreadcrumbItemTheme> {
   href?: string;
   icon?: FC<ComponentProps<"svg">>;
-  theme?: DeepPartial<FlowbiteBreadcrumbItemTheme>;
 }
 
-export const BreadcrumbItem = forwardRef<HTMLAnchorElement | HTMLSpanElement, BreadcrumbItemProps>(
-  ({ children, className, href, icon: Icon, theme: customTheme = {}, ...props }, ref) => {
-    const isLink = typeof href !== "undefined";
-    const Component = isLink ? "a" : "span";
+export const BreadcrumbItem = forwardRef<HTMLAnchorElement | HTMLSpanElement, BreadcrumbItemProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [breadcrumbTheme.item, provider.theme?.breadcrumb?.item, props.theme],
+    [get(provider.clearTheme, "breadcrumb.item"), props.clearTheme],
+    [get(provider.applyTheme, "breadcrumb.item"), props.applyTheme],
+  );
 
-    const theme = mergeDeep(getTheme().breadcrumb.item, customTheme);
+  const { children, className, href, icon: Icon, ...restProps } = resolveProps(props, provider.props?.breadcrumbItem);
 
-    return (
-      <li className={twMerge(theme.base, className)} {...props}>
-        <HiOutlineChevronRight aria-hidden className={theme.chevron} data-testid="flowbite-breadcrumb-separator" />
-        <Component
-          ref={ref as never}
-          className={theme.href[isLink ? "on" : "off"]}
-          data-testid="flowbite-breadcrumb-item"
-          href={href}
-        >
-          {Icon && <Icon aria-hidden className={theme.icon} />}
-          {children}
-        </Component>
-      </li>
-    );
-  },
-);
+  const isLink = typeof href !== "undefined";
+  const Component = isLink ? "a" : "span";
 
-BreadcrumbItem.displayName = "Breadcrumb.Item";
+  return (
+    <li className={twMerge(theme.base, className)} {...restProps}>
+      <ChevronRightIcon aria-hidden className={theme.chevron} data-testid="flowbite-breadcrumb-separator" />
+      <Component
+        ref={ref as never}
+        className={theme.href[isLink ? "on" : "off"]}
+        data-testid="flowbite-breadcrumb-item"
+        href={href}
+      >
+        {Icon && <Icon aria-hidden className={theme.icon} />}
+        {children}
+      </Component>
+    </li>
+  );
+});
+
+BreadcrumbItem.displayName = "BreadcrumbItem";

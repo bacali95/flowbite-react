@@ -1,23 +1,25 @@
 "use client";
 
-import type { ComponentProps, FC } from "react";
-import { useEffect, useId } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial } from "../../types";
-import type { FlowbiteBoolean } from "../Flowbite";
+import type { ComponentProps } from "react";
+import { forwardRef, useEffect, useId } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { FlowbiteBoolean, ThemingProps } from "../../types";
 import { DrawerContext } from "./DrawerContext";
-import { DrawerHeader, type FlowbiteDrawerHeaderTheme } from "./DrawerHeader";
-import { DrawerItems, type FlowbiteDrawerItemsTheme } from "./DrawerItems";
+import type { DrawerHeaderTheme } from "./DrawerHeader";
+import type { DrawerItemsTheme } from "./DrawerItems";
+import { drawerTheme } from "./theme";
 
-export interface FlowbiteDrawerTheme {
-  root: FlowbiteDrawerRootTheme;
-  header: FlowbiteDrawerHeaderTheme;
-  items: FlowbiteDrawerItemsTheme;
+export interface DrawerTheme {
+  root: DrawerRootTheme;
+  header: DrawerHeaderTheme;
+  items: DrawerItemsTheme;
 }
 
-export interface FlowbiteDrawerRootTheme {
+export interface DrawerRootTheme {
   base: string;
   backdrop: string;
   edge: string;
@@ -29,29 +31,34 @@ export interface FlowbiteDrawerRootTheme {
   };
 }
 
-export interface DrawerProps extends ComponentProps<"div"> {
+export interface DrawerProps extends ComponentProps<"div">, ThemingProps<DrawerTheme> {
   backdrop?: boolean;
   edge?: boolean;
   onClose: () => void;
   open?: boolean;
   position?: "top" | "right" | "bottom" | "left";
-  theme?: DeepPartial<FlowbiteDrawerTheme>;
 }
 
-const DrawerComponent: FC<DrawerProps> = ({
-  backdrop = true,
-  children,
-  className,
-  edge = false,
-  position = "left",
-  onClose,
-  open: isOpen = false,
-  theme: customTheme = {},
-  ...props
-}) => {
+export const Drawer = forwardRef<HTMLDivElement, DrawerProps>((props, ref) => {
   const id = useId();
 
-  const theme = mergeDeep(getTheme().drawer, customTheme);
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [drawerTheme, provider.theme?.drawer, props.theme],
+    [get(provider.clearTheme, "drawer"), props.clearTheme],
+    [get(provider.applyTheme, "drawer"), props.applyTheme],
+  );
+
+  const {
+    backdrop = true,
+    children,
+    className,
+    edge = false,
+    position = "left",
+    onClose,
+    open: isOpen = false,
+    ...restProps
+  } = resolveProps(props, provider.props?.drawer);
 
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
@@ -66,8 +73,11 @@ const DrawerComponent: FC<DrawerProps> = ({
   }, [onClose, isOpen]);
 
   return (
-    <DrawerContext.Provider value={{ theme, onClose, isOpen, id }}>
+    <DrawerContext.Provider
+      value={{ theme: props.theme, clearTheme: props.clearTheme, applyTheme: props.applyTheme, onClose, isOpen, id }}
+    >
       <div
+        ref={ref}
         aria-modal
         aria-describedby={`drawer-dialog-${id}`}
         role="dialog"
@@ -79,18 +89,13 @@ const DrawerComponent: FC<DrawerProps> = ({
           edge && !isOpen && theme.root.edge,
           className,
         )}
-        {...props}
+        {...restProps}
       >
         {children}
       </div>
       {isOpen && backdrop && <div onClick={() => onClose()} className={theme.root.backdrop} />}
     </DrawerContext.Provider>
   );
-};
-
-DrawerComponent.displayName = "Drawer";
-
-export const Drawer = Object.assign(DrawerComponent, {
-  Header: DrawerHeader,
-  Items: DrawerItems,
 });
+
+Drawer.displayName = "Drawer";

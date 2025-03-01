@@ -1,7 +1,7 @@
 "use client";
 
 import { Alert } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
 "use client";
@@ -28,7 +28,7 @@ export function Component() {
 export const dismissible: CodeData = {
   type: "single",
   code: {
-    fileName: "client",
+    fileName: "index",
     language: "tsx",
     code,
   },

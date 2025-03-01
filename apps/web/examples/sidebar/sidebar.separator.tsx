@@ -1,58 +1,56 @@
-// TODO: try to make it RSC - failing because of `<SidebarItem />` icon prop
-
 "use client";
 
-import { Sidebar } from "flowbite-react";
+import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems } from "flowbite-react";
 import { BiBuoy } from "react-icons/bi";
 import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser, HiViewBoards } from "react-icons/hi";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
 "use client";
 
-import { Sidebar } from "flowbite-react";
+import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems } from "flowbite-react";
 import { BiBuoy } from "react-icons/bi";
 import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser, HiViewBoards } from "react-icons/hi";
 
 export function Component() {
   return (
     <Sidebar aria-label="Sidebar with content separator example">
-      <Sidebar.Items>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiChartPie}>
+      <SidebarItems>
+        <SidebarItemGroup>
+          <SidebarItem href="#" icon={HiChartPie}>
             Dashboard
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiViewBoards}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiViewBoards}>
             Kanban
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiInbox}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiInbox}>
             Inbox
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiUser}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiUser}>
             Users
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiShoppingBag}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiShoppingBag}>
             Products
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiArrowSmRight}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiArrowSmRight}>
             Sign In
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiTable}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiTable}>
             Sign Up
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiChartPie}>
+          </SidebarItem>
+        </SidebarItemGroup>
+        <SidebarItemGroup>
+          <SidebarItem href="#" icon={HiChartPie}>
             Upgrade to Pro
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiViewBoards}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiViewBoards}>
             Documentation
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={BiBuoy}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={BiBuoy}>
             Help
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
-      </Sidebar.Items>
+          </SidebarItem>
+        </SidebarItemGroup>
+      </SidebarItems>
     </Sidebar>
   );
 }
@@ -61,42 +59,42 @@ export function Component() {
 export function Component() {
   return (
     <Sidebar aria-label="Sidebar with content separator example">
-      <Sidebar.Items>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiChartPie}>
+      <SidebarItems>
+        <SidebarItemGroup>
+          <SidebarItem href="#" icon={HiChartPie}>
             Dashboard
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiViewBoards}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiViewBoards}>
             Kanban
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiInbox}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiInbox}>
             Inbox
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiUser}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiUser}>
             Users
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiShoppingBag}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiShoppingBag}>
             Products
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiArrowSmRight}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiArrowSmRight}>
             Sign In
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiTable}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiTable}>
             Sign Up
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiChartPie}>
+          </SidebarItem>
+        </SidebarItemGroup>
+        <SidebarItemGroup>
+          <SidebarItem href="#" icon={HiChartPie}>
             Upgrade to Pro
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiViewBoards}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiViewBoards}>
             Documentation
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={BiBuoy}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={BiBuoy}>
             Help
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
-      </Sidebar.Items>
+          </SidebarItem>
+        </SidebarItemGroup>
+      </SidebarItems>
     </Sidebar>
   );
 }
@@ -104,7 +102,7 @@ export function Component() {
 export const separator: CodeData = {
   type: "single",
   code: {
-    fileName: "client",
+    fileName: "index",
     language: "tsx",
     code,
   },

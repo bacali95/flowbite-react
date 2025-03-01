@@ -1,60 +1,28 @@
 import { FileInput, Label } from "flowbite-react";
-import { type CodeData } from "~/components/code-demo";
+import type { CodeData } from "~/components/code-demo";
 
 const code = `
-"use client";
-
 import { FileInput, Label } from "flowbite-react";
 
 export function Component() {
   return (
-    <div>
-      <div className="mb-2">
-        <div>
-          <Label htmlFor="small-file-upload" value="Small file input" />
-        </div>
+    <div className="space-y-5">
+      <div>
+        <Label className="mb-2 block" htmlFor="small-file-upload">
+          Small file input
+        </Label>
         <FileInput id="small-file-upload" sizing="sm" />
       </div>
-      <div className="mb-2">
-        <div>
-          <Label htmlFor="default-file-upload" value="Default size file input" />
-        </div>
+      <div>
+        <Label className="mb-2 block" htmlFor="default-file-upload">
+          Default size file input
+        </Label>
         <FileInput id="default-file-upload" />
       </div>
       <div>
-        <div>
-          <Label htmlFor="large-file-upload" value="Large file input" />
-        </div>
-        <FileInput id="large-file-upload" sizing="lg" />
-      </div>
-    </div>
-  );
-}
-`;
-
-const codeRSC = `
-
-import { FileInput, Label } from "flowbite-react";
-
-export function Component() {
-  return (
-    <div>
-      <div className="mb-2">
-        <div>
-          <Label htmlFor="small-file-upload" value="Small file input" />
-        </div>
-        <FileInput id="small-file-upload" sizing="sm" />
-      </div>
-      <div className="mb-2">
-        <div>
-          <Label htmlFor="default-file-upload" value="Default size file input" />
-        </div>
-        <FileInput id="default-file-upload" />
-      </div>
-      <div>
-        <div>
-          <Label htmlFor="large-file-upload" value="Large file input" />
-        </div>
+        <Label className="mb-2 block" htmlFor="large-file-upload">
+          Large file input
+        </Label>
         <FileInput id="large-file-upload" sizing="lg" />
       </div>
     </div>
@@ -64,23 +32,23 @@ export function Component() {
 
 export function Component() {
   return (
-    <div>
-      <div className="mb-2">
-        <div>
-          <Label htmlFor="small-file-upload" value="Small file input" />
-        </div>
+    <div className="space-y-5">
+      <div>
+        <Label className="mb-2 block" htmlFor="small-file-upload">
+          Small file input
+        </Label>
         <FileInput id="small-file-upload" sizing="sm" />
       </div>
-      <div className="mb-2">
-        <div>
-          <Label htmlFor="default-file-upload" value="Default size file input" />
-        </div>
+      <div>
+        <Label className="mb-2 block" htmlFor="default-file-upload">
+          Default size file input
+        </Label>
         <FileInput id="default-file-upload" />
       </div>
       <div>
-        <div>
-          <Label htmlFor="large-file-upload" value="Large file input" />
-        </div>
+        <Label className="mb-2 block" htmlFor="large-file-upload">
+          Large file input
+        </Label>
         <FileInput id="large-file-upload" sizing="lg" />
       </div>
     </div>
@@ -89,18 +57,11 @@ export function Component() {
 
 export const sizes: CodeData = {
   type: "single",
-  code: [
-    {
-      fileName: "client",
-      language: "tsx",
-      code,
-    },
-    {
-      fileName: "server",
-      language: "tsx",
-      code: codeRSC,
-    },
-  ],
+  code: {
+    fileName: "index",
+    language: "tsx",
+    code,
+  },
   githubSlug: "fileInput/fileInput.sizes.tsx",
   component: <Component />,
 };

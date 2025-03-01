@@ -1,18 +1,17 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import { DynamicStringEnumKeysOf } from "../../types";
-import type { FlowbiteRatingTheme } from "./Rating";
-import type { FlowbiteStarSizes } from "./RatingStar";
+import type { DynamicStringEnumKeysOf, ThemingProps } from "../../types";
+import type { RatingTheme } from "./Rating";
+import type { RatingStarSizes } from "./RatingStar";
 
-export type RatingContext = {
-  theme: FlowbiteRatingTheme;
-  size?: DynamicStringEnumKeysOf<FlowbiteStarSizes>;
-};
+export interface RatingContextValue extends ThemingProps<RatingTheme> {
+  size?: DynamicStringEnumKeysOf<RatingStarSizes>;
+}
 
-export const RatingContext = createContext<RatingContext | undefined>(undefined);
+export const RatingContext = createContext<RatingContextValue | undefined>(undefined);
 
-export function useRatingContext(): RatingContext {
+export function useRatingContext(): RatingContextValue {
   const context = useContext(RatingContext);
 
   if (!context) {

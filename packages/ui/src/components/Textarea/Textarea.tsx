@@ -1,13 +1,16 @@
-import type { ComponentProps, ReactNode } from "react";
-import { forwardRef } from "react";
-import { twMerge } from "tailwind-merge";
-import { mergeDeep } from "../../helpers/merge-deep";
-import { getTheme } from "../../theme-store";
-import type { DeepPartial, DynamicStringEnumKeysOf } from "../../types";
-import type { FlowbiteBoolean, FlowbiteColors } from "../Flowbite";
-import { HelperText } from "../HelperText";
+"use client";
 
-export interface FlowbiteTextareaTheme {
+import type { ComponentProps } from "react";
+import { forwardRef } from "react";
+import { get } from "../../helpers/get";
+import { resolveProps } from "../../helpers/resolve-props";
+import { useResolveTheme } from "../../helpers/resolve-theme";
+import { twMerge } from "../../helpers/tailwind-merge";
+import { useThemeProvider } from "../../theme/provider";
+import type { DynamicStringEnumKeysOf, FlowbiteBoolean, FlowbiteColors, ThemingProps } from "../../types";
+import { textareaTheme } from "./theme";
+
+export interface TextareaTheme {
   base: string;
   colors: TextareaColors;
   withShadow: FlowbiteBoolean;
@@ -17,28 +20,28 @@ export interface TextareaColors extends Pick<FlowbiteColors, "gray" | "info" | "
   [key: string]: string;
 }
 
-export interface TextareaProps extends Omit<ComponentProps<"textarea">, "color" | "ref"> {
+export interface TextareaProps extends Omit<ComponentProps<"textarea">, "color" | "ref">, ThemingProps<TextareaTheme> {
   color?: DynamicStringEnumKeysOf<TextareaColors>;
-  helperText?: ReactNode;
   shadow?: boolean;
-  theme?: DeepPartial<FlowbiteTextareaTheme>;
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, color = "gray", helperText, shadow, theme: customTheme = {}, ...props }, ref) => {
-    const theme = mergeDeep(getTheme().textarea, customTheme);
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => {
+  const provider = useThemeProvider();
+  const theme = useResolveTheme(
+    [textareaTheme, provider.theme?.textarea, props.theme],
+    [get(provider.clearTheme, "textarea"), props.clearTheme],
+    [get(provider.applyTheme, "textarea"), props.applyTheme],
+  );
 
-    return (
-      <>
-        <textarea
-          ref={ref}
-          className={twMerge(theme.base, theme.colors[color], theme.withShadow[shadow ? "on" : "off"], className)}
-          {...props}
-        />
-        {helperText && <HelperText color={color}>{helperText}</HelperText>}
-      </>
-    );
-  },
-);
+  const { className, color = "gray", shadow, ...restProps } = resolveProps(props, provider.props?.textarea);
+
+  return (
+    <textarea
+      ref={ref}
+      className={twMerge(theme.base, theme.colors[color], theme.withShadow[shadow ? "on" : "off"], className)}
+      {...restProps}
+    />
+  );
+});
 
 Textarea.displayName = "Textarea";
